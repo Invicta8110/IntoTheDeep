@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.hardware
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
-
+import com.qualcomm.robotcore.hardware.HardwareMap
 
 class Motor(val dcMotorEx: DcMotorEx) {
     //this should be changed to java
     //testing
+
+    constructor(name: String, hwMap: HardwareMap) : this(hwMap.get(DcMotorEx::class.java, name))
 
     operator fun invoke() : DcMotorEx {
         return dcMotorEx
