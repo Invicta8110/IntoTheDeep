@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx
 
 class Motor(val dcMotorEx: DcMotorEx) {
     //this should be changed to java
+    //testing
 
     operator fun invoke() : DcMotorEx {
         return dcMotorEx
