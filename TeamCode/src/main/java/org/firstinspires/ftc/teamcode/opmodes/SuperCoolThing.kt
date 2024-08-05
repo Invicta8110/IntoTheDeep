@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import org.firstinspires.ftc.teamcode.hardware.Motor
+import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 
 class SuperCoolThing : LinearOpMode() {
     override fun runOpMode() {
