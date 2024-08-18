@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware.wrappers
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 
 class Motor(val dcMotorEx: DcMotorEx) {
@@ -29,6 +30,12 @@ class Motor(val dcMotorEx: DcMotorEx) {
         }
 
         reset()
+    }
+
+    fun reverse() = when (dcMotorEx.direction) {
+        DcMotorSimple.Direction.FORWARD -> dcMotorEx.direction = DcMotorSimple.Direction.REVERSE
+        DcMotorSimple.Direction.REVERSE -> dcMotorEx.direction = DcMotorSimple.Direction.FORWARD
+        null -> dcMotorEx.direction = DcMotorSimple.Direction.FORWARD
     }
 
 }
