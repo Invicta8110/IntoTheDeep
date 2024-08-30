@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
-import java.lang.Math
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 
 class Motor(val dcMotorEx: DcMotorEx) {
     //this should be changed to java
@@ -16,6 +16,8 @@ class Motor(val dcMotorEx: DcMotorEx) {
     operator fun invoke() : DcMotorEx {
         return dcMotorEx
     }
+
+    val current get() = this().getCurrent(CurrentUnit.AMPS)
 
     fun reset() {
         dcMotorEx.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
