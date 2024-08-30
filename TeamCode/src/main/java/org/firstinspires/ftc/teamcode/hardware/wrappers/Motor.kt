@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.hardware.wrappers
 
+import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
+import java.lang.Math
 
 class Motor(val dcMotorEx: DcMotorEx) {
     //this should be changed to java
@@ -29,6 +31,11 @@ class Motor(val dcMotorEx: DcMotorEx) {
             //it does stuff here
         }
 
+        val v1 = Vector2d(0.0, 0.0)
+        val v2 = Vector2d(10.0, 10.0)
+
+        val v3 = v1 + v2
+
         reset()
     }
 
@@ -37,5 +44,6 @@ class Motor(val dcMotorEx: DcMotorEx) {
         DcMotorSimple.Direction.REVERSE -> dcMotorEx.direction = DcMotorSimple.Direction.FORWARD
         null -> dcMotorEx.direction = DcMotorSimple.Direction.FORWARD
     }
+
 
 }
