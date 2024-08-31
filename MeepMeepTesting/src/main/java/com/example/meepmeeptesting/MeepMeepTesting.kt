@@ -20,11 +20,13 @@ fun main() {
     val redLeft = Pose2d(-36.0, -60.0, Math.PI/2)
 
     //any actions go here
+    val action = myBot.drive.actionBuilder(redLeft) //this is your starting position
+        .splineTo(Vector2d(-36.0, -36.0), Math.toRadians(90.0))
+        .splineTo(Vector2d(48.0, -36.0), 0.0)
+        .build()
+
     myBot.runAction(
-        myBot.drive.actionBuilder(redLeft) //this is your starting position
-            .splineTo(Vector2d(-36.0, -36.0), Math.toRadians(90.0))
-            .splineTo(Vector2d(48.0, -36.0), 0.0)
-            .build()
+        action
     )
 
     meepMeep.setBackground(Background.FIELD_CENTERSTAGE_JUICE_DARK)
