@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 
-class HardwareFactory(private val hwMap: HardwareMap) {
+class HardwareGen(private val hwMap: HardwareMap) {
     fun buildMotor(name: String) : Motor {
         return Motor(name, hwMap)
     }
