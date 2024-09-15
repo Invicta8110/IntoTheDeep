@@ -20,7 +20,7 @@ public class TestRobot {
     TwoPointServo claw, drone;
 
     public TestRobot(HardwareMap hwMap) {
-        HardwareFactory factory = new HardwareFactory(hwMap);
+        HardwareGen factory = new HardwareGen(hwMap);
 
         dt = new MecanumDrive(hwMap, new Pose2d(0, 0, 0));
 

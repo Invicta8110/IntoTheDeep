@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.opmodes
+package org.firstinspires.ftc.teamcode.opmodes.testing
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.firstinspires.ftc.teamcode.hardware.HardwareFactory
+import org.firstinspires.ftc.teamcode.hardware.HardwareGen
 import kotlin.math.abs
 
 @TeleOp
 class VegaOrientation : LinearOpMode() {
     override fun runOpMode() {
-        val f = HardwareFactory(hardwareMap)
+        val f = HardwareGen(hardwareMap)
         val frontLeft = f.buildDcEx("frontLeft")
         val frontRight = f.buildDcEx("frontRight")
         val backLeft = f.buildDcEx("backLeft")

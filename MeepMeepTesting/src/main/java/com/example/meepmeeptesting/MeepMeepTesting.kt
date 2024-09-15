@@ -29,7 +29,7 @@ fun main() {
         action
     )
 
-    meepMeep.setBackground(Background.FIELD_CENTERSTAGE_JUICE_DARK)
+    meepMeep.setBackground(Background.FIELD_CENTERSTAGE_OFFICIAL)
         .setDarkMode(true)
         .setBackgroundAlpha(0.95f)
         .addEntity(myBot)
