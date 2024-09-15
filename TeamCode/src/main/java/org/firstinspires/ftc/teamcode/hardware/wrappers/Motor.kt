@@ -11,6 +11,11 @@ class Motor(val dcMotorEx: DcMotorEx) {
     //this should be changed to java
     //testing
 
+    init {
+        dcMotorEx.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        reset()
+    }
+
     constructor(name: String, hwMap: HardwareMap) : this(hwMap.get(DcMotorEx::class.java, name))
 
     operator fun invoke() : DcMotorEx {
