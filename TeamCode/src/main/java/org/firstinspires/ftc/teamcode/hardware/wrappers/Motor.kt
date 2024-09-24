@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 
 class Motor(val dcMotorEx: DcMotorEx) {
-    //this should be changed to java
+    //this can no longer be changed to java
     //testing
 
     init {
@@ -23,11 +23,6 @@ class Motor(val dcMotorEx: DcMotorEx) {
     }
 
     val current get() = this().getCurrent(CurrentUnit.AMPS)
-
-    fun reset() {
-        dcMotorEx.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        dcMotorEx.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
-    }
 
     fun runToPosition(target: Int, power: Double) {
         dcMotorEx.targetPosition = target
@@ -50,6 +45,11 @@ class Motor(val dcMotorEx: DcMotorEx) {
         DcMotorSimple.Direction.FORWARD -> dcMotorEx.direction = DcMotorSimple.Direction.REVERSE
         DcMotorSimple.Direction.REVERSE -> dcMotorEx.direction = DcMotorSimple.Direction.FORWARD
         null -> dcMotorEx.direction = DcMotorSimple.Direction.FORWARD
+    }
+
+    fun reset() {
+        dcMotorEx.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        dcMotorEx.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
     }
 
 

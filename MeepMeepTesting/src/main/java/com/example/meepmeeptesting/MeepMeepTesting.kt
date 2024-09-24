@@ -21,15 +21,15 @@ fun main() {
 
     //any actions go here
     val action = myBot.drive.actionBuilder(redLeft) //this is your starting position
-        .splineTo(Vector2d(-36.0, -36.0), Math.toRadians(90.0))
-        .splineTo(Vector2d(48.0, -36.0), 0.0)
+        .splineTo(Vector2d(0.0, 0.0), Math.PI/2)
+        .splineToSplineHeading(blueLeft, -Math.PI/2)
         .build()
 
     myBot.runAction(
         action
     )
 
-    meepMeep.setBackground(Background.FIELD_CENTERSTAGE_OFFICIAL)
+    meepMeep.setBackground(Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
         .setDarkMode(true)
         .setBackgroundAlpha(0.95f)
         .addEntity(myBot)
