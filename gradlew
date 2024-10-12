@@ -10,6 +10,7 @@
 DEFAULT_JVM_OPTS=""
 
 APP_NAME="Gradle"
+# shellcheck disable=SC2006
 APP_BASE_NAME=`basename "$0"`
 
 # Use the maximum available, or set MAX_FD != -1 to use that value.

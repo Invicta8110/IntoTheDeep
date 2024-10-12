@@ -32,6 +32,10 @@ repositories {
         url = 'https://maven.brott.dev/'
     }
     maven {
+        url = 'http://repo.dairy.foundation/releases'
+        allowInsecureProtocol = true
+    }
+    maven {
         url = 'https://jitpack.io/'
     }
 }
@@ -47,4 +51,6 @@ dependencies {
     implementation "com.acmerobotics.dashboard:dashboard:0.4.15"
 
     implementation "com.github.jdhs-ftc:road-runner-ftc-otos:a02ba3fe51"
+
+    implementation "dev.frozenmilk.dairy:Pasteurized:1.0.0"
 }
