@@ -52,5 +52,10 @@ class Motor(val dcMotorEx: DcMotorEx) {
         dcMotorEx.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
     }
 
-
+    companion object {
+        fun reversed(motor: Motor) : Motor {
+            motor.reverse()
+            return motor
+        }
+    }
 }

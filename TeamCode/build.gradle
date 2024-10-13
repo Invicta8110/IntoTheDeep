@@ -32,19 +32,25 @@ repositories {
         url = 'https://maven.brott.dev/'
     }
     maven {
+        url = 'https://repo.dairy.foundation/releases'
+    }
+    maven {
         url = 'https://jitpack.io/'
     }
 }
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.core:core-ktx:1.0.0'
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
-    implementation "com.acmerobotics.roadrunner:ftc:0.1.12"
+    //implementation "com.acmerobotics.roadrunner:ftc:0.1.12"
     implementation "com.acmerobotics.roadrunner:core:1.0.0"
     implementation "com.acmerobotics.roadrunner:actions:1.0.0"
     implementation "com.acmerobotics.dashboard:dashboard:0.4.15"
 
     implementation "com.github.jdhs-ftc:road-runner-ftc-otos:a02ba3fe51"
+
+    implementation "dev.frozenmilk.dairy:Core:1.0.0"
+    implementation "dev.frozenmilk.dairy:Pasteurized:1.0.0"
 }
