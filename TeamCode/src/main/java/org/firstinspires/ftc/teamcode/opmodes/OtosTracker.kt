@@ -5,14 +5,21 @@ import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import com.qualcomm.robotcore.hardware.DcMotorEx
 import org.firstinspires.ftc.teamcode.roadrunner.SparkFunOTOSDrive
 
 @TeleOp
 class OtosTracker : OpMode() {
-    lateinit var robot: SparkFunOTOSDrive
+    val robot: SparkFunOTOSDrive by lazy {
+        SparkFunOTOSDrive(hardwareMap, Pose2d(0.0, 0.0, 0.0))
+    }
+
+    val arm: DcMotorEx by lazy {
+        hardwareMap.get("arm") as DcMotorEx
+    }
 
     override fun init() {
-        robot = SparkFunOTOSDrive(hardwareMap, Pose2d(0.0,0.0,0.0))
+        robot
     }
 
     override fun loop() {
