@@ -23,6 +23,7 @@ class Motor(val dcMotorEx: DcMotorEx) {
     }
 
     val current get() = this().getCurrent(CurrentUnit.AMPS)
+    val position get() = this().currentPosition
 
     fun runToPosition(target: Int, power: Double) {
         dcMotorEx.targetPosition = target
