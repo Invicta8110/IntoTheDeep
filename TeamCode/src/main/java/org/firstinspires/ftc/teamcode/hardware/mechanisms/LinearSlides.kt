@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware.mechanisms
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.Action
+import com.acmerobotics.roadrunner.InstantAction
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 
@@ -24,6 +25,18 @@ class LinearSlides(vararg motors: Motor) {
 
     fun up() {
         motors.forEach { m -> m().power = 1.0}
+    }
+
+    operator fun get(index: Int) : Motor {
+        return motors[index];
+    }
+
+    fun setPower(power: Double) {
+        motors.forEach { it().power = power }
+    }
+
+    fun powerAction(power: Double) : InstantAction {
+        return InstantAction { setPower(power) }
     }
 
     fun upAction() : Action {
