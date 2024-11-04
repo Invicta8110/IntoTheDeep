@@ -208,6 +208,29 @@ public final class PIDFController {
         return update(System.nanoTime(), measuredPosition, null);
     }
 
+    public double updateSquid(
+            long timestamp,
+            double measuredPosition,
+            @Nullable Double measuredVelocity
+    ) {
+        double result = update(timestamp, measuredPosition, measuredVelocity);
+
+        return Math.sqrt(Math.abs(result)) * Math.signum(result);
+    }
+
+    public double updateSquid(
+            long timestamp,
+            double measuredPosition
+    ) {
+        return updateSquid(timestamp, measuredPosition, null);
+    }
+
+    public double updateSquid(
+            double measuredPosition
+    ) {
+        return updateSquid(System.nanoTime(), measuredPosition, null);
+    }
+
     /**
      * Reset the controller's integral sum.
      */

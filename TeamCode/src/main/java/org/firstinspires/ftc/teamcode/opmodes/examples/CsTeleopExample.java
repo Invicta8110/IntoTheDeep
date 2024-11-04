@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.opmodes.examples;
 
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
@@ -60,6 +62,8 @@ public class CsTeleopExample extends ActionOpMode {
         } else if (gamepad.dpadDown().onFalse()) {
             add(slides.powerAction(0));
         }
+
+        runActionOnPress(claw.runToA, gamepad.x());
 
         telemetry.addData(
                 "Slide Current",
