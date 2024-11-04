@@ -1,55 +1,90 @@
 package org.firstinspires.ftc.teamcode.hardware.wrappers
 
-import com.acmerobotics.roadrunner.Vector2d
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket
+import com.acmerobotics.roadrunner.Action
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
+import org.firstinspires.ftc.teamcode.control.PIDFController
+import org.firstinspires.ftc.teamcode.control.PIDFController.PIDCoefficients
 
-class Motor(val dcMotorEx: DcMotorEx) {
+class Motor(val internal: DcMotorEx) {
     //this can no longer be changed to java
     //testing
 
     init {
-        dcMotorEx.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        internal.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         reset()
     }
 
     constructor(name: String, hwMap: HardwareMap) : this(hwMap.get(DcMotorEx::class.java, name))
 
     operator fun invoke() : DcMotorEx {
-        return dcMotorEx
+        return internal
     }
 
     val current get() = this().getCurrent(CurrentUnit.AMPS)
+    val position get() = this().currentPosition
 
     fun runToPosition(target: Int, power: Double) {
-        dcMotorEx.targetPosition = target
-        dcMotorEx.mode = DcMotor.RunMode.RUN_TO_POSITION
-        dcMotorEx.power = power
+        internal.targetPosition = target
+        internal.mode = DcMotor.RunMode.RUN_TO_POSITION
+        internal.power = power
 
-        while (dcMotorEx.isBusy) {
-            //it does stuff here
+        while (internal.isBusy) {
+            //weewoo
         }
 
-        val v1 = Vector2d(0.0, 0.0)
-        val v2 = Vector2d(10.0, 10.0)
-
-        val v3 = v1 + v2
-
-        reset()
+        //internal.setPower(0);
+        //reset();
     }
 
-    fun reverse() = when (dcMotorEx.direction) {
-        DcMotorSimple.Direction.FORWARD -> dcMotorEx.direction = DcMotorSimple.Direction.REVERSE
-        DcMotorSimple.Direction.REVERSE -> dcMotorEx.direction = DcMotorSimple.Direction.FORWARD
-        null -> dcMotorEx.direction = DcMotorSimple.Direction.FORWARD
+    fun rtpAction(target: Int, power: Double) : Action {
+        return object : Action {
+            var initialized = false
+            override fun run(p: TelemetryPacket): Boolean {
+                if (!initialized) {
+                    internal.targetPosition = target
+                    internal.mode = DcMotor.RunMode.RUN_TO_POSITION
+                    internal.power = power
+
+                    initialized = true
+                }
+
+                return internal.isBusy
+            }
+        }
+    }
+
+    fun pidfAction(target: Int, coefficients: PIDCoefficients) : Action {
+        return object : Action {
+            var initialized = false
+            val pidf = PIDFController(coefficients)
+
+            override fun run(p: TelemetryPacket): Boolean {
+                if (!initialized) {
+                    pidf.setTargetPosition(target)
+                    initialized = true
+                }
+
+                internal.power = pidf.update(position.toDouble())
+
+                return kotlin.math.abs(position - target) > 100
+            }
+        }
+    }
+
+    fun reverse() = when (internal.direction) {
+        DcMotorSimple.Direction.FORWARD -> internal.direction = DcMotorSimple.Direction.REVERSE
+        DcMotorSimple.Direction.REVERSE -> internal.direction = DcMotorSimple.Direction.FORWARD
+        null -> internal.direction = DcMotorSimple.Direction.FORWARD
     }
 
     fun reset() {
-        dcMotorEx.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        dcMotorEx.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        internal.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        internal.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
     }
 
     companion object {
