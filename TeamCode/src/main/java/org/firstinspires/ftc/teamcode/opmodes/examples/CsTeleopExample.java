@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.examples;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -11,7 +7,6 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.control.ActionOpMode;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo;
@@ -45,9 +40,9 @@ public class CsTeleopExample extends ActionOpMode {
     @Override
     public void loop() {
         if (gamepad.a().onTrue()) {
-            add(new InstantAction(() -> intake.getDcMotorEx().setPower(1)));
+            add(new InstantAction(() -> intake.getInternal().setPower(1)));
         } else if (gamepad.b().onTrue()) {
-            add(new InstantAction(() -> intake.getDcMotorEx().setPower(0)));
+            add(new InstantAction(() -> intake.getInternal().setPower(0)));
         }
 
         if (gamepad.leftTrigger().state() > 0) {

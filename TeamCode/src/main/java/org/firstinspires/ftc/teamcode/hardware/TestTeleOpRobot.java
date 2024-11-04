@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.acmerobotics.roadrunner.Pose2d;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -10,23 +9,53 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
+import java.util.List;
+
 public class TestTeleOpRobot {
-    private HardwareMap hwMap;
-    private Gamepad gp1;
-    private MecanumDrive drive;
-    private Motor arm;
-    private LinearSlides slides;
+    private final Gamepad gp1;
+    private final MecanumDrive drive;
+    private final Motor arm;
+
+    private final LinearSlides slides;
+    private LynxModule controlHub, expansionHub;
 
     public TestTeleOpRobot(HardwareMap hwMap, Gamepad gp1) {
-        this.hwMap = hwMap;
         this.gp1 = gp1;
         drive = new MecanumDrive(hwMap, new Pose2d(0.0,0.0,0.0));
         slides = new LinearSlides(new Motor("slides",hwMap));
         arm = new Motor("arm",hwMap);
+
+        List<LynxModule> hubs = hwMap.getAll(LynxModule.class);
+        for (LynxModule module : hubs) {
+            if (module.isParent() && controlHub == null) {
+                controlHub = module;
+            } else if (expansionHub == null) {
+                expansionHub = module;
+            }
+        }
+    }
+
+    public MecanumDrive getDrive() {
+        return drive;
+    }
+
+    public Motor getArm() {
+        return arm;
+    }
+
+    public LinearSlides getSlides() {
+        return slides;
+    }
+
+    public LynxModule getControlHub() {
+        return controlHub;
+    }
+
+    public LynxModule getExpansionHub() {
+        return expansionHub;
     }
 
     public TestTeleOpRobot(HardwareMap hwMap, Gamepad gp1, MecanumDrive drive, LinearSlides slides, Motor arm) {
-        this.hwMap = hwMap;
         this.gp1 = gp1;
         this.drive = drive;
         this.slides = slides;
@@ -47,13 +76,13 @@ public class TestTeleOpRobot {
 
     public void arm() {
         if(gp1.x) {
-            arm.getDcMotorEx().setPower(1);
+            arm.getInternal().setPower(1);
         }
         else if(gp1.y) {
-            arm.getDcMotorEx().setPower(-1);
+            arm.getInternal().setPower(-1);
         }
         else {
-            arm.getDcMotorEx().setPower(0);
+            arm.getInternal().setPower(0);
         }
     }
 
@@ -61,5 +90,16 @@ public class TestTeleOpRobot {
         for (Motor m : slides.getMotors()) {
             m.runToPosition(5, 0.5);
         }
+    }
+
+    public void drive() {
+        double y = -gp1.left_stick_y; // Remember, Y stick is reversed!
+        double x = gp1.left_stick_x;
+        double rx = gp1.right_stick_x;
+
+        drive.leftFront.setPower(y + x + rx);
+        drive.leftBack.setPower(y - x + rx);
+        drive.rightFront.setPower(y - x - rx);
+        drive.rightBack.setPower(y + x - rx);
     }
 }

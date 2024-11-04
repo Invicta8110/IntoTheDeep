@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
 
 
-class TwoPointServo @JvmOverloads constructor (
+open class TwoPointServo @JvmOverloads constructor (
     private val servo: ServoImplEx,
     private val pA: Double = 0.0,
     private val pB: Double = 1.0,

@@ -4,6 +4,9 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.Action
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 
+/**
+ * Makes a
+ */
 abstract class ActionOpMode : OpMode() {
     private var running = mutableListOf<Action>()
     val packet : TelemetryPacket by lazy { TelemetryPacket() }

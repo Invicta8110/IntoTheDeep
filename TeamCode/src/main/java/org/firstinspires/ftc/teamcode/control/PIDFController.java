@@ -8,6 +8,12 @@ import androidx.annotation.Nullable;
 public final class PIDFController {
     public static final class PIDCoefficients {
         public double kP, kI, kD;
+
+        public PIDCoefficients(double kP, double kI, double kD) {
+            this.kP = kP;
+            this.kI = kI;
+            this.kD = kD;
+        }
     }
 
     public interface FeedforwardFun {
@@ -30,7 +36,7 @@ public final class PIDFController {
     /**
      * Target position (that is, the controller setpoint).
      */
-    public double targetPosition;
+    public int targetPosition;
 
     /**
      * Target velocity.
@@ -122,6 +128,10 @@ public final class PIDFController {
             minOutput = min;
             maxOutput = max;
         }
+    }
+
+    public void setTargetPosition(int position) {
+        targetPosition = position;
     }
 
     private double getPositionError(double measuredPosition) {
