@@ -69,9 +69,9 @@ class Motor(val internal: DcMotorEx) {
                     initialized = true
                 }
 
-                internal.power = pidf.update(position.toDouble())
+                internal.power = pidf.updateSquid(position.toDouble())
 
-                return kotlin.math.abs(position - target) > 100
+                return position in (target-100)..(target+100)
             }
         }
     }

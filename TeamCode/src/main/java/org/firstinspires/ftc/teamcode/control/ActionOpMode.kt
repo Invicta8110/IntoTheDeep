@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.control
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.Action
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import dev.frozenmilk.dairy.core.util.supplier.logical.EnhancedBooleanSupplier
+import dev.frozenmilk.dairy.core.util.supplier.numeric.EnhancedDoubleSupplier
+import java.util.function.BooleanSupplier
 
 /**
  * Makes a
@@ -29,4 +32,11 @@ abstract class ActionOpMode : OpMode() {
 
         running = new
     }
+
+    fun runActionOnPress(action: Action, button: EnhancedBooleanSupplier) {
+        if (button.onTrue) {
+            add(action)
+        }
+    }
+
 }
