@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.examples;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -34,7 +35,7 @@ public class CsTeleopExample extends ActionOpMode {
                 1, 0.5);
         intake = new Motor(hardwareMap.get(DcMotorEx.class, "intake"));
 
-        claw.runToA.run(getPacket());
+        claw.runToA().run(new TelemetryPacket());
     }
 
     @Override
@@ -78,7 +79,7 @@ public class CsTeleopExample extends ActionOpMode {
                 slides.powerAction(1),
                 new SleepAction(1),
                 slides.powerAction(0),
-                claw.runToA,
+                claw.runToA(),
                 new SleepAction(1),
                 slides.powerAction(-1),
                 new SleepAction(1),

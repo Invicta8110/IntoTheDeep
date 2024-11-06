@@ -13,7 +13,7 @@ public class OtosTest extends OpMode {
 
     @Override
     public void init() {
-        robot = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+        robot = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         otos = hardwareMap.get(SparkFunOTOS.class, "otos");
     }
 

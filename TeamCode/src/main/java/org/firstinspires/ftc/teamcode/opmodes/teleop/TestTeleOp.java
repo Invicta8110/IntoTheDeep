@@ -1,20 +1,19 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit;
-import org.firstinspires.ftc.teamcode.hardware.TestTeleOpRobot;
+import org.firstinspires.ftc.teamcode.hardware.robots.TestTeleOpRobot;
 
 @TeleOp
 public class TestTeleOp extends LinearOpMode {
-    private TestTeleOpRobot robot;
 
     public void runOpMode() {
-        robot = new TestTeleOpRobot(hardwareMap,gamepad1);
+        TestTeleOpRobot robot = new TestTeleOpRobot(hardwareMap, gamepad1);
         waitForStart();
-        while(opModeIsActive()) {
+        while (opModeIsActive()) {
             robot.slides();
             robot.arm();
             robot.drive();

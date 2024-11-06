@@ -6,63 +6,42 @@ import androidx.annotation.Nullable;
  * PID controller with various feedforward components.
  */
 public final class PIDFController {
-    public static final class PIDCoefficients {
-        public double kP, kI, kD;
-
-        public PIDCoefficients(double kP, double kI, double kD) {
-            this.kP = kP;
-            this.kI = kI;
-            this.kD = kD;
-        }
-    }
-
-    public interface FeedforwardFun {
-        double compute(double position, @Nullable Double velocity);
-    }
-
     private final PIDCoefficients pid;
     private final double kV, kA, kStatic;
     private final FeedforwardFun kF;
-
-    private double errorSum;
-    private long lastUpdateTs;
-
-    private boolean inputBounded;
-    private double minInput, maxInput;
-
-    private boolean outputBounded;
-    private double minOutput, maxOutput;
-
     /**
      * Target position (that is, the controller setpoint).
      */
     public int targetPosition;
-
     /**
      * Target velocity.
      */
     public double targetVelocity;
-
     /**
      * Target acceleration.
      */
     public double targetAcceleration;
-
     /**
      * Error computed in the last call to {@link #update(long, double, Double)}
      */
     public double lastError;
+    private double errorSum;
+    private long lastUpdateTs;
+    private boolean inputBounded;
+    private double minInput, maxInput;
+    private boolean outputBounded;
+    private double minOutput, maxOutput;
 
     /**
      * Feedforward parameters {@code kV}, {@code kA}, and {@code kStatic} correspond with a basic
      * kinematic model of DC motors. The general function {@code kF} computes a custom feedforward
      * term for other plants.
      *
-     * @param pid traditional PID coefficients
-     * @param kV feedforward velocity gain
-     * @param kA feedforward acceleration gain
+     * @param pid     traditional PID coefficients
+     * @param kV      feedforward velocity gain
+     * @param kA      feedforward acceleration gain
      * @param kStatic additive feedforward constant
-     * @param kF custom feedforward that depends on position and velocity
+     * @param kF      custom feedforward that depends on position and velocity
      */
     public PIDFController(
             PIDCoefficients pid,
@@ -148,7 +127,7 @@ public final class PIDFController {
     /**
      * Run a single iteration of the controller.
      *
-     * @param timestamp measurement timestamp as given by {@link System#nanoTime()}
+     * @param timestamp        measurement timestamp as given by {@link System#nanoTime()}
      * @param measuredPosition measured position (feedback)
      * @param measuredVelocity measured velocity
      */
@@ -208,6 +187,29 @@ public final class PIDFController {
         return update(System.nanoTime(), measuredPosition, null);
     }
 
+    public double updateSquid(
+            long timestamp,
+            double measuredPosition,
+            @Nullable Double measuredVelocity
+    ) {
+        double result = update(timestamp, measuredPosition, measuredVelocity);
+
+        return Math.sqrt(Math.abs(result)) * Math.signum(result);
+    }
+
+    public double updateSquid(
+            long timestamp,
+            double measuredPosition
+    ) {
+        return updateSquid(timestamp, measuredPosition, null);
+    }
+
+    public double updateSquid(
+            double measuredPosition
+    ) {
+        return updateSquid(System.nanoTime(), measuredPosition, null);
+    }
+
     /**
      * Reset the controller's integral sum.
      */
@@ -215,5 +217,19 @@ public final class PIDFController {
         errorSum = 0;
         lastError = 0;
         lastUpdateTs = 0;
+    }
+
+    public interface FeedforwardFun {
+        double compute(double position, @Nullable Double velocity);
+    }
+
+    public static final class PIDCoefficients {
+        public double kP, kI, kD;
+
+        public PIDCoefficients(double kP, double kI, double kD) {
+            this.kP = kP;
+            this.kI = kI;
+            this.kD = kD;
+        }
     }
 }

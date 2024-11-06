@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.examples;
 
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -56,7 +55,7 @@ public class ActionsExample extends LinearOpMode {
                 .build();
 
         // actions that need to happen on init; for instance, a claw tightening.
-        Actions.runBlocking(claw.runToA);
+        Actions.runBlocking(claw.runToA());
 
 
         while (!isStopRequested() && !opModeIsActive()) {
@@ -76,9 +75,9 @@ public class ActionsExample extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         trajectoryActionChosen,
-                        lift.upAction(),
-                        claw.runToB,
-                        lift.downAction(),
+                        lift.goUp(),
+                        claw.runToB(),
+                        lift.goDown(),
                         trajectoryActionCloseOut
                 )
         );

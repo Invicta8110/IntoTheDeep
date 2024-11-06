@@ -45,7 +45,7 @@ public class SampleLocator extends LinearOpMode {
 
             ColorBlobLocatorProcessor.Util.filterByArea(50, 10000, blobs);
 
-            for (ColorBlobLocatorProcessor.Blob b: blobs) {
+            for (ColorBlobLocatorProcessor.Blob b : blobs) {
                 telemetry.addData("Blob", b.getContourArea());
             }
 
