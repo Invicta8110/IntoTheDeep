@@ -8,8 +8,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 
 
-class LinearSlides(vararg motors: Motor) {
+class LinearSlides(private val DOWN_POS: Int, private val UP_POS: Int, vararg motors: Motor) {
     public val motors: List<Motor>
+    val position: Int
+        get() = motors[0].position
 
     /**
      * NOTE: MOTORS MUST BE SET TO THE CORRECT DIRECTION BEFORE CONSTRUCTING LINEAR SLIDES
@@ -17,6 +19,8 @@ class LinearSlides(vararg motors: Motor) {
     init {
         this.motors = motors.toList()
     }
+
+    constructor(vararg motors: Motor) : this(0, 2000, *motors)
 
     constructor(hardwareMap: HardwareMap) : this(Motor.reversed(Motor("slidesLeft", hardwareMap)), Motor("slidesRight", hardwareMap))
 
@@ -40,15 +44,9 @@ class LinearSlides(vararg motors: Motor) {
         return InstantAction { setPower(power) }
     }
 
-    fun upAction() : Action {
-        return ParallelAction(motors.map {
-            it.rtpAction(2000, 0.75)
-        })
-    }
+    @get:JvmName("goUp")
+    val goUp get() = ParallelAction(motors.map { it.RTPAction(UP_POS, 1.0)})
 
-    fun downAction() : Action {
-        return ParallelAction(motors.map {
-            it.rtpAction(0, 0.75)
-        })
-    }
+    @get:JvmName("goDown")
+    val goDown get() = ParallelAction(motors.map { it.RTPAction(DOWN_POS, 1.0) })
 }

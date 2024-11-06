@@ -1,41 +1,42 @@
 package org.firstinspires.ftc.teamcode.opmodes.testing;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.teamcode.control.ActionOpMode;
 import org.firstinspires.ftc.teamcode.control.PIDFController;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 
 import dev.frozenmilk.dairy.pasteurized.Pasteurized;
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad;
 
+@Config
 @Autonomous
-public class ArmPidTest extends OpMode {
+public class ArmPidTest extends ActionOpMode {
     Motor arm;
-    PIDFController pidf;
-    int target;
-    final int UP_POS = 500, DOWN_POS = 0;
-    SDKGamepad gamepad;
+    PIDFController.PIDCoefficients pidf;
+    public static int UP_POS = 500, DOWN_POS = 0;
+    public static double kP=0.01, kI=0, kD=0;
 
     @Override
     public void init() {
         arm = new Motor(hardwareMap.get(DcMotorEx.class, "arm"));
-        pidf = new PIDFController(new PIDFController.PIDCoefficients(1, 0, 0));
+        pidf = new PIDFController.PIDCoefficients(kP, kI, kD);
 
-        gamepad = (SDKGamepad) Pasteurized.gamepad1();
-        target = DOWN_POS;
-        pidf.setTargetPosition(target);
+        super.init();
     }
 
     @Override
     public void loop() {
-        if (gamepad.dpadUp().onTrue()) {
-            pidf.setTargetPosition(UP_POS);
-        } else if (gamepad.dpadDown().onTrue()) {
-            pidf.setTargetPosition(DOWN_POS);
-        }
+        pidf.kD = kD;
+        pidf.kI = kI;
+        pidf.kP = kP;
 
-        arm.getInternal().setPower(pidf.update(arm.getPosition()));
+        addActionOnPress(arm.pidfAction(UP_POS, pidf), gp1().dpadUp());
+        addActionOnPress(arm.pidfAction(DOWN_POS, pidf), gp1().dpadDown());
+
+        super.loop();
     }
 }

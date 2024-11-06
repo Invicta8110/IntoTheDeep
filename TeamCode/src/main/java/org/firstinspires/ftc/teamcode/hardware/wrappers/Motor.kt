@@ -14,6 +14,37 @@ class Motor(val internal: DcMotorEx) {
     //this can no longer be changed to java
     //testing
 
+    inner class RTPAction(private val target: Int, val power: Double) : Action {
+        private var initialized = false
+        override fun run(p: TelemetryPacket): Boolean {
+            if (!initialized) {
+                internal.targetPosition = target
+                internal.mode = DcMotor.RunMode.RUN_TO_POSITION
+                internal.power = power
+
+                initialized = true
+            }
+
+            return internal.isBusy
+        }
+    }
+
+    inner class PIDFAction(private val target: Int, private val coefficients: PIDCoefficients) : Action {
+        private var initialized = false
+        private val pidf = PIDFController(coefficients)
+
+        override fun run(p: TelemetryPacket): Boolean {
+            if (!initialized) {
+                pidf.setTargetPosition(target)
+                initialized = true
+            }
+
+            internal.power = pidf.updateSquid(position.toDouble())
+
+            return position in (target-100)..(target+100)
+        }
+    }
+
     init {
         internal.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         reset()
@@ -42,38 +73,11 @@ class Motor(val internal: DcMotorEx) {
     }
 
     fun rtpAction(target: Int, power: Double) : Action {
-        return object : Action {
-            var initialized = false
-            override fun run(p: TelemetryPacket): Boolean {
-                if (!initialized) {
-                    internal.targetPosition = target
-                    internal.mode = DcMotor.RunMode.RUN_TO_POSITION
-                    internal.power = power
-
-                    initialized = true
-                }
-
-                return internal.isBusy
-            }
-        }
+        return RTPAction(target, power)
     }
 
     fun pidfAction(target: Int, coefficients: PIDCoefficients) : Action {
-        return object : Action {
-            var initialized = false
-            val pidf = PIDFController(coefficients)
-
-            override fun run(p: TelemetryPacket): Boolean {
-                if (!initialized) {
-                    pidf.setTargetPosition(target)
-                    initialized = true
-                }
-
-                internal.power = pidf.updateSquid(position.toDouble())
-
-                return position in (target-100)..(target+100)
-            }
-        }
+        return PIDFAction(target, coefficients)
     }
 
     fun reverse() = when (internal.direction) {
