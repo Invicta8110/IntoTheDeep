@@ -2,23 +2,19 @@ package org.firstinspires.ftc.teamcode.opmodes.testing;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.control.ActionOpMode;
 import org.firstinspires.ftc.teamcode.control.PIDFController;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 
-import dev.frozenmilk.dairy.pasteurized.Pasteurized;
-import dev.frozenmilk.dairy.pasteurized.SDKGamepad;
-
 @Config
 @Autonomous
 public class ArmPidTest extends ActionOpMode {
+    public static int UP_POS = 500, DOWN_POS = 0;
+    public static double kP = 0.01, kI = 0, kD = 0;
     Motor arm;
     PIDFController.PIDCoefficients pidf;
-    public static int UP_POS = 500, DOWN_POS = 0;
-    public static double kP=0.01, kI=0, kD=0;
 
     @Override
     public void init() {

@@ -21,9 +21,9 @@ public class TestTeleOpRobot {
 
     public TestTeleOpRobot(HardwareMap hwMap, Gamepad gp1) {
         this.gp1 = gp1;
-        drive = new MecanumDrive(hwMap, new Pose2d(0.0,0.0,0.0));
-        slides = new LinearSlides(new Motor("slides",hwMap));
-        arm = new Motor("arm",hwMap);
+        drive = new MecanumDrive(hwMap, new Pose2d(0.0, 0.0, 0.0));
+        slides = new LinearSlides(new Motor("slides", hwMap));
+        arm = new Motor("arm", hwMap);
 
         List<LynxModule> hubs = hwMap.getAll(LynxModule.class);
         for (LynxModule module : hubs) {
@@ -33,6 +33,13 @@ public class TestTeleOpRobot {
                 expansionHub = module;
             }
         }
+    }
+
+    public TestTeleOpRobot(HardwareMap hwMap, Gamepad gp1, MecanumDrive drive, LinearSlides slides, Motor arm) {
+        this.gp1 = gp1;
+        this.drive = drive;
+        this.slides = slides;
+        this.arm = arm;
     }
 
     public MecanumDrive getDrive() {
@@ -55,33 +62,22 @@ public class TestTeleOpRobot {
         return expansionHub;
     }
 
-    public TestTeleOpRobot(HardwareMap hwMap, Gamepad gp1, MecanumDrive drive, LinearSlides slides, Motor arm) {
-        this.gp1 = gp1;
-        this.drive = drive;
-        this.slides = slides;
-        this.arm = arm;
-    }
-
     public void slides() {
-        if(gp1.a) {
+        if (gp1.a) {
             slides.setPower(1);
-        }
-        else if(gp1.b) {
+        } else if (gp1.b) {
             slides.setPower(-1);
-        }
-        else {
+        } else {
             slides.setPower(0);
         }
     }
 
     public void arm() {
-        if(gp1.x) {
+        if (gp1.x) {
             arm.getInternal().setPower(1);
-        }
-        else if(gp1.y) {
+        } else if (gp1.y) {
             arm.getInternal().setPower(-1);
-        }
-        else {
+        } else {
             arm.getInternal().setPower(0);
         }
     }

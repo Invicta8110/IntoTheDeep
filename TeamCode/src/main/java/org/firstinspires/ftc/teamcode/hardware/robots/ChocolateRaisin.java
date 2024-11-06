@@ -19,26 +19,6 @@ public class ChocolateRaisin {
     private final TwoPointServo claw;
     private LynxModule controlHub, expansionHub;
 
-    @Config
-    public static class Arm {
-        private final Motor motor;
-        public static int DOWN_POS, UP_POS;
-
-        public Arm(Motor motor) {
-            this.motor = motor;
-            DOWN_POS = 0;
-            UP_POS = 1000;
-        }
-
-        public Motor.RTPAction goUp() {
-            return motor.new RTPAction(UP_POS, .5);
-        }
-
-        public Motor.RTPAction goDown() {
-            return motor.new RTPAction(DOWN_POS, .5);
-        }
-    }
-
     public ChocolateRaisin(HardwareMap hwMap, Pose2d pose) {
         chassis = new MecanumChassis(hwMap, pose);
         slides = new LinearSlides(new Motor("slides", hwMap));
@@ -83,5 +63,25 @@ public class ChocolateRaisin {
 
     public LynxModule expansionHub() {
         return expansionHub;
+    }
+
+    @Config
+    public static class Arm {
+        public static int DOWN_POS, UP_POS;
+        private final Motor motor;
+
+        public Arm(Motor motor) {
+            this.motor = motor;
+            DOWN_POS = 0;
+            UP_POS = 1000;
+        }
+
+        public Motor.RTPAction goUp() {
+            return motor.new RTPAction(UP_POS, .5);
+        }
+
+        public Motor.RTPAction goDown() {
+            return motor.new RTPAction(DOWN_POS, .5);
+        }
     }
 }

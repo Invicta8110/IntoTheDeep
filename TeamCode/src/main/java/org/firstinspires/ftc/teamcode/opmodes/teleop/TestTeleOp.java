@@ -13,7 +13,7 @@ public class TestTeleOp extends LinearOpMode {
     public void runOpMode() {
         TestTeleOpRobot robot = new TestTeleOpRobot(hardwareMap, gamepad1);
         waitForStart();
-        while(opModeIsActive()) {
+        while (opModeIsActive()) {
             robot.slides();
             robot.arm();
             robot.drive();

@@ -4,9 +4,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.Action
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import dev.frozenmilk.dairy.core.util.supplier.logical.EnhancedBooleanSupplier
-import dev.frozenmilk.dairy.core.util.supplier.numeric.EnhancedDoubleSupplier
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
-import java.util.function.BooleanSupplier
 
 /**
  * An OpMode that allows for the easy creation and execution of Actions.
@@ -19,13 +17,13 @@ abstract class ActionOpMode : OpMode() {
      * gamepad1 as an SDK Gamepad from Pasteurized
      */
     @get:JvmName("gp1")
-    val gp1 : SDKGamepad by lazy { SDKGamepad(gamepad1) }
+    val gp1: SDKGamepad by lazy { SDKGamepad(gamepad1) }
 
     /**
      * gamepad2 as an SDK Gamepad from Pasteurized
      */
     @get:JvmName("gp2")
-    val gp2 : SDKGamepad by lazy { SDKGamepad(gamepad2) }
+    val gp2: SDKGamepad by lazy { SDKGamepad(gamepad2) }
 
     /**
      * Forces both SDKGamepads to initialize (since they are evaluated lazily).

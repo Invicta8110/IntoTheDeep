@@ -29,7 +29,8 @@ class Motor(val internal: DcMotorEx) {
         }
     }
 
-    inner class PIDFAction(private val target: Int, private val coefficients: PIDCoefficients) : Action {
+    inner class PIDFAction(private val target: Int, private val coefficients: PIDCoefficients) :
+        Action {
         private var initialized = false
         private val pidf = PIDFController(coefficients)
 
@@ -41,7 +42,7 @@ class Motor(val internal: DcMotorEx) {
 
             internal.power = pidf.updateSquid(position.toDouble())
 
-            return position in (target-100)..(target+100)
+            return position in (target - 100)..(target + 100)
         }
     }
 
@@ -52,7 +53,7 @@ class Motor(val internal: DcMotorEx) {
 
     constructor(name: String, hwMap: HardwareMap) : this(hwMap.get(DcMotorEx::class.java, name))
 
-    operator fun invoke() : DcMotorEx {
+    operator fun invoke(): DcMotorEx {
         return internal
     }
 
@@ -72,11 +73,11 @@ class Motor(val internal: DcMotorEx) {
         //reset();
     }
 
-    fun rtpAction(target: Int, power: Double) : Action {
+    fun rtpAction(target: Int, power: Double): Action {
         return RTPAction(target, power)
     }
 
-    fun pidfAction(target: Int, coefficients: PIDCoefficients) : Action {
+    fun pidfAction(target: Int, coefficients: PIDCoefficients): Action {
         return PIDFAction(target, coefficients)
     }
 
@@ -92,7 +93,7 @@ class Motor(val internal: DcMotorEx) {
     }
 
     companion object {
-        fun reversed(motor: Motor) : Motor {
+        fun reversed(motor: Motor): Motor {
             motor.reverse()
             return motor
         }

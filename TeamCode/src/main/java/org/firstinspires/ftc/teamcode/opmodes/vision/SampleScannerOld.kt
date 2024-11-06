@@ -25,6 +25,6 @@ class SampleScannerOld : OpMode() {
         for (s in stones) { //for (AnalyzedStone s: stones)
             telemetry.addData("Stone", "Color: ${s.color}, Rvec: ${s.rvec}, Tvec: ${s.tvec}")
         }
-        telemetry.update();
+        telemetry.update()
     }
 }

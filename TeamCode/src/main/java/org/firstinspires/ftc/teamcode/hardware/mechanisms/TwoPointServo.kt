@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
 
 
-open class TwoPointServo @JvmOverloads constructor (
+open class TwoPointServo @JvmOverloads constructor(
     private val servo: ServoImplEx,
     private val pA: Double = 0.0,
     private val pB: Double = 1.0,
@@ -22,17 +22,18 @@ open class TwoPointServo @JvmOverloads constructor (
     val runToB = InstantAction(::goToB)
 
     @JvmOverloads
-    constructor(name: String,
-                hwMap: HardwareMap,
-                pA: Double = 0.0,
-                pB: Double = 1.0,
+    constructor(
+        name: String,
+        hwMap: HardwareMap,
+        pA: Double = 0.0,
+        pB: Double = 1.0,
     ) : this(
         hwMap.get(ServoImplEx::class.java, name),
         pA, pB
     )
 
     init {
-        servo.pwmRange = PwmControl.PwmRange(500.0, 2500.0);
+        servo.pwmRange = PwmControl.PwmRange(500.0, 2500.0)
         servo.direction = Servo.Direction.FORWARD
     }
 
@@ -44,7 +45,7 @@ open class TwoPointServo @JvmOverloads constructor (
         servo.position = pB
     }
 
-    fun runAction() : InstantAction {
+    fun runAction(): InstantAction {
         return if (servo.position == pA) {
             runToB
         } else {
