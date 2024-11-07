@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
+import dev.frozenmilk.dairy.core.FeatureRegistrar
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 import org.firstinspires.ftc.teamcode.control.PIDFController
 import org.firstinspires.ftc.teamcode.control.PIDFController.PIDCoefficients
@@ -25,6 +26,9 @@ class Motor(val internal: DcMotorEx) {
                 initialized = true
             }
 
+            FeatureRegistrar.activeOpMode.telemetry.addData("Motor Info", "Name: $internal; Target: $target; Error ${target-position}")
+            FeatureRegistrar.activeOpMode.telemetry.update()
+
             return internal.isBusy
         }
     }
@@ -39,6 +43,9 @@ class Motor(val internal: DcMotorEx) {
                 pidf.setTargetPosition(target)
                 initialized = true
             }
+
+            FeatureRegistrar.activeOpMode.telemetry.addData("Motor Info", "Name: $internal; Target: $target; Error ${target-position}")
+            FeatureRegistrar.activeOpMode.telemetry.update()
 
             internal.power = pidf.updateSquid(position.toDouble())
 
