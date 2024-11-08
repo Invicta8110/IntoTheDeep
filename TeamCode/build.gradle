@@ -36,7 +36,6 @@ buildscript {
         }
     }
     dependencies {
-
         classpath "dev.frozenmilk.sinister.sloth:Load:0.0.1"
     }
 }
@@ -70,4 +69,5 @@ dependencies {
     implementation "dev.frozenmilk.dairy:Core:2.0.0"
     implementation "dev.frozenmilk.dairy:Pasteurized:1.0.0"
     implementation "dev.frozenmilk:Sinister:2.0.0"
+    implementation "dev.frozenmilk.sinister.sloth:DashFix:0.0.0"
 }
