@@ -22,12 +22,10 @@ fun main() {
     //any actions go here
     val action = myBot.drive.actionBuilder(redLeft) //this is your starting position
         .splineTo(Vector2d(0.0, 0.0), Math.PI/2)
-        .splineToSplineHeading(blueLeft, -Math.PI/2)
+        .splineToSplineHeading(Pose2d(10.0,10.0,0.0), -Math.PI/2)
         .build()
 
-    myBot.runAction(
-        action
-    )
+    myBot.runAction(action)
 
     meepMeep.setBackground(Background.FIELD_CENTERSTAGE_JUICE_DARK)
         .setDarkMode(true)
