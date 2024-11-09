@@ -26,7 +26,7 @@ class PasteurizedTest : OpMode() {
         val packet = TelemetryPacket()
 
         if (gamepad.a.onTrue) {
-            running.add(slides.upAction())
+            running.add(slides.goUp)
         }
 
         for (a in running) {
