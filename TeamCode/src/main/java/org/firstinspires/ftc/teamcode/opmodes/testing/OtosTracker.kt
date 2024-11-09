@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes
+package org.firstinspires.ftc.teamcode.opmodes.testing
 
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.PoseVelocity2d
@@ -23,10 +23,12 @@ class OtosTracker : OpMode() {
     }
 
     override fun loop() {
-        robot.setDrivePowers(PoseVelocity2d(
-            Vector2d((-gamepad1.left_stick_y).toDouble(), (-gamepad1.left_stick_x).toDouble()),
-            gamepad1.right_stick_x.toDouble()
-        ))
+        robot.setDrivePowers(
+            PoseVelocity2d(
+                Vector2d((-gamepad1.left_stick_y).toDouble(), (-gamepad1.left_stick_x).toDouble()),
+                gamepad1.right_stick_x.toDouble()
+            )
+        )
 
         telemetry.addData("Position:", robot.otos.position)
         telemetry.update()

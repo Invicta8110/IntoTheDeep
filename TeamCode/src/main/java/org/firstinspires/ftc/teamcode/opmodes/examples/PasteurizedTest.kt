@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes
+package org.firstinspires.ftc.teamcode.opmodes.examples
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.Action
@@ -26,7 +26,7 @@ class PasteurizedTest : OpMode() {
         val packet = TelemetryPacket()
 
         if (gamepad.a.onTrue) {
-            running.add(slides.upAction())
+            running.add(slides.goUp)
         }
 
         for (a in running) {

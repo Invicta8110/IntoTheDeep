@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes
+package org.firstinspires.ftc.teamcode.opmodes.vision
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
@@ -25,6 +25,6 @@ class SampleScannerOld : OpMode() {
         for (s in stones) { //for (AnalyzedStone s: stones)
             telemetry.addData("Stone", "Color: ${s.color}, Rvec: ${s.rvec}, Tvec: ${s.tvec}")
         }
-        telemetry.update();
+        telemetry.update()
     }
 }

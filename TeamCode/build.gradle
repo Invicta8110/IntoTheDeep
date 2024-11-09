@@ -15,15 +15,28 @@
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'dev.frozenmilk.sinister.sloth.Load'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '1.8'
     }
 
     packagingOptions {
         jniLibs.useLegacyPackaging true
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://repo.dairy.foundation/snapshots"
+        }
+    }
+    dependencies {
+        classpath "dev.frozenmilk.sinister.sloth:Load:0.0.1"
     }
 }
 
@@ -37,20 +50,23 @@ repositories {
     maven {
         url = 'https://jitpack.io/'
     }
+    maven {
+        url = "https://repo.dairy.foundation/snapshots"
+    }
 }
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation 'androidx.core:core-ktx:1.0.0'
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
     //implementation "com.acmerobotics.roadrunner:ftc:0.1.12"
     implementation "com.acmerobotics.roadrunner:core:1.0.0"
     implementation "com.acmerobotics.roadrunner:actions:1.0.0"
     implementation "com.acmerobotics.dashboard:dashboard:0.4.15"
-
     implementation "com.github.jdhs-ftc:road-runner-ftc-otos:a02ba3fe51"
 
-    implementation "dev.frozenmilk.dairy:Core:1.0.0"
+    implementation "dev.frozenmilk.dairy:Core:2.0.0"
     implementation "dev.frozenmilk.dairy:Pasteurized:1.0.0"
+    implementation "dev.frozenmilk.sinister:Sloth:0.0.0"
+    implementation "dev.frozenmilk.sinister.sloth:DashFix:0.0.0"
 }
