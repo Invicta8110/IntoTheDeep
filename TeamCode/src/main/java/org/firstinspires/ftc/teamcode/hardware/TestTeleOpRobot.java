@@ -28,8 +28,8 @@ public class TestTeleOpRobot {
         bLeft = new Motor("bLeft",hwMap);
         bRight = new Motor("bRight",hwMap);
 
-//        bRight.reverse();
-//        fLeft.reverse();
+        bRight.reverse();
+        fRight.reverse();
     }
 
     public void slides() {
@@ -57,43 +57,14 @@ public class TestTeleOpRobot {
     }
 
     public void drive() {
-        if(gp1.left_stick_y<0) {
-            fLeft.getDcMotorEx().setPower(1);
-            fRight.getDcMotorEx().setPower(-1);
-            bLeft.getDcMotorEx().setPower(1);
-            bRight.getDcMotorEx().setPower(-1);
-        }
-        else if(gp1.left_stick_y>0) {
-            fLeft.getDcMotorEx().setPower(-1);
-            fRight.getDcMotorEx().setPower(1);
-            bLeft.getDcMotorEx().setPower(-1);
-            bRight.getDcMotorEx().setPower(1);
-        }
-        else {
-            fLeft.getDcMotorEx().setPower(0);
-            fRight.getDcMotorEx().setPower(0);
-            bLeft.getDcMotorEx().setPower(0);
-            bRight.getDcMotorEx().setPower(0);
-        }
+        double y = -gp1.left_stick_y;
+        double x = gp1.left_stick_x;
+        double rx = gp1.right_stick_x;
 
-        if(gp1.right_stick_x>0) {
-            fLeft.getDcMotorEx().setPower(.5);
-            fRight.getDcMotorEx().setPower(.5);
-            bLeft.getDcMotorEx().setPower(.5);
-            bRight.getDcMotorEx().setPower(.5);
-        }
-        else if(gp1.right_stick_x<0) {
-            fLeft.getDcMotorEx().setPower(-.5);
-            fRight.getDcMotorEx().setPower(-.5);
-            bLeft.getDcMotorEx().setPower(-.5);
-            bRight.getDcMotorEx().setPower(-.5);
-        }
-        else {
-            fLeft.getDcMotorEx().setPower(0);
-            fRight.getDcMotorEx().setPower(0);
-            bLeft.getDcMotorEx().setPower(0);
-            bRight.getDcMotorEx().setPower(0);
-        }
+        fLeft.getDcMotorEx().setPower(y + x + rx);
+        bLeft.getDcMotorEx().setPower(y - x + rx);
+        fRight.getDcMotorEx().setPower(y - x - rx);
+        bRight.getDcMotorEx().setPower(y + x - rx);
     }
 
     public void test() {
