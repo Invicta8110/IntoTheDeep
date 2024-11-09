@@ -15,8 +15,9 @@ class Motor(val internal: DcMotorEx) {
     //this can no longer be changed to java
     //testing
 
-    inner class RTPAction(private val target: Int, val power: Double) : Action {
+    inner class RTPAction(var target: Int, private val power: Double) : Action {
         private var initialized = false
+
         override fun run(p: TelemetryPacket): Boolean {
             if (!initialized) {
                 internal.targetPosition = target
@@ -33,10 +34,11 @@ class Motor(val internal: DcMotorEx) {
         }
     }
 
-    inner class PIDFAction(private val target: Int, private val coefficients: PIDCoefficients) :
+    inner class PIDFAction(var target: Int, private val coefficients: PIDCoefficients) :
         Action {
         private var initialized = false
-        private val pidf = PIDFController(coefficients)
+        val pidf = PIDFController(coefficients)
+        var count = 0
 
         override fun run(p: TelemetryPacket): Boolean {
             if (!initialized) {
@@ -47,9 +49,10 @@ class Motor(val internal: DcMotorEx) {
             FeatureRegistrar.activeOpMode.telemetry.addData("Motor Info", "Name: $internal; Target: $target; Error ${target-position}")
             FeatureRegistrar.activeOpMode.telemetry.update()
 
-            internal.power = pidf.updateSquid(position.toDouble())
+            internal.power = pidf.update(position.toDouble())
+            count++
 
-            return position in (target - 100)..(target + 100)
+            return position !in (target - 50)..(target + 50)
         }
     }
 
@@ -58,7 +61,7 @@ class Motor(val internal: DcMotorEx) {
         reset()
     }
 
-    constructor(name: String, hwMap: HardwareMap) : this(hwMap.get(DcMotorEx::class.java, name))
+    constructor(name: String, hwMap: HardwareMap) : this(hwMap[DcMotorEx::class.java, name])
 
     operator fun invoke(): DcMotorEx {
         return internal

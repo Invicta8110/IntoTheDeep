@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.hardware.robots;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis;
@@ -65,23 +65,4 @@ public class ChocolateRaisin {
         return expansionHub;
     }
 
-    @Config
-    public static class Arm {
-        public static int DOWN_POS, UP_POS;
-        private final Motor motor;
-
-        public Arm(Motor motor) {
-            this.motor = motor;
-            DOWN_POS = 0;
-            UP_POS = 1000;
-        }
-
-        public Motor.RTPAction goUp() {
-            return motor.new RTPAction(UP_POS, .5);
-        }
-
-        public Motor.RTPAction goDown() {
-            return motor.new RTPAction(DOWN_POS, .5);
-        }
-    }
 }

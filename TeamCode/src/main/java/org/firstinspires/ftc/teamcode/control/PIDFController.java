@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.control;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
@@ -113,7 +114,7 @@ public final class PIDFController {
         targetPosition = position;
     }
 
-    private double getPositionError(double measuredPosition) {
+    public double getPositionError(double measuredPosition) {
         double error = targetPosition - measuredPosition;
         if (inputBounded) {
             final double inputRange = maxInput - minInput;
@@ -207,7 +208,7 @@ public final class PIDFController {
     public double updateSquid(
             double measuredPosition
     ) {
-        return updateSquid(System.nanoTime(), measuredPosition, null);
+        return updateSquid(System.nanoTime(), measuredPosition);
     }
 
     /**
@@ -230,6 +231,16 @@ public final class PIDFController {
             this.kP = kP;
             this.kI = kI;
             this.kD = kD;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "PIDCoefficients{" +
+                    "kP=" + kP +
+                    ", kI=" + kI +
+                    ", kD=" + kD +
+                    '}';
         }
     }
 }

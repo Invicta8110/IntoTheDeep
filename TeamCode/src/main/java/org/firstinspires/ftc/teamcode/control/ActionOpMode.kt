@@ -11,7 +11,8 @@ import dev.frozenmilk.dairy.pasteurized.SDKGamepad
  * Actions are run in ActionOpMode's loop method, which must be called at the end of the loop method of the extending class.
  */
 abstract class ActionOpMode : OpMode() {
-    private var running = mutableListOf<Action>()
+    var running = mutableListOf<Action>()
+        private set
 
     /**
      * gamepad1 as an SDK Gamepad from Pasteurized
@@ -47,6 +48,10 @@ abstract class ActionOpMode : OpMode() {
      * Should be called at the end of the loop method of the extending class.
      */
     override fun loop() {
+        if (gp1.rightStickButton.onTrue) {
+            running.clear()
+        }
+
         val new = mutableListOf<Action>()
 
         val packet = TelemetryPacket()
