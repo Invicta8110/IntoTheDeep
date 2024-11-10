@@ -34,25 +34,25 @@ public class TestTeleOpRobot {
 
     public void slides() {
         if(gp1.a) {
-            slides.getDcMotorEx().setPower(1);
+            slides.getInternal().setPower(1);
         }
         else if(gp1.b) {
-            slides.getDcMotorEx().setPower(-1);
+            slides.getInternal().setPower(-1);
         }
         else {
-            slides.getDcMotorEx().setPower(0);
+            slides.getInternal().setPower(0);
         }
     }
 
     public void arm() {
         if(gp1.x) {
-            arm.getDcMotorEx().setPower(1);
+            arm.getInternal().setPower(1);
         }
         else if(gp1.y) {
-            arm.getDcMotorEx().setPower(-1);
+            arm.getInternal().setPower(-1);
         }
         else {
-            arm.getDcMotorEx().setPower(0);
+            arm.getInternal().setPower(0);
         }
     }
 
@@ -61,10 +61,10 @@ public class TestTeleOpRobot {
         double x = gp1.left_stick_x;
         double rx = gp1.right_stick_x;
 
-        fLeft.getDcMotorEx().setPower(y + x + rx);
-        bLeft.getDcMotorEx().setPower(y - x + rx);
-        fRight.getDcMotorEx().setPower(y - x - rx);
-        bRight.getDcMotorEx().setPower(y + x - rx);
+        fLeft.getInternal().setPower(y + x + rx);
+        bLeft.getInternal().setPower(y - x + rx);
+        fRight.getInternal().setPower(y - x - rx);
+        bRight.getInternal().setPower(y + x - rx);
     }
 
     public void test() {
