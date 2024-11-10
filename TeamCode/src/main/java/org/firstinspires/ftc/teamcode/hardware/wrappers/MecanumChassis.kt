@@ -11,6 +11,11 @@ class MecanumChassis
 @JvmOverloads constructor(hwMap: HardwareMap, pose: Pose2d = Pose2d(0.0, 0.0, 0.0)) :
     MecanumDrive(hwMap, pose) {
 
+    fun setDrivePowers(x: Double, y: Double, heading: Double) {
+        setDrivePowers(PoseVelocity2d(Vector2d(x, y), heading))
+
+    }
+
     fun moveToPointAction(x: Double, y: Double): Action {
         return actionBuilder(pose)
             .splineTo(Vector2d(x, y), pose.heading)
@@ -40,5 +45,9 @@ class MecanumChassis
 
     fun calculateFieldCentricPower(input: Vector2d): Vector2d {
         return pose.heading.inverse() * input
+    }
+
+    fun pidToPoint() {
+
     }
 }

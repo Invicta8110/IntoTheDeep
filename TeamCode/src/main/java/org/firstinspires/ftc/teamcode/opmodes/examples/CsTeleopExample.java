@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.opmodes.examples;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
@@ -40,6 +42,11 @@ public class CsTeleopExample extends ActionOpMode {
 
     @Override
     public void loop() {
+        drive.setDrivePowers(new PoseVelocity2d(
+                new Vector2d(-gamepad1.left_stick_y, gamepad1.left_stick_x),
+                gamepad1.right_stick_x
+        ));
+
         if (gamepad.a().onTrue()) {
             add(new InstantAction(() -> intake.getInternal().setPower(1)));
         } else if (gamepad.b().onTrue()) {

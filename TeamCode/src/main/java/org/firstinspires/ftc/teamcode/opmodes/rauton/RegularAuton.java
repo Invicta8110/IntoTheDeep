@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.rAuton;
+package org.firstinspires.ftc.teamcode.opmodes.rauton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -19,7 +19,7 @@ public class RegularAuton extends LinearOpMode {
         bRight = new Motor("bRight",hardwareMap);
 
         bRight.reverse();
-        bLeft.reverse();
+        fRight.reverse();
 
         waitForStart();
         fLeft.runToPosition((int)Util.CPR_435*5,1);
