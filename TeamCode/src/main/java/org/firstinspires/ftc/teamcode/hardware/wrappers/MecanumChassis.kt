@@ -49,7 +49,7 @@ class MecanumChassis
         }
     }
 
-
+    val localizer: BadLocalizer = BadLocalizer()
 
     fun setDrivePowers(x: Double, y: Double, heading: Double) {
         setDrivePowers(PoseVelocity2d(Vector2d(x, y), heading))
