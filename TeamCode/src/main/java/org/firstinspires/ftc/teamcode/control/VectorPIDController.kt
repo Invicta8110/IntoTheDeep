@@ -6,9 +6,9 @@ import kotlin.math.min
 
 class VectorPIDController @JvmOverloads constructor(
     val pid: PIDFController.PIDCoefficients,
-    var targetPos: Vector2d,
-    var targetVel: Vector2d = ZERO_VECTOR
-) {
+    override var targetPosition: Vector2d,
+    override var targetVelocity: Vector2d = ZERO_VECTOR
+) : PIDController<Vector2d> {
 
     var outputBounded = false
     var inputBounded = false
@@ -54,15 +54,14 @@ class VectorPIDController @JvmOverloads constructor(
     }
 
     fun getPositionError(measuredPosition: Vector2d): Vector2d {
-        val error = targetPos - measuredPosition
+        val error = targetPosition - measuredPosition
         return error
     }
 
-    @JvmOverloads
-    fun update(
-        timestamp: Long = System.nanoTime(),
+    override fun update(
+        timestamp: Long,
         measuredPosition: Vector2d,
-        measuredVelocity: Vector2d? = null
+        measuredVelocity: Vector2d?
     ): Vector2d {
 
         val errorP = getPositionError(measuredPosition)
@@ -80,7 +79,7 @@ class VectorPIDController @JvmOverloads constructor(
         lastError = errorP
         lastTimestamp = timestamp
 
-        val errorV = measuredVelocity?.let { targetVel - it } ?: errorD
+        val errorV = measuredVelocity?.let { targetVelocity - it } ?: errorD
 
         val output = (errorP * pid.kP) + (errorSum * pid.kI) + (errorD * pid.kD)
 

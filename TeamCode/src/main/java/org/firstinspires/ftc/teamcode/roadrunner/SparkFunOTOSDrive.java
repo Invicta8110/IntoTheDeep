@@ -24,11 +24,11 @@ import org.firstinspires.ftc.teamcode.roadrunner.messages.PoseMessage;
  */
 public class SparkFunOTOSDrive extends MecanumDrive {
     public static Params PARAMS = new Params();
-    public SparkFunOTOSCorrected otos;
+    public SparkFunOTOS otos;
     private Pose2d lastOtosPose = pose;
     public SparkFunOTOSDrive(HardwareMap hardwareMap, Pose2d pose) {
         super(hardwareMap, pose);
-        otos = hardwareMap.get(SparkFunOTOSCorrected.class, "sensor_otos");
+        otos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos"); //TODO: change to SparkFunOTOSCorrected in config
         // RR localizer note:
         // don't change the units, it will stop Dashboard field view from working properly
         // and might cause various other issues

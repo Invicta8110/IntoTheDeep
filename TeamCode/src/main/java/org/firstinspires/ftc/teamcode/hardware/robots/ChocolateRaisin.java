@@ -5,9 +5,9 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.control.Util;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo;
@@ -16,8 +16,6 @@ import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 
 import java.util.List;
 
-import dev.frozenmilk.dairy.core.FeatureRegistrar;
-
 public class ChocolateRaisin {
     private final MecanumChassis chassis;
     private final LinearSlides slides;
@@ -25,16 +23,13 @@ public class ChocolateRaisin {
     private final TwoPointServo claw;
     private LynxModule controlHub, expansionHub;
     private SparkFunOTOS otos;
-    private Telemetry telemetry;
 
     public ChocolateRaisin(HardwareMap hwMap, Pose2d pose) {
         chassis = new MecanumChassis(hwMap, pose);
         slides = new LinearSlides(new Motor("slides", hwMap));
         arm = new Arm(new Motor("arm", hwMap));
         claw = new TwoPointServo("claw", hwMap);
-        otos = hwMap.get(SparkFunOTOS.class, "sensor_otos");
-
-        telemetry = FeatureRegistrar.getActiveOpMode().telemetry;
+        otos = chassis.otos;
 
         List<LynxModule> hubs = hwMap.getAll(LynxModule.class);
         for (LynxModule module : hubs) {
@@ -79,8 +74,8 @@ public class ChocolateRaisin {
     public SparkFunOTOS getOTOS() { return otos; }
 
     private void configureOtos() {
-        telemetry.addLine("Configuring OTOS...");
-        telemetry.update();
+        Util.mtel.addLine("Configuring OTOS...");
+        Util.mtel.update();
 
         // Set the desired units for linear and angular measurements. Can be either
         // meters or inches for linear, and radians or degrees for angular. If not
@@ -153,10 +148,7 @@ public class ChocolateRaisin {
         SparkFunOTOS.Version fwVersion = new SparkFunOTOS.Version();
         otos.getVersionInfo(hwVersion, fwVersion);
 
-        telemetry.addLine("OTOS configured! Press start to get position data!");
-        telemetry.addLine();
-        telemetry.addLine(String.format("OTOS Hardware Version: v%d.%d", hwVersion.major, hwVersion.minor));
-        telemetry.addLine(String.format("OTOS Firmware Version: v%d.%d", fwVersion.major, fwVersion.minor));
-        telemetry.update();
+        Util.mtel.addLine("OTOS configured! Press start to get position data!");
+        Util.mtel.update();
     }
 }

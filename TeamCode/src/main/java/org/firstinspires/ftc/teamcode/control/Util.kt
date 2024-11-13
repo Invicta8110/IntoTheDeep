@@ -2,9 +2,12 @@
 
 package org.firstinspires.ftc.teamcode.control
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS.Pose2D
+import dev.frozenmilk.dairy.core.FeatureRegistrar
 import kotlin.math.PI
 import kotlin.math.max
 import kotlin.math.min
@@ -19,8 +22,15 @@ import kotlin.math.round
 
 @JvmField val ZERO_VECTOR = Vector2d(0.0, 0.0)
 
-fun convertPoseToRR(pose: Pose2D): Pose2d {
-    return Pose2d(pose.x, pose.y, pose.h)
+@JvmField val mtel: MultipleTelemetry = MultipleTelemetry(FeatureRegistrar.activeOpMode.telemetry, FtcDashboard.getInstance().telemetry)
+
+
+fun Pose2D.convertPoseToRR(): Pose2d {
+    return Pose2d(this.x, this.y, this.h)
+}
+
+fun Pose2d.convertPoseToOTOS(): Pose2D {
+    return Pose2D(this.position.x, this.position.y, this.heading.toDouble())
 }
 
 fun Vector2d.compareTo(other: Vector2d): Int {
