@@ -27,7 +27,7 @@ fun main() {
 
     myBot.runAction(action)
 
-    meepMeep.setBackground(Background.FIELD_CENTERSTAGE_JUICE_DARK)
+    meepMeep.setBackground(Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
         .setDarkMode(true)
         .setBackgroundAlpha(0.95f)
         .addEntity(myBot)

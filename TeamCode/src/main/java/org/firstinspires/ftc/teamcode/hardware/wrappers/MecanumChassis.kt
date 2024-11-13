@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.Action
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.Vector2d
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.control.CPI_435_104
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive
@@ -11,6 +12,11 @@ import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive
 class MecanumChassis
 @JvmOverloads constructor(hwMap: HardwareMap, pose: Pose2d = Pose2d(0.0, 0.0, 0.0)) :
     MecanumDrive(hwMap, pose) {
+
+    init {
+        rightFront.direction = DcMotorSimple.Direction.REVERSE;
+        rightBack.direction = DcMotorSimple.Direction.REVERSE;
+    }
 
     inner class BadLocalizer {
         var lastPose: Pose2d
