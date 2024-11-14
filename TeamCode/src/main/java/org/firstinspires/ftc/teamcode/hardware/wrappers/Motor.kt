@@ -69,6 +69,7 @@ class Motor(val internal: DcMotorEx) {
 
     val current get() = this().getCurrent(CurrentUnit.AMPS)
     val position get() = this().currentPosition
+    var power by internal::power
 
     fun runToPosition(target: Int, power: Double) {
         internal.targetPosition = target
@@ -101,6 +102,8 @@ class Motor(val internal: DcMotorEx) {
         internal.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         internal.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
     }
+
+    fun isBusy() = internal.isBusy
 
     companion object {
         fun reversed(motor: Motor): Motor {

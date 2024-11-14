@@ -47,27 +47,27 @@ public class ChocolateRaisin {
         this(hwMap, new Pose2d(0, 0, 0));
     }
 
-    public MecanumChassis chassis() {
+    public MecanumChassis getChassis() {
         return chassis;
     }
 
-    public LinearSlides slides() {
+    public LinearSlides getSlides() {
         return slides;
     }
 
-    public Arm arm() {
+    public Arm getArm() {
         return arm;
     }
 
-    public TwoPointServo claw() {
+    public TwoPointServo getClaw() {
         return claw;
     }
 
-    public LynxModule controlHub() {
+    public LynxModule getControlHub() {
         return controlHub;
     }
 
-    public LynxModule expansionHub() {
+    public LynxModule getExpansionHub() {
         return expansionHub;
     }
 

@@ -5,7 +5,6 @@ import com.acmerobotics.roadrunner.ParallelAction
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 
-
 class LinearSlides(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
                    @get:JvmName("UP_POS") val UP_POS: Int,
                    vararg motors: Motor) {
@@ -45,6 +44,10 @@ class LinearSlides(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
 
     fun powerAction(power: Double): InstantAction {
         return InstantAction { setPower(power) }
+    }
+
+    fun stop() {
+        motors.forEach { it().power = 0.0 }
     }
 
     @get:JvmName("goUp")

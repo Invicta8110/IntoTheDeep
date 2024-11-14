@@ -20,6 +20,10 @@ public class Arm {
         UP_POS = 1000;
     }
 
+    public void setPower(double power) {
+        motor.setPower(power);
+    }
+
     public Motor.PIDFAction goUp() {
         Motor.PIDFAction a = motor.new PIDFAction(UP_POS, coefs);
         a.getPidf().setOutputBounds(-0.75, 0.75);

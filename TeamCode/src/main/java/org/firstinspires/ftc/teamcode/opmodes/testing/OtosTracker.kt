@@ -6,20 +6,20 @@ import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotorEx
+import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import org.firstinspires.ftc.teamcode.roadrunner.SparkFunOTOSDrive
 
 @TeleOp
 class OtosTracker : OpMode() {
-    val robot: SparkFunOTOSDrive by lazy {
+    val robot: SparkFunOTOSDrive by OpModeLazyCell {
         SparkFunOTOSDrive(hardwareMap, Pose2d(0.0, 0.0, 0.0))
     }
 
-    val arm: DcMotorEx by lazy {
+    val arm: DcMotorEx by OpModeLazyCell {
         hardwareMap.get("arm") as DcMotorEx
     }
 
     override fun init() {
-        robot
     }
 
     override fun loop() {
