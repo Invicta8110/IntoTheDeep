@@ -2,17 +2,22 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import static org.firstinspires.ftc.teamcode.control.Util.mtel;
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.control.PIDFController;
+import org.firstinspires.ftc.teamcode.control.Util;
 import org.firstinspires.ftc.teamcode.hardware.robots.ChocolateRaisin;
 
 @TeleOp
 public class ChocolateRaisinTeleOp extends OpMode {
     ChocolateRaisin robot;
     PIDFController slidesPid;
+    Pose2d drivePowers;
+    boolean fieldCentric = false;
 
     @Override
     public void init() {
@@ -22,32 +27,37 @@ public class ChocolateRaisinTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        robot.getChassis().setDrivePowers(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        if (gamepad1.left_stick_button) {
+            fieldCentric = !fieldCentric;
+        }
 
-        if (gamepad1.dpad_left) {
-            slidesPid.setTargetPosition(robot.getSlides().UP_POS());
-        } else if (gamepad1.dpad_right) {
-            slidesPid.setTargetPosition(robot.getSlides().DOWN_POS());
+        drivePowers = new Pose2d(-gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
+        if (fieldCentric) {
+            drivePowers = Util.convertToFieldCentric(drivePowers);
+        }
+        robot.getChassis().setDrivePowers(new PoseVelocity2d(drivePowers.position, drivePowers.heading.toDouble()));
+
+        if (gamepad1.right_bumper) {
+            robot.getSlides().setPower(1);
+        } else if (gamepad1.left_bumper) {
+            robot.getSlides().setPower(-1);
+        } else {
+            robot.getSlides().setPower(0);
         }
 
         if (gamepad1.dpad_up) {
-            robot.getArm().motor.setPower(1);
+            robot.getArm().motor.setPower(.50);
         } else if (gamepad1.dpad_down) {
-            robot.getArm().motor.setPower(-1);
+            robot.getArm().motor.setPower(-.50);
         } else {
             robot.getArm().motor.setPower(0);
         }
 
-        if (robot.getArm().motor.getPower() != 0) {
-            robot.getSlides().stop();
-        } else {
-            robot.getSlides().setPower(slidesPid.update(robot.getSlides().getPosition()));
-        }
 
         if (gamepad1.right_trigger > 0) {
-            robot.getClaw().goToA();
-        } else if (gamepad1.left_trigger > 0) {
             robot.getClaw().goToB();
+        } else if (gamepad1.left_trigger > 0) {
+            robot.getClaw().goToA();
         }
 
         mtel.addData("Arm Power", robot.getArm().motor.getPower());

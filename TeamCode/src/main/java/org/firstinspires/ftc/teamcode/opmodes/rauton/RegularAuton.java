@@ -1,17 +1,13 @@
-package org.firstinspires.ftc.teamcode.opmodes.rAuton;
+package org.firstinspires.ftc.teamcode.opmodes.rauton;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.control.PIDFController;
 import org.firstinspires.ftc.teamcode.control.Util;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 
 @Config
@@ -59,10 +55,10 @@ public class RegularAuton extends OpMode {
         double bRPower = fLController.update(bRight.getPosition());
 
 
-        fLeft.getInternal().setPower(fLPower);
-        fRight.getInternal().setPower(fRPower);
-        bLeft.getInternal().setPower(bLPower);
-        bRight.getInternal().setPower(bRPower);
+        fLeft.setPower(fLPower);
+        fRight.setPower(fRPower);
+        bLeft.setPower(bLPower);
+        bRight.setPower(bRPower);
 
         mtel.addData("fLeft pos", fLeft.getPosition());
         mtel.addData("fLeft target", fLController.targetPosition);
@@ -75,11 +71,11 @@ public class RegularAuton extends OpMode {
         //arm.goUp();
 
         if(arm.getPosition()<1200)
-            arm.getInternal().setPower(1);
+            arm.setPower(1);
         else if(arm.getPosition()>3000)
-            arm.getInternal().setPower(0);
+            arm.setPower(0);
         else
-            arm.getInternal().setPower(.5);
+            arm.setPower(.5);
         mtel.addData("arm pos: ", arm.getPosition());
     }
 

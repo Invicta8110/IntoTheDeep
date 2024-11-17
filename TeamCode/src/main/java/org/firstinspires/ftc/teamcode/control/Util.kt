@@ -9,9 +9,11 @@ import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS.Pose2D
 import dev.frozenmilk.dairy.core.FeatureRegistrar
 import kotlin.math.PI
+import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
+import kotlin.math.sin
 
 @JvmField val CPR_312 = 537.7
 @JvmField val CPR_435 = 384.5
@@ -48,4 +50,11 @@ fun vectorMax(a: Vector2d, b: Vector2d): Vector2d {
 
 fun vectorMin(a: Vector2d, b: Vector2d): Vector2d {
     return Vector2d(min(a.x, b.x), min(a.y, b.y))
+}
+
+fun convertToFieldCentric(pose: Pose2d): Pose2d {
+    val heading = pose.heading.toDouble()
+    val rotX = pose.position.x * cos(-heading) - pose.position.y * sin(-heading)
+    val rotY = pose.position.x * sin(-heading) + pose.position.y * cos(-heading)
+    return Pose2d(rotX, rotY, heading)
 }

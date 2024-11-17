@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.rAuton;
+package org.firstinspires.ftc.teamcode.opmodes.rauton;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;

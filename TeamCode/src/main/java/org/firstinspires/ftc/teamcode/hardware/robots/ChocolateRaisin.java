@@ -28,7 +28,7 @@ public class ChocolateRaisin {
         chassis = new MecanumChassis(hwMap, pose);
         slides = new LinearSlides(new Motor("slides", hwMap));
         arm = new Arm(new Motor("arm", hwMap));
-        claw = new TwoPointServo("claw", hwMap);
+        claw = new TwoPointServo("claw", hwMap, .75, 1);
         otos = chassis.otos;
 
         List<LynxModule> hubs = hwMap.getAll(LynxModule.class);

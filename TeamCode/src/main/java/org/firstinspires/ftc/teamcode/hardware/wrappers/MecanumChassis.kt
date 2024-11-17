@@ -1,18 +1,18 @@
 package org.firstinspires.ftc.teamcode.hardware.wrappers
 
-import com.acmerobotics.dashboard.FtcDashboard
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.acmerobotics.roadrunner.Action
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.robotcore.hardware.HardwareMap
-import dev.frozenmilk.dairy.core.FeatureRegistrar
-import org.firstinspires.ftc.teamcode.control.CPI_435_104
-import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive
 import org.firstinspires.ftc.teamcode.roadrunner.SparkFunOTOSDrive
 
 class MecanumChassis @JvmOverloads constructor(hwMap: HardwareMap, pose: Pose2d = Pose2d(0.0, 0.0, 0.0)) : SparkFunOTOSDrive(hwMap, pose) {
+
+    init {
+        Motor.reverse(rightFront);
+        Motor.reverse(rightBack)
+    }
 
     fun setDrivePowers(x: Double, y: Double, heading: Double) = setDrivePowers(PoseVelocity2d(Vector2d(x, y), heading))
 
@@ -38,6 +38,4 @@ class MecanumChassis @JvmOverloads constructor(hwMap: HardwareMap, pose: Pose2d 
             setDrivePowers(PoseVelocity2d(Vector2d(x, y), heading))
             false
         }
-
-    fun calculateFieldCentricPower(input: Vector2d): Vector2d = pose.heading.inverse() * input
 }
