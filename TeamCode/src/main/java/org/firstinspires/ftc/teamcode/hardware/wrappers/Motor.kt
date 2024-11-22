@@ -9,8 +9,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import dev.frozenmilk.dairy.core.FeatureRegistrar
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
+import org.firstinspires.ftc.teamcode.control.ActionsEx
 import org.firstinspires.ftc.teamcode.control.PIDFController
 import org.firstinspires.ftc.teamcode.control.PIDFController.PIDCoefficients
+import org.firstinspires.ftc.teamcode.control.mtel
 
 class Motor(private val internal: DcMotorEx) {
     //this can no longer be changed to java
@@ -51,8 +53,25 @@ class Motor(private val internal: DcMotorEx) {
 
             power = pidf.update(position.toDouble())
 
-            return position !in (target - 50)..(target + 50)
+            return position in (target - 50)..(target + 50)
         }
+    }
+
+    inner class PIDFActionEx(private var target: Int, private val coefficients: PIDCoefficients,
+    ) : ActionsEx({ position in (target - 50)..(target + 50)} )  {
+        private val pidf = PIDFController(coefficients)
+
+        override fun init() {
+            pidf.setTargetPosition(target)
+        }
+
+        override fun loop() {
+            mtel.addData("Motor Info", "Name: $internal; Target: $target; Error ${target-position}")
+            mtel.update()
+
+            power = pidf.update(position.toDouble())
+        }
+
     }
 
     init {
