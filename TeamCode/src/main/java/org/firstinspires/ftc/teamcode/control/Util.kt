@@ -18,9 +18,9 @@ import kotlin.math.min
 import kotlin.math.round
 import kotlin.math.sin
 
-@JvmField val CPR_312 = 537.7
-@JvmField val CPR_435 = 384.5
-@JvmField val CPR_84 = 1993.6
+const val CPR_312 = 537.7
+const val CPR_435 = 384.5
+const val CPR_84 = 1993.6
 
 @JvmField val CPI_312_104 = round((1 / (104 * PI)) * CPR_312 * 25.4).toInt()
 @JvmField val CPI_435_104 = round((1 / (104 * PI)) * CPR_435 * 25.4).toInt()
