@@ -5,8 +5,8 @@ import dev.frozenmilk.dairy.core.dependency.Dependency
 import dev.frozenmilk.dairy.core.dependency.lazy.Yielding
 import dev.frozenmilk.dairy.core.wrapper.Wrapper
 
-import org.firstinspires.ftc.teamcode.control.PIDFController
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
+import page.j5155.expressway.ftc.motion.PIDFController
 
 class PIDFService(val motor: Motor, val controller: PIDFController) : Feature {
 	// first, we need to set up the dependency
@@ -20,14 +20,9 @@ class PIDFService(val motor: Motor, val controller: PIDFController) : Feature {
 	}
 
 	private fun update() {
-		val output = controller.update(motor.position.toDouble())
+		val output = controller.update(motor.currentPosition.toDouble())
 
-		// don't update motor power if the controller isn't enabled
-		if (enabled) {
-			motor.power = output
-		} else {
-			return
-		}
+		motor.power = output
 	}
 
 	// users should be able to change the target
@@ -36,10 +31,9 @@ class PIDFService(val motor: Motor, val controller: PIDFController) : Feature {
 	// users should be able to enable / disable the controller
 	var enabled: Boolean = true
 
-
 	// update controller after loop
 	override fun postUserLoopHook(opMode: Wrapper) {
-		update()
+		if (enabled) update()
 	}
 
 	// in cleanup we deregister, which prevents this from sticking around for another OpMode,

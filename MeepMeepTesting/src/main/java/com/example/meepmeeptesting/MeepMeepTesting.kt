@@ -15,14 +15,14 @@ fun main() {
 
     //starting positions
     val blueRight = Pose2d(36.0, 60.0, -Math.PI/2)
-    val blueLeft = Pose2d(-36.0, 60.0, -Math.PI/2)
-    val redRight = Pose2d(36.0, -60.0, Math.PI/2)
+    val blueLeft = Pose2d(-26.0, 60.0, -Math.PI/2)
+    val redRight = Pose2d(26.0, -60.0, Math.PI/2)
     val redLeft = Pose2d(-36.0, -60.0, Math.PI/2)
 
     //any actions go here
     val action = myBot.drive.actionBuilder(redLeft) //this is your starting position
-        .splineTo(Vector2d(0.0, 0.0), Math.PI/2)
-        .splineToSplineHeading(Pose2d(10.0,10.0,0.0), -Math.PI/2)
+        .strafeTo(Vector2d(47.4, -24.5))
+        .splineToSplineHeading(Pose2d(47.4, -57.5, -Math.PI/2), 0.0)
         .build()
 
     myBot.runAction(action)

@@ -77,11 +77,11 @@ public class TestTeleOpRobot {
 
     public void arm() {
         if (gp1.x) {
-            arm.getInternal().setPower(1);
+            arm.setPower(1);
         } else if (gp1.y) {
-            arm.getInternal().setPower(-1);
+            arm.setPower(-1);
         } else {
-            arm.getInternal().setPower(0);
+            arm.setPower(0);
         }
     }
 

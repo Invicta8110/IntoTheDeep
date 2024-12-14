@@ -73,6 +73,10 @@ public class ChocolateRaisin {
 
     public SparkFunOTOS getOTOS() { return otos; }
 
+    public Pose2d getPose() {
+        return chassis.pose;
+    }
+
     private void configureOtos() {
         Util.mtel.addLine("Configuring OTOS...");
         Util.mtel.update();

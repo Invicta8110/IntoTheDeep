@@ -8,9 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.control.PIDFController;
 import org.firstinspires.ftc.teamcode.control.Util;
 import org.firstinspires.ftc.teamcode.hardware.robots.ChocolateRaisin;
+
+import page.j5155.expressway.ftc.motion.PIDFController;
 
 @TeleOp
 public class ChocolateRaisinTeleOp extends OpMode {
@@ -61,8 +62,8 @@ public class ChocolateRaisinTeleOp extends OpMode {
         }
 
         mtel.addData("Arm Power", robot.getArm().motor.getPower());
-        mtel.addData("Arm Position", robot.getArm().motor.getPosition());
-        mtel.addData("Arm Target", slidesPid.targetPosition);
+        mtel.addData("Arm Position", robot.getArm().motor.getCurrentPosition());
+        mtel.addData("Arm Target", slidesPid.getTargetPosition());
         mtel.addData("CHub Current", robot.getControlHub().getCurrent(CurrentUnit.AMPS));
         mtel.addData("EXHub Current", robot.getExpansionHub().getCurrent(CurrentUnit.AMPS));
         mtel.update();

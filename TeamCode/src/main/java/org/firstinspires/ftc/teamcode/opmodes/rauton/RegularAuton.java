@@ -6,9 +6,10 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.control.PIDFController;
 import org.firstinspires.ftc.teamcode.control.Util;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
+
+import page.j5155.expressway.ftc.motion.PIDFController;
 
 @Config
 @Autonomous
@@ -49,10 +50,10 @@ public class RegularAuton extends OpMode {
         bLController.setTargetPosition((int) (Util.CPI_435_104 * 12));
         fRController.setTargetPosition((int) (Util.CPI_435_104 * 12));
         bRController.setTargetPosition((int) (Util.CPI_435_104 * 12));
-        double fLPower = fLController.update(fLeft.getPosition());
-        double bLPower = fLController.update(bLeft.getPosition());
-        double fRPower = fLController.update(fRight.getPosition());
-        double bRPower = fLController.update(bRight.getPosition());
+        double fLPower = fLController.update(fLeft.getCurrentPosition());
+        double bLPower = fLController.update(bLeft.getCurrentPosition());
+        double fRPower = fLController.update(fRight.getCurrentPosition());
+        double bRPower = fLController.update(bRight.getCurrentPosition());
 
 
         fLeft.setPower(fLPower);
@@ -60,23 +61,23 @@ public class RegularAuton extends OpMode {
         bLeft.setPower(bLPower);
         bRight.setPower(bRPower);
 
-        mtel.addData("fLeft pos", fLeft.getPosition());
-        mtel.addData("fLeft target", fLController.targetPosition);
+        mtel.addData("fLeft pos", fLeft.getCurrentPosition());
+        mtel.addData("fLeft target", fLController.getTargetPosition());
         mtel.addData("fLeft power", fLPower);
-        mtel.addData("error: ", fLController.targetPosition - fLeft.getPosition());
+        mtel.addData("error: ", fLController.getTargetPosition() - fLeft.getCurrentPosition());
 
 //        armController.setTargetPosition((int)(Util.CPI_435_104/2));
-//        arm.getInternal().setPower(armController.update(arm.getPosition()));
+//        arm.getInternal().setPower(armController.update(arm.getCurrentPosition()));
 
         //arm.goUp();
 
-        if(arm.getPosition()<1200)
+        if(arm.getCurrentPosition()<1200)
             arm.setPower(1);
-        else if(arm.getPosition()>3000)
+        else if(arm.getCurrentPosition()>3000)
             arm.setPower(0);
         else
             arm.setPower(.5);
-        mtel.addData("arm pos: ", arm.getPosition());
+        mtel.addData("arm pos: ", arm.getCurrentPosition());
     }
 
 }

@@ -2,19 +2,17 @@ package org.firstinspires.ftc.teamcode.hardware.wrappers
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.Action
+import com.acmerobotics.roadrunner.InstantAction
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
-import com.qualcomm.robotcore.hardware.DcMotorImplEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import dev.frozenmilk.dairy.core.FeatureRegistrar
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
-import org.firstinspires.ftc.teamcode.control.ActionsEx
-import org.firstinspires.ftc.teamcode.control.PIDFController
-import org.firstinspires.ftc.teamcode.control.PIDFController.PIDCoefficients
 import org.firstinspires.ftc.teamcode.control.mtel
+import page.j5155.expressway.core.actions.InitLoopCondAction
+import page.j5155.expressway.ftc.motion.PIDFController
 
-class Motor(private val internal: DcMotorEx) {
+class Motor(private val internal: DcMotorEx) : DcMotorEx by internal {
     //this can no longer be changed to java
     //testing
 
@@ -30,48 +28,65 @@ class Motor(private val internal: DcMotorEx) {
                 initialized = true
             }
 
-            FeatureRegistrar.activeOpMode.telemetry.addData("Motor Info", "Name: $internal; Target: $target; Error ${target-position}")
+            FeatureRegistrar.activeOpMode.telemetry.addData("Motor Info", "Name: $internal; Target: $target; Error ${target-currentPosition}")
             FeatureRegistrar.activeOpMode.telemetry.update()
 
             return internal.isBusy
         }
     }
 
-    inner class PIDFAction(private var target: Int, private val coefficients: PIDCoefficients) :
-        Action {
+    inner class PIDFAction(target: Int, val pidf: PIDFController) : Action {
+        constructor(target: Int, coefs: PIDFController.PIDCoefficients) : this(target, PIDFController(coefs))
+
         private var initialized = false
-        val pidf = PIDFController(coefficients)
+
+        var target = target
+            set(value) {
+                pidf.targetPosition = value
+                field = value
+            }
 
         override fun run(p: TelemetryPacket): Boolean {
             if (!initialized) {
-                pidf.setTargetPosition(target)
+                pidf.targetPosition = target
                 initialized = true
             }
 
-            FeatureRegistrar.activeOpMode.telemetry.addData("Motor Info", "Name: $internal; Target: $target; Error ${target-position}")
+            FeatureRegistrar.activeOpMode.telemetry.addData("Motor Info", "Name: $internal; Target: $target; Error ${target-currentPosition}")
             FeatureRegistrar.activeOpMode.telemetry.update()
 
-            power = pidf.update(position.toDouble())
+            power = pidf.update(currentPosition.toDouble())
 
-            return position in (target - 50)..(target + 50)
+            return currentPosition in (target - 50)..(target + 50)
         }
     }
 
-    inner class PIDFActionEx(private var target: Int, private val coefficients: PIDCoefficients,
-    ) : ActionsEx({ position in (target - 50)..(target + 50)} )  {
-        private val pidf = PIDFController(coefficients)
+    inner class PIDFActionEx(target: Int, val pidf: PIDFController
+    ) : InitLoopCondAction({ currentPosition in (target - 50)..(target + 50)} )  {
+
+        constructor(target: Int, coefs: PIDFController.PIDCoefficients) : this(target, PIDFController(coefs))
+
+        var target = target
+            set(value) {
+                pidf.targetPosition = value
+                field = value
+            }
+
+
 
         override fun init() {
-            pidf.setTargetPosition(target)
+            pidf.targetPosition = (target)
         }
 
-        override fun loop() {
-            mtel.addData("Motor Info", "Name: $internal; Target: $target; Error ${target-position}")
+        override fun loop(p: TelemetryPacket) {
+            mtel.addData("Motor Info", "Name: $internal; Target: $target; Error ${target-currentPosition}")
             mtel.update()
 
-            power = pidf.update(position.toDouble())
+            power = pidf.update(currentPosition.toDouble())
         }
 
+        fun update(target: Int) { this.target = target }
+        fun updateAction(target: Int) : Action = InstantAction { update(target) }
     }
 
     init {
@@ -85,15 +100,6 @@ class Motor(private val internal: DcMotorEx) {
     operator fun invoke(): DcMotorEx {
         return internal
     }
-
-    val current: Double = internal.getCurrent(CurrentUnit.AMPS)
-    val isBusy get() = internal.isBusy
-    val position: Int by internal::currentPosition
-
-    var power: Double by internal::power
-    var targetPosition: Int by internal::targetPosition
-    var direction: DcMotorSimple.Direction by internal::direction
-    var mode: DcMotor.RunMode by internal::mode
 
     fun runToPosition(target: Int, power: Double) {
         this.targetPosition = target
@@ -110,13 +116,14 @@ class Motor(private val internal: DcMotorEx) {
         return RTPAction(target, power)
     }
 
-    fun pidfAction(target: Int, coefficients: PIDCoefficients): Action {
-        return PIDFAction(target, coefficients)
+    fun pidfActionEx(target: Int, coefficients: PIDFController.PIDCoefficients): PIDFActionEx {
+        return PIDFActionEx(target, coefficients)
     }
 
     fun reverse() = when (direction) {
         DcMotorSimple.Direction.FORWARD -> internal.direction = DcMotorSimple.Direction.REVERSE
         DcMotorSimple.Direction.REVERSE -> internal.direction = DcMotorSimple.Direction.FORWARD
+        null -> internal.direction = DcMotorSimple.Direction.FORWARD
     }
 
     fun reset() {

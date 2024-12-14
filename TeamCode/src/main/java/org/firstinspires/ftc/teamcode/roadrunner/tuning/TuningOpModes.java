@@ -39,8 +39,7 @@ public final class TuningOpModes {
     public static final String GROUP = "quickstart";
     public static final boolean DISABLED = false;
 
-    private TuningOpModes() {
-    }
+    private TuningOpModes() {}
 
     private static OpModeMeta metaForClass(Class<? extends OpMode> cls) {
         return new OpModeMeta.Builder()
@@ -61,8 +60,8 @@ public final class TuningOpModes {
 
                 List<Encoder> leftEncs = new ArrayList<>(), rightEncs = new ArrayList<>();
                 List<Encoder> parEncs = new ArrayList<>(), perpEncs = new ArrayList<>();
-                parEncs.add(new OtosEncoder(od.otos, false, false, od.leftBack));
-                perpEncs.add(new OtosEncoder(od.otos, true, false, od.leftBack));
+                parEncs.add(new OtosEncoder(od.otos,false,false, od.leftBack));
+                perpEncs.add(new OtosEncoder(od.otos,true,false, od.leftBack));
 
                 return new DriveView(
                         DriveType.MECANUM,
@@ -116,7 +115,7 @@ public final class TuningOpModes {
                 }
 
                 return new DriveView(
-                        DriveType.MECANUM,
+                    DriveType.MECANUM,
                         MecanumDrive.PARAMS.inPerTick,
                         MecanumDrive.PARAMS.maxWheelVel,
                         MecanumDrive.PARAMS.minProfileAccel,
@@ -165,7 +164,7 @@ public final class TuningOpModes {
                 }
 
                 return new DriveView(
-                        DriveType.TANK,
+                    DriveType.TANK,
                         TankDrive.PARAMS.inPerTick,
                         TankDrive.PARAMS.maxWheelVel,
                         TankDrive.PARAMS.minProfileAccel,

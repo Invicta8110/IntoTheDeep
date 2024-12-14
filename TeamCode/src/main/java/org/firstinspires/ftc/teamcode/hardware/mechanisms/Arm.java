@@ -2,8 +2,9 @@ package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
 import com.acmerobotics.dashboard.config.Config;
 
-import org.firstinspires.ftc.teamcode.control.PIDFController;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
+
+import page.j5155.expressway.ftc.motion.PIDFController;
 
 @Config
 public class Arm {
@@ -34,5 +35,9 @@ public class Arm {
         Motor.PIDFAction a = motor.new PIDFAction(DOWN_POS, coefs);
         a.getPidf().setOutputBounds(-0.75, 0.75);
         return a;
+    }
+
+    public double getVelocity() {
+        return motor.getVelocity();
     }
 }

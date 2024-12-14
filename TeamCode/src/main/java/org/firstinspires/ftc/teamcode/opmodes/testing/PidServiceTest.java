@@ -4,13 +4,13 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.control.PIDFController;
 import org.firstinspires.ftc.teamcode.control.Util;
 import org.firstinspires.ftc.teamcode.control.services.PIDFService;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.hardware.robots.ChocolateRaisin;
 
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad;
+import page.j5155.expressway.ftc.motion.PIDFController;
 
 @Config
 @TeleOp
@@ -52,7 +52,7 @@ public class PidServiceTest extends OpMode {
 
         Util.mtel.addData("Enabled", pidf.getEnabled());
         Util.mtel.addData("Target", pidf.getTarget());
-        Util.mtel.addData("Position", arm.motor.getPosition());
+        Util.mtel.addData("Position", arm.motor.getCurrentPosition());
         Util.mtel.addData("Power", arm.motor.getPower());
         Util.mtel.update();
     }

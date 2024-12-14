@@ -8,16 +8,9 @@ import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 class LinearSlides(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
                    @get:JvmName("UP_POS") val UP_POS: Int,
                    vararg motors: Motor) {
-    val motors: List<Motor>
+    val motors: List<Motor> = motors.toList()
     val position: Int
-        get() = motors[0].position
-
-    /**
-     * NOTE: MOTORS MUST BE SET TO THE CORRECT DIRECTION BEFORE CONSTRUCTING LINEAR SLIDES
-     */
-    init {
-        this.motors = motors.toList()
-    }
+        get() = motors[0].currentPosition
 
     constructor(vararg motors: Motor) : this(0, 2000, *motors)
 

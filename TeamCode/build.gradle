@@ -62,8 +62,11 @@ dependencies {
     //implementation "com.acmerobotics.roadrunner:ftc:0.1.12"
     implementation "com.acmerobotics.roadrunner:core:1.0.0"
     implementation "com.acmerobotics.roadrunner:actions:1.0.0"
-    implementation "com.acmerobotics.dashboard:dashboard:0.4.15"
+    implementation "com.acmerobotics.dashboard:dashboard:0.4.16"
     implementation "com.github.jdhs-ftc:road-runner-ftc-otos:a02ba3fe51"
+
+    implementation "page.j5155.roadrunner.expressway:core:0.3.7"
+    implementation "page.j5155.roadrunner.expressway:ftc:0.3.7"
 
     implementation "dev.frozenmilk.dairy:Core:2.0.0"
     implementation "dev.frozenmilk.dairy:Pasteurized:1.0.0"
