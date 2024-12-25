@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.ftc.OTOSPoseToRRPose
 import com.acmerobotics.roadrunner.ftc.RRPoseToOTOSPose
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS.Pose2D
 import dev.frozenmilk.dairy.core.FeatureRegistrar
+import page.j5155.expressway.ftc.motion.PIDFController
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.max
@@ -68,9 +69,25 @@ fun vectorMin(a: Vector2d, b: Vector2d): Vector2d {
     return Vector2d(min(a.x, b.x), min(a.y, b.y))
 }
 
-fun convertToFieldCentric(pose: Pose2d): Pose2d {
-    val heading = pose.heading.toDouble()
-    val rotX = pose.position.x * cos(-heading) - pose.position.y * sin(-heading)
-    val rotY = pose.position.x * sin(-heading) + pose.position.y * cos(-heading)
-    return Pose2d(rotX, rotY, heading)
+fun Vector2d.fieldCentric(rotation: Rotation2d): Vector2d = rotation.inverse() * this
+
+fun convertToFieldCentric(vector: Vector2d, rotation: Rotation2d): Vector2d {
+    return vector.fieldCentric(rotation)
+}
+
+fun PIDFController.updateInTolerance(
+    tolerance: Double,
+    timestamp: Long = System.nanoTime(),
+    measuredPosition: Double,
+    measuredVelocity: Double? = null,
+    )
+: Double {
+    return when (getPositionError(measuredPosition)) {
+        in -tolerance..tolerance -> {
+            0.0
+        }
+        else -> {
+            update(timestamp, measuredPosition, measuredVelocity)
+        }
+    }
 }

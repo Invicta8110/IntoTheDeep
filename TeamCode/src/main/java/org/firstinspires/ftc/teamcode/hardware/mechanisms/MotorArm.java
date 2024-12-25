@@ -7,14 +7,14 @@ import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 import page.j5155.expressway.ftc.motion.PIDFController;
 
 @Config
-public class Arm {
+public class MotorArm {
     //VIA SOME TESTING I'VE DETERMINED THE ARM SHOULD STAY AT PIDFCOEFFICIENTS kP = 0.005, kI = 0, kD = 0.01
 
     public static int DOWN_POS, UP_POS;
     public static PIDFController.PIDCoefficients coefs = new PIDFController.PIDCoefficients(0.005, 0, 0.01);
     public final Motor motor;
 
-    public Arm(Motor motor) {
+    public MotorArm(Motor motor) {
         this.motor = motor;
         motor.reverse();
         DOWN_POS = 0;

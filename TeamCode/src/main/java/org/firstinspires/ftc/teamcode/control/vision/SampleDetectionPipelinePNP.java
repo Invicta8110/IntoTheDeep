@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.control.vision;
 
-import android.graphics.Canvas;
-
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
-import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -18,10 +15,11 @@ import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
-public class SampleDetectionPipelinePNP implements VisionProcessor {
+public class SampleDetectionPipelinePNP extends OpenCvPipeline {
     /*
      * Threshold values
      */
@@ -167,7 +165,6 @@ public class SampleDetectionPipelinePNP implements VisionProcessor {
         }
     }
 
-    @Override
     public void init(int width, int height, CameraCalibration calibration) {
         // Initialize camera parameters
         // Replace these values with your actual camera calibration parameters
@@ -189,11 +186,6 @@ public class SampleDetectionPipelinePNP implements VisionProcessor {
         distCoeffs = new MatOfDouble(0, 0, 0, 0, 0);
     }
 
-    @Override
-    public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
-
-    }
-
     public void onViewportTapped() {
         int nextStageNum = stageNum + 1;
 
@@ -205,7 +197,7 @@ public class SampleDetectionPipelinePNP implements VisionProcessor {
     }
 
     @Override
-    public Mat processFrame(Mat frame, long milliseconds) {
+    public Mat processFrame(Mat frame) {
         // We'll be updating this with new data below
         internalStoneList.clear();
 

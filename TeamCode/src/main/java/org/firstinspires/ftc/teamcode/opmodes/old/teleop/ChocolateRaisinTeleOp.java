@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.teleop;
+package org.firstinspires.ftc.teamcode.opmodes.old.teleop;
 
 import static org.firstinspires.ftc.teamcode.control.Util.mtel;
 
@@ -34,7 +34,10 @@ public class ChocolateRaisinTeleOp extends OpMode {
 
         drivePowers = new Pose2d(-gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
         if (fieldCentric) {
-            drivePowers = Util.convertToFieldCentric(drivePowers);
+            drivePowers = new Pose2d(
+                    Util.convertToFieldCentric(drivePowers.position, robot.getPose().heading),
+                    drivePowers.heading
+            );
         }
         robot.getChassis().setDrivePowers(new PoseVelocity2d(drivePowers.position, drivePowers.heading.toDouble()));
 

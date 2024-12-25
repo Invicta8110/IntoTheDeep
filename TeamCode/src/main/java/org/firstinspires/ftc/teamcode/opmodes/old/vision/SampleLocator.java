@@ -1,14 +1,19 @@
-package org.firstinspires.ftc.teamcode.opmodes.vision;
+package org.firstinspires.ftc.teamcode.opmodes.old.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.SortOrder;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
+import org.opencv.core.MatOfPoint;
+import org.opencv.imgproc.Imgproc;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SampleLocator extends LinearOpMode {
     @Override
@@ -42,6 +47,10 @@ public class SampleLocator extends LinearOpMode {
 
         while (opModeIsActive() || opModeInInit()) {
             List<ColorBlobLocatorProcessor.Blob> blobs = colorLocatorBlue.getBlobs();
+
+            ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+
+            ColorBlobLocatorProcessor.Blob largest = blobs.get(0);
 
             ColorBlobLocatorProcessor.Util.filterByArea(50, 10000, blobs);
 

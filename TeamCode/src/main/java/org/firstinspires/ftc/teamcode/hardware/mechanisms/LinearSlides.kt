@@ -4,10 +4,12 @@ import com.acmerobotics.roadrunner.InstantAction
 import com.acmerobotics.roadrunner.ParallelAction
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
+import page.j5155.expressway.ftc.motion.PIDFController
 
 class LinearSlides(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
                    @get:JvmName("UP_POS") val UP_POS: Int,
-                   vararg motors: Motor) {
+                   vararg motors: Motor)
+    : List<Motor> by motors.toList() {
     val motors: List<Motor> = motors.toList()
     val position: Int
         get() = motors[0].currentPosition
@@ -19,16 +21,10 @@ class LinearSlides(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
         Motor("slidesRight", hardwareMap)
     )
 
-    fun reverse() {
-        motors.forEach { m -> m.reverse() }
-    }
+    fun reverse() = motors.forEach { m -> m.reverse() }
 
     fun up() {
         motors.forEach { m -> m().power = 1.0 }
-    }
-
-    operator fun get(index: Int): Motor {
-        return motors[index]
     }
 
     fun setPower(power: Double) {
@@ -51,5 +47,12 @@ class LinearSlides(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
 
     enum class SlidePosition {
         DOWN, UP
+    }
+
+    companion object {
+        const val UP: Int = 1500
+        const val DOWN: Int = 0
+
+        @JvmStatic val PID = PIDFController.PIDCoefficients(0.1, 0.0, 0.01)
     }
 }

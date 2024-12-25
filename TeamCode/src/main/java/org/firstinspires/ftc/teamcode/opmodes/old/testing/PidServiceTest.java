@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.testing;
+package org.firstinspires.ftc.teamcode.opmodes.old.testing;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.control.Util;
 import org.firstinspires.ftc.teamcode.control.services.PIDFService;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.Arm;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.MotorArm;
 import org.firstinspires.ftc.teamcode.hardware.robots.ChocolateRaisin;
 
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad;
@@ -18,15 +18,15 @@ public class PidServiceTest extends OpMode {
     public static PIDFService pidf;
     public static int UP_POS = 500, DOWN_POS = 0;
 
-    Arm arm;
+    MotorArm motorArm;
     SDKGamepad gp1;
 
     @Override
     public void init() {
-        arm = new ChocolateRaisin(hardwareMap).getArm();
+        motorArm = new ChocolateRaisin(hardwareMap).getArm();
         gp1 = new SDKGamepad(gamepad1);
 
-        pidf = new PIDFService(arm.motor, new PIDFController(new PIDFController.PIDCoefficients(0.01, 0, 0)));
+        pidf = new PIDFService(new PIDFController(new PIDFController.PIDCoefficients(0.01, 0, 0)), motorArm.motor);
         pidf.setTarget(0);
     }
 
@@ -42,18 +42,18 @@ public class PidServiceTest extends OpMode {
             }
         } else {
             if (gp1.dpadUp().toggleTrue()) {
-                arm.setPower(.5);
+                motorArm.setPower(.5);
             } else if (gp1.dpadDown().toggleTrue()) {
-                arm.setPower(-.5);
+                motorArm.setPower(-.5);
             } else {
-                arm.setPower(0);
+                motorArm.setPower(0);
             }
         }
 
         Util.mtel.addData("Enabled", pidf.getEnabled());
         Util.mtel.addData("Target", pidf.getTarget());
-        Util.mtel.addData("Position", arm.motor.getCurrentPosition());
-        Util.mtel.addData("Power", arm.motor.getPower());
+        Util.mtel.addData("Position", motorArm.motor.getCurrentPosition());
+        Util.mtel.addData("Power", motorArm.motor.getPower());
         Util.mtel.update();
     }
 }

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.control.Util;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.Arm;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.MotorArm;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis;
@@ -19,7 +19,7 @@ import java.util.List;
 public class ChocolateRaisin {
     private final MecanumChassis chassis;
     private final LinearSlides slides;
-    private final Arm arm;
+    private final MotorArm motorArm;
     private final TwoPointServo claw;
     private LynxModule controlHub, expansionHub;
     private SparkFunOTOS otos;
@@ -27,7 +27,7 @@ public class ChocolateRaisin {
     public ChocolateRaisin(HardwareMap hwMap, Pose2d pose) {
         chassis = new MecanumChassis(hwMap, pose);
         slides = new LinearSlides(new Motor("slides", hwMap));
-        arm = new Arm(new Motor("arm", hwMap));
+        motorArm = new MotorArm(new Motor("arm", hwMap));
         claw = new TwoPointServo("claw", hwMap, .75, 1);
         otos = chassis.otos;
 
@@ -55,8 +55,8 @@ public class ChocolateRaisin {
         return slides;
     }
 
-    public Arm getArm() {
-        return arm;
+    public MotorArm getArm() {
+        return motorArm;
     }
 
     public TwoPointServo getClaw() {

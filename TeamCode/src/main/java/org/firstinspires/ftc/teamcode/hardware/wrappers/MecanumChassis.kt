@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.hardware.wrappers
 
 import com.acmerobotics.roadrunner.Action
+import com.acmerobotics.roadrunner.InstantAction
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.PoseVelocity2d
+import com.acmerobotics.roadrunner.Rotation2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive
@@ -10,9 +12,10 @@ import org.firstinspires.ftc.teamcode.roadrunner.SparkFunOTOSDrive
 import page.j5155.expressway.ftc.motion.PIDFController
 import page.j5155.expressway.ftc.motion.PIDToPoint
 
-class MecanumChassis @JvmOverloads constructor(hwMap: HardwareMap, pose: Pose2d = Pose2d(0.0, 0.0, 0.0)) : SparkFunOTOSDrive(hwMap, pose) {
-
-    @JvmField val RR_PARAMS = MecanumDrive.PARAMS
+class MecanumChassis @JvmOverloads constructor(
+    hwMap: HardwareMap,
+    pose: Pose2d = Pose2d(0.0, 0.0, 0.0)
+) : SparkFunOTOSDrive(hwMap, pose) {
 
     init {
         Motor.reverse(rightFront)
@@ -20,6 +23,10 @@ class MecanumChassis @JvmOverloads constructor(hwMap: HardwareMap, pose: Pose2d 
     }
 
     fun setDrivePowers(x: Double, y: Double, heading: Double) = setDrivePowers(PoseVelocity2d(Vector2d(x, y), heading))
+
+    fun setDrivePowers(vector: Vector2d, heading: Double) = setDrivePowers(PoseVelocity2d(vector, heading))
+
+    fun setDrivePowers(vector: Vector2d, rotation: Rotation2d) = setDrivePowers(PoseVelocity2d(vector, rotation.toDouble()))
 
     fun moveToPointAction(x: Double, y: Double): Action = actionBuilder(pose)
         .splineTo(Vector2d(x, y), pose.heading)
@@ -39,10 +46,7 @@ class MecanumChassis @JvmOverloads constructor(hwMap: HardwareMap, pose: Pose2d 
     }
 
     fun drivePowerAction(x: Double, y: Double, heading: Double): Action
-        = Action {
-            setDrivePowers(PoseVelocity2d(Vector2d(x, y), heading))
-            false
-        }
+        = InstantAction { setDrivePowers(x, y, heading) }
 
     /*
         public PIDToPoint pidToPointAction(Pose2d target) {
@@ -67,4 +71,8 @@ class MecanumChassis @JvmOverloads constructor(hwMap: HardwareMap, pose: Pose2d 
         PIDFController.PIDCoefficients(RR_PARAMS.lateralGain, 0.0, RR_PARAMS.lateralVelGain), // the lateral PID coefficients
         PIDFController.PIDCoefficients(RR_PARAMS.headingGain, 0.0, RR_PARAMS.headingVelGain) // the heading PID coefficients
     )
+
+    companion object {
+        @JvmStatic val RR_PARAMS: MecanumDrive.Params = MecanumDrive.PARAMS
+    }
 }

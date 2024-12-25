@@ -8,11 +8,14 @@ import dev.frozenmilk.dairy.core.wrapper.Wrapper
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 import page.j5155.expressway.ftc.motion.PIDFController
 
-class PIDFService(val motor: Motor, val controller: PIDFController) : Feature {
+class PIDFService(val controller: PIDFController, vararg val motors: Motor) : Feature {
+
 	// first, we need to set up the dependency
 	// Yielding just says "this isn't too important, always attach me, but run me after more important things"
 	// Yielding is reusable!
 	override var dependency: Dependency<*> = Yielding
+	var lastOutput = 0.0
+		private set
 
 	init {
 		// regardless of constructor used, call register when the class is instantiated
@@ -20,9 +23,9 @@ class PIDFService(val motor: Motor, val controller: PIDFController) : Feature {
 	}
 
 	private fun update() {
-		val output = controller.update(motor.currentPosition.toDouble())
+		lastOutput = controller.update(motors.averageOf { it.currentPosition.toDouble() })
 
-		motor.power = output
+		motors.forEach { it.power = lastOutput }
 	}
 
 	// users should be able to change the target
@@ -33,7 +36,9 @@ class PIDFService(val motor: Motor, val controller: PIDFController) : Feature {
 
 	// update controller after loop
 	override fun postUserLoopHook(opMode: Wrapper) {
-		if (enabled) update()
+		if (enabled) {
+			update()
+		}
 	}
 
 	// in cleanup we deregister, which prevents this from sticking around for another OpMode,
@@ -42,3 +47,7 @@ class PIDFService(val motor: Motor, val controller: PIDFController) : Feature {
 		deregister()
 	}
 }
+
+fun controllerFromPID(kP: Double, kI: Double, kV: Double) = PIDFController(PIDFController.PIDCoefficients(kP, kI, kV))
+
+fun <E> Array<E>.averageOf(func: (E) -> Double) = this.map(func).average()
