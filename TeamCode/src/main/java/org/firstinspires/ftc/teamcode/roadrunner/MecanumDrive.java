@@ -24,6 +24,7 @@ import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.Time;
 import com.acmerobotics.roadrunner.TimeTrajectory;
 import com.acmerobotics.roadrunner.TimeTurn;
+import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.TrajectoryBuilderParams;
@@ -51,6 +52,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.control.FollowTrajectoryAsPathAction;
 import org.firstinspires.ftc.teamcode.roadrunner.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.roadrunner.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.roadrunner.messages.MecanumLocalizerInputsMessage;
@@ -59,9 +61,6 @@ import org.firstinspires.ftc.teamcode.roadrunner.messages.PoseMessage;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
-import dev.frozenmilk.mercurial.commands.Command;
-import dev.frozenmilk.mercurial.commands.Lambda;
 
 @Config
 public class MecanumDrive {
@@ -517,67 +516,74 @@ public class MecanumDrive {
         );
     }
 
-    class TrajectoryCommand extends Lambda {
-        TimeTrajectory traj;
-        double generalTime, startTime;
+    public void setDrivePowersWithFF(PoseVelocity2dDual<Time> powers) {
+        MecanumKinematics.WheelVelocities<Time> wheelVels = kinematics.inverse(powers);
+        double voltage = voltageSensor.getVoltage();
 
-        public TrajectoryCommand(TimeTrajectory traj) {
-            super("TrajectoryCommand");
-            this.traj = traj;
-        }
+        final MotorFeedforward feedforward = new MotorFeedforward(PARAMS.kS,
+                PARAMS.kV / PARAMS.inPerTick, PARAMS.kA / PARAMS.inPerTick);
+        double leftFrontPower = feedforward.compute(wheelVels.leftFront) / voltage;
+        double leftBackPower = feedforward.compute(wheelVels.leftBack) / voltage;
+        double rightBackPower = feedforward.compute(wheelVels.rightBack) / voltage;
+        double rightFrontPower = feedforward.compute(wheelVels.rightFront) / voltage;
 
-        @Override
-        public void initialise() {
-            generalTime = 0;
-            startTime = System.nanoTime() * 1e-9;
-        }
+        mecanumCommandWriter.write(new MecanumCommandMessage(
+                voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower
+        ));
 
-        @Override
-        public void execute() {
-            generalTime = (System.nanoTime() * 1e-9) - startTime;
+        leftFront.setPower(leftFrontPower);
+        leftBack.setPower(leftBackPower);
+        rightBack.setPower(rightBackPower);
+        rightFront.setPower(rightFrontPower);
+    }
 
-            Pose2dDual<Time> txWorldTarget = traj.get(generalTime);
-            targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
+    public void setDrivePowersWithFF(PoseVelocity2d powers) {
+        setDrivePowersWithFF(PoseVelocity2dDual.constant(powers, 1));
+    }
 
-            PoseVelocity2d robotVelRobot = updatePoseEstimate();
+    public Action followTrajectoryAsPathAction(TimeTrajectory t) {
+        return new FollowTrajectoryAsPathAction(
+                t,
+                PARAMS.axialGain,
+                PARAMS.lateralGain,
+                PARAMS.headingGain,
+                PARAMS.axialVelGain,
+                PARAMS.lateralVelGain,
+                PARAMS.headingVelGain,
+                this::setDrivePowersWithFF,
+                this::updatePoseEstimate,
+                () -> this.pose
+        );
+    }
 
-            PoseVelocity2dDual<Time> command = new HolonomicController(
-                    PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
-                    PARAMS.axialVelGain, PARAMS.lateralVelGain, PARAMS.headingVelGain
-            )
-                    .compute(txWorldTarget, pose, robotVelRobot);
-            driveCommandWriter.write(new DriveCommandMessage(command));
+    public Action followTrajectoryAsPathAction(Trajectory t) {
+        return new FollowTrajectoryAsPathAction(
+                new TimeTrajectory(t),
+                PARAMS.axialGain,
+                PARAMS.lateralGain,
+                PARAMS.headingGain,
+                PARAMS.axialVelGain,
+                PARAMS.lateralVelGain,
+                PARAMS.headingVelGain,
+                this::setDrivePowersWithFF,
+                this::updatePoseEstimate,
+                () -> this.pose
+        );
+    }
 
-            MecanumKinematics.WheelVelocities<Time> wheelVels = kinematics.inverse(command);
-            double voltage = voltageSensor.getVoltage();
-
-            final MotorFeedforward feedforward = new MotorFeedforward(PARAMS.kS,
-                    PARAMS.kV / PARAMS.inPerTick, PARAMS.kA / PARAMS.inPerTick);
-            double leftFrontPower = feedforward.compute(wheelVels.leftFront) / voltage;
-            double leftBackPower = feedforward.compute(wheelVels.leftBack) / voltage;
-            double rightBackPower = feedforward.compute(wheelVels.rightBack) / voltage;
-            double rightFrontPower = feedforward.compute(wheelVels.rightFront) / voltage;
-            mecanumCommandWriter.write(new MecanumCommandMessage(
-                    voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower
-            ));
-
-            leftFront.setPower(leftFrontPower);
-            leftBack.setPower(leftBackPower);
-            rightBack.setPower(rightBackPower);
-            rightFront.setPower(rightFrontPower);
-        }
-
-        @Override
-        public boolean finished() {
-            return generalTime >= traj.duration;
-        }
-
-        @Override
-        public void end(boolean b) {
-            leftFront.setPower(0);
-            leftBack.setPower(0);
-            rightBack.setPower(0);
-            rightFront.setPower(0);
-        }
+    public TrajectoryActionBuilder pathActionBuilder(Pose2d beginPose) {
+        return new TrajectoryActionBuilder(
+                TurnAction::new,
+                this::followTrajectoryAsPathAction,
+                new TrajectoryBuilderParams(
+                        1e-6,
+                        new ProfileParams(
+                                0.25, 0.1, 1e-2
+                        )
+                ),
+                beginPose, 0.0,
+                defaultTurnConstraints,
+                defaultVelConstraint, defaultAccelConstraint
+        );
     }
 }
