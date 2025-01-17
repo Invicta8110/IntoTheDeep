@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.old.zauton;
 import static org.firstinspires.ftc.teamcode.hardware.mechanisms.MotorArm.coefs;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.control.SilkRoad;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad;
 
+@Disabled
 @Config
 @SilkRoad.Attach
 public class ArmAngleTest extends OpMode {

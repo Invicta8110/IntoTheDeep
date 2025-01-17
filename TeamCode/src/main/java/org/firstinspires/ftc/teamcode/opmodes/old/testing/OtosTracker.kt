@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode.opmodes.old.testing
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.Vector2d
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import org.firstinspires.ftc.teamcode.roadrunner.SparkFunOTOSDrive
 
+@Disabled
 @TeleOp
 class OtosTracker : OpMode() {
     val robot: SparkFunOTOSDrive by OpModeLazyCell {

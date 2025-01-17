@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.old.testing;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.hardware.robots.ChocolateRaisin;
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad;
 import page.j5155.expressway.ftc.motion.PIDFController;
 
+@Disabled
 @Config
 @TeleOp
 public class PidServiceTest extends OpMode {

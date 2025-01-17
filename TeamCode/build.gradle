@@ -71,9 +71,9 @@ dependencies {
     implementation "page.j5155.roadrunner.expressway:core:0.3.7"
     implementation "page.j5155.roadrunner.expressway:ftc:0.3.7"
 
-    implementation "dev.frozenmilk.dairy:Core:2.0.0"
+    implementation "dev.frozenmilk.dairy:Core:1.0.0"
     implementation "dev.frozenmilk.dairy:Pasteurized:1.0.0"
     implementation "dev.frozenmilk.mercurial:Mercurial:1.0.0"
-//    implementation "dev.frozenmilk.sinister:Sloth:0.0.0"
-//    implementation "dev.frozenmilk.sinister.sloth:DashFix:0.0.0"
+    //implementation "dev.frozenmilk.sinister:Sloth:0.0.0"
+    //implementation "dev.frozenmilk.sinister.sloth:DashFix:0.0.0"
 }

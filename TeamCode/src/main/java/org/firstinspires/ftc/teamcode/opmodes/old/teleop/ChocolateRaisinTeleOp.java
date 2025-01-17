@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.control.Util.mtel;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.hardware.robots.ChocolateRaisin;
 
 import page.j5155.expressway.ftc.motion.PIDFController;
 
+@Disabled
 @TeleOp
 public class ChocolateRaisinTeleOp extends OpMode {
     ChocolateRaisin robot;

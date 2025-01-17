@@ -52,9 +52,6 @@ class Motor(private val internal: DcMotorEx) : DcMotorEx by internal {
                 initialized = true
             }
 
-            FeatureRegistrar.activeOpMode.telemetry.addData("Motor Info", "Name: $internal; Target: $target; Error ${target-currentPosition}")
-            FeatureRegistrar.activeOpMode.telemetry.update()
-
             power = pidf.update(currentPosition.toDouble())
 
             return currentPosition in (target - 50)..(target + 50)

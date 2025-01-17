@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.old.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit;
 import org.firstinspires.ftc.teamcode.hardware.robots.TestTeleOpRobot;
 
+@Disabled
 @TeleOp
 public class TestTeleOp extends LinearOpMode {
 

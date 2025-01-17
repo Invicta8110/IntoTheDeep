@@ -30,6 +30,8 @@ object SilkRoad : Feature {
     }
 
     private val actions: MutableList<Action> = mutableListOf()
+    val runningActions: List<Action>
+        get() = actions
 
 
     /**

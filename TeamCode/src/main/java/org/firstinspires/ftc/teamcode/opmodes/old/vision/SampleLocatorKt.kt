@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.old.vision
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName
 import org.firstinspires.ftc.vision.VisionPortal
@@ -10,6 +11,7 @@ import org.opencv.core.MatOfPoint
 import org.opencv.imgproc.Imgproc
 import java.util.stream.Collectors
 
+@Disabled
 class SampleLocatorKt : LinearOpMode() {
     override fun runOpMode() {
         val colorLocatorBlue = ColorBlobLocatorProcessor.Builder()

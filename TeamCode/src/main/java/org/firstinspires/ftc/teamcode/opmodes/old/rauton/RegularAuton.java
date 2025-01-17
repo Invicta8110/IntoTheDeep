@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.control.Util;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 
 import page.j5155.expressway.ftc.motion.PIDFController;
 
+@Disabled
 @Config
 @Autonomous
 public class RegularAuton extends OpMode {

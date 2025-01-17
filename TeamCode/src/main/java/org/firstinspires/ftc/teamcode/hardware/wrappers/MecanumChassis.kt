@@ -17,33 +17,11 @@ class MecanumChassis @JvmOverloads constructor(
     pose: Pose2d = Pose2d(0.0, 0.0, 0.0)
 ) : SparkFunOTOSDrive(hwMap, pose) {
 
-    init {
-        Motor.reverse(rightFront)
-        Motor.reverse(rightBack)
-    }
-
     fun setDrivePowers(x: Double, y: Double, heading: Double) = setDrivePowers(PoseVelocity2d(Vector2d(x, y), heading))
 
     fun setDrivePowers(vector: Vector2d, heading: Double) = setDrivePowers(PoseVelocity2d(vector, heading))
 
-    fun setDrivePowers(vector: Vector2d, rotation: Rotation2d) = setDrivePowers(PoseVelocity2d(vector, rotation.toDouble()))
-
-    fun moveToPointAction(x: Double, y: Double): Action = actionBuilder(pose)
-        .splineTo(Vector2d(x, y), pose.heading)
-        .build()
-
-    fun turnAction(angle: Double): Action  = actionBuilder(pose)
-        .turnTo(angle)
-        .build()
-
-
-    fun followTrajectoryAction(trajectory: List<Pose2d>): Action {
-        var traj = actionBuilder(pose)
-        for (pose in trajectory) {
-            traj = traj.splineTo(pose.position, pose.heading)
-        }
-        return traj.build()
-    }
+    fun drivePowerAction(pose: PoseVelocity2d): Action = InstantAction { setDrivePowers(pose) }
 
     fun drivePowerAction(x: Double, y: Double, heading: Double): Action
         = InstantAction { setDrivePowers(x, y, heading) }

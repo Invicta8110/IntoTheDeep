@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.old.vision;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.SortOrder;
 
@@ -15,6 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Disabled
 public class SampleLocator extends LinearOpMode {
     @Override
     public void runOpMode() {

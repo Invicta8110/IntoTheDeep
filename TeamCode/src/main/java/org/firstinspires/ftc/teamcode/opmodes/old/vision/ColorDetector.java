@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.old.vision;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
+@Disabled
 public class ColorDetector extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

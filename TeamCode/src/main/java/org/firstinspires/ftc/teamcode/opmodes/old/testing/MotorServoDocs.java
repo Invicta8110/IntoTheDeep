@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.old.testing;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Disabled
 public class MotorServoDocs extends LinearOpMode {
     DcMotor motorEx;
     Servo servoEx; //physically, a Servo and a CR Servo (Continuous Rotation Servo) are the same; you use a Servo Programmer to change them from one mode to the other

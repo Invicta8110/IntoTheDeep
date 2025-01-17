@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.opmodes.old.testing;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.control.Util;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis;
 
+@Disabled
 @TeleOp
 public class OtosTest extends OpMode {
     MecanumChassis robot;

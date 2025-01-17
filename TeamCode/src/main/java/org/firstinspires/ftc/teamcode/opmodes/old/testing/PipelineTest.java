@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.old.testing;
 
 import android.graphics.Canvas;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+@Disabled
 public class PipelineTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
