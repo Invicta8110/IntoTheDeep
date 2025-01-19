@@ -54,6 +54,11 @@ class MushroomTeleop : OpMode() {
             robot.arm.goToB()
         } else if (gp1.b.onTrue) {
             robot.arm.position = CreamyMushroomRobot.armCenter
+        } else if (gp1.y.onTrue) {
+            robot.arm.position = CreamyMushroomRobot.armSpecimenGrab
+        }
+        if (gp1.back.onTrue) {
+            slidePid.targetPosition = LinearSlides.SlidePosition.SPECIMEN_HANG.position
         }
 
         if (gp1.dpadUp.state) {
@@ -78,6 +83,8 @@ class MushroomTeleop : OpMode() {
         }
 
         mtel.addData("Slide PID Target", slidePid.targetPosition)
+        mtel.addData("Slide 0 Pos", robot.slides[0].currentPosition)
+        mtel.addData("Slide 1 Pos", robot.slides[1].currentPosition)
         mtel.addData("Robot Position", robot.drive.pose.position)
         mtel.addData("Robot Heading", robot.drive.pose.heading.log())
         mtel.addData("Loop Time", timer.milliseconds()/loopCount)
