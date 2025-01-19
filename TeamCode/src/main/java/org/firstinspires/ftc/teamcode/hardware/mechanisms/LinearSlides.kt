@@ -77,9 +77,9 @@ class LinearSlides(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
         override fun loop(p: TelemetryPacket): Boolean {
             val output = pid.update(measuredPosition=motors[0].currentPosition.toDouble())
 
-            if (enabled) setPower(output)
+            if (enabled) motors.forEach { it.power = output }
 
-            return false
+            return true
         }
 
         fun updateTarget(target: Int) : Action {

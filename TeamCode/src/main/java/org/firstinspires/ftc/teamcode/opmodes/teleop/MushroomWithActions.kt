@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes
+package org.firstinspires.ftc.teamcode.opmodes.teleop
 
 import com.acmerobotics.roadrunner.InstantAction
 import com.acmerobotics.roadrunner.ParallelAction
@@ -69,9 +69,9 @@ class MushroomWithActions : OpMode() {
 
         // SLIDE ACTIONS (complicated)
         if (gp1.dpadUp.onTrue) {
-            slidePid.target = 2400
+            SilkRoad.runAsync(InstantAction{ slidePid.target = 2400 })
         } else if (gp1.dpadDown.onTrue) {
-            slidePid.target = 100
+            SilkRoad.runAsync(InstantAction{ slidePid.target = 100 })
         }
 
         mtel.addData("Loop Time", timer.milliseconds()/loopCount)

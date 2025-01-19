@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.Vector2d
 import com.noahbres.meepmeep.MeepMeep
 import com.noahbres.meepmeep.MeepMeep.Background
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder
+import kotlin.math.PI
 
 fun main() {
     val meepMeep = MeepMeep(800)
@@ -20,9 +21,9 @@ fun main() {
     val redLeft = Pose2d(-36.0, -60.0, Math.PI/2)
 
     //any actions go here
-    val action = myBot.drive.actionBuilder(redLeft) //this is your starting position
-        .strafeTo(Vector2d(47.4, -24.5))
-        .splineToSplineHeading(Pose2d(47.4, -57.5, -Math.PI/2), 0.0)
+    val action = myBot.drive.actionBuilder(Pose2d(0.0, 0.0, Math.PI/2))
+        .splineTo(Vector2d(12.0, 72.0), PI)//this is your starting position
+        .strafeTo(Vector2d(24.0, 0.0))
         .build()
 
     myBot.runAction(action)

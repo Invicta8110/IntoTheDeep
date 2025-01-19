@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes
+package org.firstinspires.ftc.teamcode.opmodes.teleop
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.control.SilkRoad
 import org.firstinspires.ftc.teamcode.control.mtel
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides
 import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot
-import org.firstinspires.ftc.teamcode.hardware.robots.TreeRobot
 import page.j5155.expressway.ftc.motion.PIDFController
 
 @TeleOp(name = "Mushroom One Driver", group = "Mushrooms")
@@ -85,13 +84,5 @@ class MushroomTeleop : OpMode() {
         mtel.update()
 
         loopCount++;
-    }
-
-    companion object {
-        @JvmStatic var armA = 0.0
-        @JvmStatic var armB = 1.0
-
-        @JvmStatic var wristA = 0.0
-        @JvmStatic var wristB = 1.0
     }
 }

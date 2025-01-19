@@ -63,7 +63,7 @@ class CreamyMushroomRobot
     companion object {
         val armRange = PwmRange(500.0, 2500.0)
         val armDown = 0.65
-        val armUp = 0.25
-        val armCenter = 0.35
+        val armUp = 0.20
+        val armCenter = 0.40
     }
 }
