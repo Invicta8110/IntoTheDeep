@@ -51,7 +51,7 @@ class LinearSlides(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
     val goDown get() = ParallelAction(motors.map { it.RTPAction(DOWN_POS, 1.0) })
 
     enum class SlidePosition(val position: Int) {
-        DOWN(100), MIDDLE(2000), UP(3000)
+        DOWN(100), SPECIMEN_HANG(752), MIDDLE(2000), UP(3000)
     }
 
     companion object {

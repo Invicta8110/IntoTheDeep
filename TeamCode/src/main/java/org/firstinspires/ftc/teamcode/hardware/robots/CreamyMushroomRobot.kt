@@ -23,7 +23,7 @@ class CreamyMushroomRobot
 ) {
     val drive = MecanumChassis(hwMap, startPose)
     val slides = LinearSlides(hwMap)
-    val claw = TwoPointServo("claw", hwMap, 0.15, 0.60)
+    val claw = TwoPointServo("claw", hwMap, 0.35, 0.60)
     val arm = TwoPointServo("armRight", hwMap, armUp, armDown)
     val wrist = TwoPointServo("wrist", hwMap, 0.25, 0.55)
     val lynxes = hwMap.getAll(LynxModule::class.java)
@@ -63,7 +63,8 @@ class CreamyMushroomRobot
     companion object {
         val armRange = PwmRange(500.0, 2500.0)
         val armDown = 0.65
-        val armUp = 0.20
+        val armUp = 0.21
         val armCenter = 0.40
+        val armSpecimenGrab = 0.45
     }
 }
