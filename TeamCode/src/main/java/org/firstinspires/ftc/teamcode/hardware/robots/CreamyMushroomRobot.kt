@@ -26,7 +26,7 @@ class CreamyMushroomRobot
     val slides = LinearSlides(hwMap)
     val claw = TwoPointServo("claw", hwMap, 0.125, 0.75)
     val arm = TwoPointServo("armLeft", hwMap, armUp, armDown)
-    val wrist = TwoPointServo("wrist", hwMap, 0.25, 0.55)
+    val wrist = TwoPointServo("wrist", hwMap, 0.25, 0.50)
     val lynxes = hwMap.getAll(LynxModule::class.java)
     val otos: SparkFunOTOS
         get() = drive.otos
@@ -71,8 +71,8 @@ class CreamyMushroomRobot
     companion object {
         val armRange = PwmRange(500.0, 2500.0)
 
-        val armHome = 0.875
-        val armUp = 0.35
+        val armHome = 0.90
+        val armUp = 0.3375
         val armDown = 0.60
         val armBucket = 0.75
     }
