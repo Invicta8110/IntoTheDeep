@@ -58,23 +58,27 @@ class LinearSlides(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
         @JvmField var kP = 0.01
         @JvmField var kI = 0.0
         @JvmField var kD = 0.1
+
+        @JvmStatic val PIDF = PIDFController(PIDFController.PIDCoefficients(kP, kI, kD))
+    }
+
+    fun runPID(initialTarget: Int) : SlidePIDAction {
+        return SlidePIDAction(initialTarget)
     }
 
     fun runPID(initialTarget: SlidePosition) : SlidePIDAction {
         return SlidePIDAction(initialTarget)
     }
 
-    inner class SlidePIDAction(private val initialTarget: SlidePosition) : InitLoopAction() {
+    inner class SlidePIDAction(private val initialTarget: Int) : Action {
+        constructor(initialTarget: SlidePosition) : this(initialTarget.position)
+
         val pid = PIDFController(PIDFController.PIDCoefficients(kP, kI, kD))
         var enabled = true
 
         var target by pid::targetPosition
 
-        override fun init() {
-            pid.targetPosition = initialTarget.position
-        }
-
-        override fun loop(p: TelemetryPacket): Boolean {
+        override fun run(p: TelemetryPacket): Boolean {
             val output = pid.update(measuredPosition=motors[0].currentPosition.toDouble())
 
             if (enabled) motors.forEach { it.power = output }
@@ -84,6 +88,10 @@ class LinearSlides(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
 
         fun updateTarget(target: Int) : Action {
             return InstantAction { pid.targetPosition = target }
+        }
+
+        fun updateTarget(target: SlidePosition) : Action {
+            return updateTarget(target.position)
         }
 
         fun goTo(target: Int) : Action {
@@ -97,6 +105,10 @@ class LinearSlides(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
                     return motors[0].currentPosition !in target-50..target+50
                 }
             }
+        }
+
+        fun goTo(target: SlidePosition) : Action {
+            return this.goTo(target.position)
         }
     }
 }

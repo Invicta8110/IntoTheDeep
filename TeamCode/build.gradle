@@ -15,7 +15,7 @@
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 apply plugin: 'org.jetbrains.kotlin.android'
-//apply plugin: 'dev.frozenmilk.sinister.sloth.Load'
+apply plugin: 'dev.frozenmilk.sinister.sloth.Load'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
@@ -28,17 +28,17 @@ android {
     }
 }
 
-//buildscript {
-//    repositories {
-//        mavenCentral()
-//        maven {
-//            url "https://repo.dairy.foundation/snapshots"
-//        }
-//    }
-//    dependencies {
-//        classpath "dev.frozenmilk.sinister.sloth:Load:0.0.1"
-//    }
-//}
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://repo.dairy.foundation/snapshots"
+        }
+    }
+    dependencies {
+        classpath "dev.frozenmilk.sinister.sloth:Load:0.0.1"
+    }
+}
 
 repositories {
     maven {
@@ -74,6 +74,6 @@ dependencies {
     implementation "dev.frozenmilk.dairy:Core:1.0.0"
     implementation "dev.frozenmilk.dairy:Pasteurized:1.0.0"
     implementation "dev.frozenmilk.mercurial:Mercurial:1.0.0"
-    //implementation "dev.frozenmilk.sinister:Sloth:0.0.0"
-    //implementation "dev.frozenmilk.sinister.sloth:DashFix:0.0.0"
+    implementation "dev.frozenmilk.sinister:Sloth:0.0.0"
+    implementation "dev.frozenmilk.sinister.sloth:DashFix:0.0.0"
 }

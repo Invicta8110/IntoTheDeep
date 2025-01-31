@@ -56,7 +56,7 @@ public class SparkFunOTOSDrive extends MecanumDrive {
         // multiple speeds to get an average, then set the linear scalar to the
         // inverse of the error. For example, if you move the robot 100 inches and
         // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
-        public double linearScalar = 84.0 / 80.726;
+        public double linearScalar = 115.5943 / 115;
         public double angularScalar = 0.9953;
     }
 
@@ -128,6 +128,7 @@ public class SparkFunOTOSDrive extends MecanumDrive {
         SparkFunOTOS.Pose2D otosAcc = new SparkFunOTOS.Pose2D();
         otos.getPosVelAcc(otosPose,otosVel,otosAcc);
         pose = OTOSPoseToRRPose(otosPose);
+        pose = new Pose2d(new Vector2d(pose.position.x, pose.position.y * -1), pose.heading);
         lastOtosPose = pose;
 
         // RR standard
@@ -142,6 +143,4 @@ public class SparkFunOTOSDrive extends MecanumDrive {
         // OTOS velocity units happen to be identical to Roadrunners, so we don't need any conversion!
         return new PoseVelocity2d(new Vector2d(otosVel.x, otosVel.y),otosVel.h);
     }
-
-
 }

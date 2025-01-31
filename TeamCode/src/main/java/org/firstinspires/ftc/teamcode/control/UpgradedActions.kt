@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.canvas.Canvas
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.Action
+import com.acmerobotics.roadrunner.SleepAction
 import dev.frozenmilk.dairy.core.Feature
 import dev.frozenmilk.dairy.core.dependency.Dependency
 import dev.frozenmilk.dairy.core.dependency.annotation.SingleAnnotation
@@ -11,9 +12,10 @@ import dev.frozenmilk.dairy.core.dependency.feature.SingleFeature
 import dev.frozenmilk.dairy.core.util.OpModeFreshLazyCell
 import dev.frozenmilk.dairy.core.util.supplier.logical.EnhancedBooleanSupplier
 import dev.frozenmilk.dairy.core.wrapper.Wrapper
+import page.j5155.expressway.core.actions.RaceParallelAction
 
 /**
- * Dairy Service (Feature) allowing for the asynchronous usage of actions.
+ * Dairy Service (Feature) allowing for the asynchronous usage of runningActions.
  * Use by adding [SilkRoad.Attach] to your OpMode class.
  * Note: does not work with LinearOpModes
  *
@@ -29,19 +31,19 @@ object SilkRoad : Feature {
         dependency = SingleFeature(this@SilkRoad)
     }
 
-    private val actions: MutableList<Action> = mutableListOf()
-    val runningActions: List<Action>
-        get() = actions
+    private val runningActions: MutableList<Action> = mutableListOf()
+    val publicActions: List<Action>
+        get() = runningActions
 
 
     /**
-     * Adds an action to the list of actions running at the end of each loop
+     * Adds an action to the list of runningActions running at the end of each loop
      * (AKA runs it asynchronously).
      * @param action action to run
      */
     @JvmStatic
     fun runAsync(action: Action) {
-        actions.add(action)
+        runningActions.add(action)
     }
 
     override fun preUserInitHook(opMode: Wrapper) {
@@ -50,7 +52,7 @@ object SilkRoad : Feature {
     override fun postUserLoopHook(opMode: Wrapper) {
         val packet = TelemetryPacket()
         packet.fieldOverlay().operations.addAll(canvas.operations)
-        val iter: MutableIterator<Action> = actions.iterator()
+        val iter: MutableIterator<Action> = runningActions.iterator()
         while (iter.hasNext() && !Thread.currentThread().isInterrupted) {
             val action: Action = iter.next()
             if (!action.run(packet)) iter.remove()
@@ -65,6 +67,8 @@ object SilkRoad : Feature {
     @Target(AnnotationTarget.CLASS)
     annotation class Attach
 }
+
+fun Action.timeout(timeout: Double) = RaceParallelAction(SleepAction(timeout), this)
 
 fun EnhancedBooleanSupplier.onPress(action: Action) {
     SilkRoad.runAsync(action)

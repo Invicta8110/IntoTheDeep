@@ -54,7 +54,7 @@ class Motor(private val internal: DcMotorEx) : DcMotorEx by internal {
 
             power = pidf.update(currentPosition.toDouble())
 
-            return currentPosition in (target - 50)..(target + 50)
+            return currentPosition !in (target - 50)..(target + 50)
         }
     }
 

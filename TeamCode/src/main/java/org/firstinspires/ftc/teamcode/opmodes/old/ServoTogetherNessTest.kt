@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmodes.old
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.hardware.robots.TreeRobot
 
+@Disabled
 @TeleOp
 class ServoTogetherNessTest : OpMode() {
     val robot by OpModeLazyCell { TreeRobot(hardwareMap) }

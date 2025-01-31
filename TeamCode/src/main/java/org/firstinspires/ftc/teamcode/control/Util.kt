@@ -30,6 +30,11 @@ const val CPR_84 = 1993.6
 
 @JvmField val mtel: MultipleTelemetry = MultipleTelemetry(FeatureRegistrar.activeOpMode.telemetry, FtcDashboard.getInstance().telemetry)
 
+val blueRight = Pose2d(36.0, 60.0, -Math.PI/2)
+val blueLeft = Pose2d(-26.0, 60.0, -Math.PI/2)
+val redRight = Pose2d(26.0, -60.0, Math.PI/2)
+val redLeft = Pose2d(-36.0, -60.0, Math.PI/2)
+
 // Pose2d operations
 
 fun Pose2D.convertPoseToRR(): Pose2d = OTOSPoseToRRPose(this)

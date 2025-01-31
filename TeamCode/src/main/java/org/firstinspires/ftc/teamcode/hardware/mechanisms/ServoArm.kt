@@ -15,10 +15,17 @@ class ServoArm private constructor(val left: TwoPointServo, val right: TwoPointS
     constructor(hwMap: HardwareMap) : this(hwMap, 1.0, 0.0)
 
     init {
-        val range = PwmRange(1050.0, 1950.0)
+        val range = PwmRange(500.0, 2500.0)
         left.pwmRange = range
         right.pwmRange = range
     }
+
+    var position
+        get() = left.position
+        set(value) {
+            left.position = value
+            right.position = 1-value
+        }
 
     val upAction get() = InstantAction(::goUp)
     val downAction get() = InstantAction(::goDown)

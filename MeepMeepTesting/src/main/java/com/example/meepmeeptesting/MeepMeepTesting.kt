@@ -1,6 +1,7 @@
 package com.example.meepmeeptesting
 
 import com.acmerobotics.roadrunner.Pose2d
+import com.acmerobotics.roadrunner.SleepAction
 import com.acmerobotics.roadrunner.Vector2d
 import com.noahbres.meepmeep.MeepMeep
 import com.noahbres.meepmeep.MeepMeep.Background
@@ -21,9 +22,11 @@ fun main() {
     val redLeft = Pose2d(-36.0, -60.0, Math.PI/2)
 
     //any actions go here
-    val action = myBot.drive.actionBuilder(Pose2d(0.0, 0.0, Math.PI/2))
-        .splineTo(Vector2d(12.0, 72.0), PI)//this is your starting position
-        .strafeTo(Vector2d(24.0, 0.0))
+    val action = myBot.drive.actionBuilder(redRight)
+        .splineToConstantHeading(Vector2d(6.7, -36.1), PI/2)//this is your starting position
+        .splineToConstantHeading(Vector2d(27.0, -33.8), PI/2)
+        .splineToConstantHeading(Vector2d(52.0, -12.0), PI/2)
+        .splineToConstantHeading(Vector2d(42.0, -60.0), PI/2)
         .build()
 
     myBot.runAction(action)

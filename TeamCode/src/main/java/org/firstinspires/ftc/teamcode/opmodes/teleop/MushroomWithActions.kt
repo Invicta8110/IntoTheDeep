@@ -64,7 +64,7 @@ class MushroomWithActions : OpMode() {
         } else if (gp1.x.onTrue) {
             SilkRoad.runAsync(robot.arm.runToB)
         } else if (gp1.b.onTrue) {
-            SilkRoad.runAsync(InstantAction { robot.arm.position = CreamyMushroomRobot.armCenter })
+            SilkRoad.runAsync(InstantAction { robot.arm.position = CreamyMushroomRobot.armUp })
         }
 
         // SLIDE ACTIONS (complicated)
