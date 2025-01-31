@@ -49,14 +49,15 @@ class MushroomTeleop : OpMode() {
         robot.wristManualControl(gp1)
 
         if (gp1.a.onTrue) {
-            robot.arm.goToA()
+            robot.arm.position = CreamyMushroomRobot.armUp
         } else if (gp1.x.onTrue) {
-            robot.arm.goToB()
+            robot.arm.position = CreamyMushroomRobot.armHome
         } else if (gp1.b.onTrue) {
-            robot.arm.position = CreamyMushroomRobot.armCenter
+            robot.arm.position = CreamyMushroomRobot.armDown
         } else if (gp1.y.onTrue) {
-            robot.arm.position = CreamyMushroomRobot.armSpecimenGrab
+            robot.arm.position = CreamyMushroomRobot.armBucket
         }
+
         if (gp1.back.onTrue) {
             slidePid.targetPosition = LinearSlides.SlidePosition.SPECIMEN_HANG.position
         }
@@ -70,16 +71,10 @@ class MushroomTeleop : OpMode() {
         } else if (gp1.dpadDown.onFalse) {
             slidePid.targetPosition = robot.slides[0].currentPosition
         } else {
-            val avg = robot.slides.sumOf { it.currentPosition } / robot.slides.size
             val output = slidePid.update(measuredPosition=robot.slides[0].currentPosition.toDouble())
 
             robot.slides[0].power = output
             robot.slides[1].power = output
-        }
-
-        robot.lynxes.forEachIndexed { i, it ->
-            mtel.addData("Lynx $i Voltage", it.getInputVoltage(VoltageUnit.VOLTS))
-            mtel.addData("Lynx $i Current", it.getCurrent(CurrentUnit.AMPS))
         }
 
         mtel.addData("Slide PID Target", slidePid.targetPosition)

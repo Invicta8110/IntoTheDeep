@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware.robots
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.PoseVelocity2d
+import com.acmerobotics.roadrunner.SequentialAction
 import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS
@@ -23,8 +24,8 @@ class CreamyMushroomRobot
 ) {
     val drive = MecanumChassis(hwMap, startPose)
     val slides = LinearSlides(hwMap)
-    val claw = TwoPointServo("claw", hwMap, 0.35, 0.60)
-    val arm = TwoPointServo("armRight", hwMap, armUp, armDown)
+    val claw = TwoPointServo("claw", hwMap, 0.125, 0.75)
+    val arm = TwoPointServo("armLeft", hwMap, armUp, armDown)
     val wrist = TwoPointServo("wrist", hwMap, 0.25, 0.55)
     val lynxes = hwMap.getAll(LynxModule::class.java)
     val otos: SparkFunOTOS
@@ -60,11 +61,19 @@ class CreamyMushroomRobot
         )
     }
 
+    fun scoreSpecimen(slidePid: LinearSlides.SlidePIDAction) = SequentialAction(
+        slidePid.goTo(LinearSlides.SlidePosition.SPECIMEN_HANG),
+        arm.runToA,
+        claw.runToB,
+        slidePid.goTo(LinearSlides.SlidePosition.DOWN)
+    )
+
     companion object {
         val armRange = PwmRange(500.0, 2500.0)
-        val armDown = 0.65
-        val armUp = 0.21
-        val armCenter = 0.40
-        val armSpecimenGrab = 0.45
+
+        val armHome = 0.875
+        val armUp = 0.35
+        val armDown = 0.60
+        val armBucket = 0.75
     }
 }
