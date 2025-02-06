@@ -8,10 +8,10 @@ import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.Rotation2d
 import com.acmerobotics.roadrunner.Vector2d
-import com.acmerobotics.roadrunner.ftc.OTOSPoseToRRPose
-import com.acmerobotics.roadrunner.ftc.RRPoseToOTOSPose
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS.Pose2D
 import dev.frozenmilk.dairy.core.FeatureRegistrar
+import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer.convertPose
 import page.j5155.expressway.ftc.motion.PIDFController
 import kotlin.math.PI
 import kotlin.math.cos
@@ -38,8 +38,8 @@ val redLeft = Pose2d(-36.0, -60.0, Math.PI/2)
 
 // Pose2d operations
 
-fun Pose2D.convertPoseToRR(): Pose2d = OTOSPoseToRRPose(this)
-fun Pose2d.convertPoseToOTOS(): Pose2D = RRPoseToOTOSPose(this)
+fun Pose2D.convertPoseToRR(): Pose2d = convertPose(this)
+fun Pose2d.convertPoseToOTOS(): Pose2D = convertPose(this)
 fun Pose2d.convertToPoseVelocity2d() = PoseVelocity2d(this.position, this.heading.toDouble())
 
 fun Pose2d.distanceTo(other: Pose2d) = this.position.distanceTo(other.position)

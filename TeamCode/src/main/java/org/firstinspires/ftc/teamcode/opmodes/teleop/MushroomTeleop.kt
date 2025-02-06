@@ -79,8 +79,8 @@ class MushroomTeleop : OpMode() {
         mtel.addData("Slide PID Target", slidePid.targetPosition)
         mtel.addData("Slide 0 Pos", robot.slides[0].currentPosition)
         mtel.addData("Slide 1 Pos", robot.slides[1].currentPosition)
-        mtel.addData("Robot Position", robot.drive.pose.position)
-        mtel.addData("Robot Heading", robot.drive.pose.heading.log())
+        mtel.addData("Robot Position", robot.drive.localizer.pose.position)
+        mtel.addData("Robot Heading", robot.drive.localizer.pose.heading.log())
         mtel.addData("Loop Time", timer.milliseconds()/loopCount)
         mtel.update()
 

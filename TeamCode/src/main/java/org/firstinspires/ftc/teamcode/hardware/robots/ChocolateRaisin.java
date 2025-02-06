@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
+import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class ChocolateRaisin {
         slides = new LinearSlides(new Motor("slides", hwMap));
         motorArm = new MotorArm(new Motor("armRight", hwMap));
         claw = new TwoPointServo("claw", hwMap, .75, 1);
-        otos = chassis.otos;
+        otos = ((OTOSLocalizer)chassis.localizer).getOTOS();
 
         List<LynxModule> hubs = hwMap.getAll(LynxModule.class);
         for (LynxModule module : hubs) {
@@ -74,7 +75,7 @@ public class ChocolateRaisin {
     public SparkFunOTOS getOTOS() { return otos; }
 
     public Pose2d getPose() {
-        return chassis.pose;
+        return chassis.localizer.getPose();
     }
 
     private void configureOtos() {

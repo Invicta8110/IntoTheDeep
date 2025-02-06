@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.ServoArm
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
+import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer
 
 class TreeRobot(hwMap: HardwareMap) {
     val drive = MecanumChassis(hwMap)
@@ -18,7 +19,7 @@ class TreeRobot(hwMap: HardwareMap) {
     val claw = TwoPointServo("claw", hwMap, 0.66, 1.0)
     val arm = ServoArm(hwMap)
     val otos: SparkFunOTOS
-        get() = drive.otos
+        get() = (drive.localizer as OTOSLocalizer).otos
 
     fun slideManualControl(gamepad: SDKGamepad) {
         when {
@@ -53,7 +54,7 @@ class TreeRobot(hwMap: HardwareMap) {
     fun driveManualControlFC(gamepad: SDKGamepad) {
         this.drive.setDrivePowers(
             Vector2d(gamepad.leftStickY.state, gamepad.leftStickX.state)
-                .fieldCentric(drive.pose.heading),
+                .fieldCentric(drive.localizer.pose.heading),
             gamepad.rightStickX.state
             )
     }

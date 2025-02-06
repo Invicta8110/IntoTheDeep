@@ -28,7 +28,7 @@ public class OtosTest extends OpMode {
         Pose2d pose = Util.convertPoseToRR(otos.getPosition());
 
         Util.mtel.addData("Robot Position via OTOS", pose);
-        Util.mtel.addData("Robot Position via RR", robot.pose);
+        Util.mtel.addData("Robot Position via RR", robot.localizer.getPose());
         Util.mtel.update();
     }
 }

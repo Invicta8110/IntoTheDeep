@@ -38,16 +38,6 @@ class MecanumChassis @JvmOverloads constructor(
     }
      */
 
-    fun moveToPoint(target: Pose2d): PIDToPoint = PIDToPoint(
-        this::pose,
-        this::updatePoseEstimate,
-        target,
-        this::setDrivePowers,
-        PIDFController.PIDCoefficients(RR_PARAMS.axialGain, 0.0, RR_PARAMS.axialVelGain), // the axial PID coefficients
-        PIDFController.PIDCoefficients(RR_PARAMS.lateralGain, 0.0, RR_PARAMS.lateralVelGain), // the lateral PID coefficients
-        PIDFController.PIDCoefficients(RR_PARAMS.headingGain, 0.0, RR_PARAMS.headingVelGain) // the heading PID coefficients
-    )
-
     companion object {
         @JvmStatic val RR_PARAMS: MecanumDrive.Params = MecanumDrive.PARAMS
     }

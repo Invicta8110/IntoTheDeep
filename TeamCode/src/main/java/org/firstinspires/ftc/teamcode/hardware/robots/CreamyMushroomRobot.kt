@@ -16,6 +16,7 @@ import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
+import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer
 
 @Config
 class CreamyMushroomRobot
@@ -28,7 +29,7 @@ class CreamyMushroomRobot
     val claw = TwoPointServo("claw", hwMap, 0.10, 0.625)
     val wrist = TwoPointServo("wrist", hwMap, 0.25, 0.50)
     val otos: SparkFunOTOS
-        get() = drive.otos
+        get() = (drive.localizer as OTOSLocalizer).otos
 
     val arm: List<ServoImplEx>
     val lynxes: List<LynxModule>
