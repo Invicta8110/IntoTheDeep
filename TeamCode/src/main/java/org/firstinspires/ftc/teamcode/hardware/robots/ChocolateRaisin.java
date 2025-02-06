@@ -27,7 +27,7 @@ public class ChocolateRaisin {
     public ChocolateRaisin(HardwareMap hwMap, Pose2d pose) {
         chassis = new MecanumChassis(hwMap, pose);
         slides = new LinearSlides(new Motor("slides", hwMap));
-        motorArm = new MotorArm(new Motor("arm", hwMap));
+        motorArm = new MotorArm(new Motor("armRight", hwMap));
         claw = new TwoPointServo("claw", hwMap, .75, 1);
         otos = chassis.otos;
 

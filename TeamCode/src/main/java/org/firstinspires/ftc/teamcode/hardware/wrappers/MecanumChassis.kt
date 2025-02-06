@@ -4,18 +4,16 @@ import com.acmerobotics.roadrunner.Action
 import com.acmerobotics.roadrunner.InstantAction
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.PoseVelocity2d
-import com.acmerobotics.roadrunner.Rotation2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive
-import org.firstinspires.ftc.teamcode.roadrunner.SparkFunOTOSDrive
 import page.j5155.expressway.ftc.motion.PIDFController
 import page.j5155.expressway.ftc.motion.PIDToPoint
 
 class MecanumChassis @JvmOverloads constructor(
     hwMap: HardwareMap,
     pose: Pose2d = Pose2d(0.0, 0.0, 0.0)
-) : SparkFunOTOSDrive(hwMap, pose) {
+) : MecanumDrive(hwMap, pose) {
 
     fun setDrivePowers(x: Double, y: Double, heading: Double) = setDrivePowers(PoseVelocity2d(Vector2d(x, y), heading))
 

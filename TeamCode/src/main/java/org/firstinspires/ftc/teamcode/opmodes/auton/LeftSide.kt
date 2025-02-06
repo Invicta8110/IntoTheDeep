@@ -15,7 +15,7 @@ class LeftSide : LinearOpMode() {
 
     override fun runOpMode() {
         val action = robot.drive.actionBuilder(Pose2d(0.0, 0.0, PI/2))
-            .strafeTo(Vector2d(20.0, 0.0))
+            .strafeTo(Vector2d(16.0, 0.0))
             .build()
 
         waitForStart()

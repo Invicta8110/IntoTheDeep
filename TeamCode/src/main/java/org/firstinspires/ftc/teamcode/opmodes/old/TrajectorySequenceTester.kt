@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import org.firstinspires.ftc.teamcode.control.SilkRoad
-import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive
 
 @SilkRoad.Attach
 @Autonomous

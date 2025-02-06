@@ -3,15 +3,15 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import com.qualcomm.robotcore.hardware.ServoImplEx
 import com.qualcomm.robotcore.util.ElapsedTime
 import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
-import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit
 import org.firstinspires.ftc.teamcode.control.SilkRoad
 import org.firstinspires.ftc.teamcode.control.mtel
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides
 import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot
+import org.firstinspires.ftc.teamcode.hardware.robots.position
 import page.j5155.expressway.ftc.motion.PIDFController
 
 @TeleOp(name = "Mushroom One Driver", group = "Mushrooms")
@@ -36,8 +36,8 @@ class MushroomTeleop : OpMode() {
     override fun loop() {
 //        slideCoefs = PIDFController.PIDCoefficients(LinearSlides.kP, LinearSlides.kI, LinearSlides.kD)
 //
-//        robot.arm.pA = armA
-//        robot.arm.pB = armB
+//        robot.armRight.pA = armA
+//        robot.armRight.pB = armB
 //        robot.wrist.pA = wristA
 //        robot.wrist.pB = wristB
 
@@ -48,14 +48,13 @@ class MushroomTeleop : OpMode() {
         robot.clawManualControl(gamepad1)
         robot.wristManualControl(gp1)
 
-        if (gp1.a.onTrue) {
-            robot.arm.position = CreamyMushroomRobot.armUp
-        } else if (gp1.x.onTrue) {
-            robot.arm.position = CreamyMushroomRobot.armHome
-        } else if (gp1.b.onTrue) {
-            robot.arm.position = CreamyMushroomRobot.armDown
-        } else if (gp1.y.onTrue) {
-            robot.arm.position = CreamyMushroomRobot.armBucket
+        when {
+            gp1.a.onTrue -> robot.arm.position = CreamyMushroomRobot.armUp
+            gp1.x.onTrue -> robot.arm.position = CreamyMushroomRobot.armHome
+            gp1.b.onTrue -> robot.arm.position = CreamyMushroomRobot.armDown
+            gp1.y.onTrue -> robot.arm.position = CreamyMushroomRobot.armBucket
+            gp1.leftTrigger.state > 0 -> robot.arm.position -= 0.0025
+            gp1.rightTrigger.state > 0 -> robot.arm.position += 0.0025
         }
 
         if (gp1.back.onTrue) {

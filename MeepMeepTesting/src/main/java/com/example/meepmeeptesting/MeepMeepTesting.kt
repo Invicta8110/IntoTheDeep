@@ -23,10 +23,11 @@ fun main() {
 
     //any actions go here
     val action = myBot.drive.actionBuilder(redRight)
-        .splineToConstantHeading(Vector2d(6.7, -36.1), PI/2)//this is your starting position
-        .splineToConstantHeading(Vector2d(27.0, -33.8), PI/2)
+        .splineToConstantHeading(Vector2d(46.0, -12.0), PI/2)
+        .splineToConstantHeading(Vector2d(52.0, -60.0), PI/2)
         .splineToConstantHeading(Vector2d(52.0, -12.0), PI/2)
-        .splineToConstantHeading(Vector2d(42.0, -60.0), PI/2)
+        .splineToConstantHeading(Vector2d(52.0, -60.0), PI/2)
+        .splineToConstantHeading(Vector2d(68.0, -12.0), PI/2)
         .build()
 
     myBot.runAction(action)

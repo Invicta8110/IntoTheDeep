@@ -26,7 +26,7 @@ public class ArmAngleTest extends OpMode {
     @Override
     public void init() {
         gp1 = new SDKGamepad(gamepad1);
-        motorArm = new MotorArm(new Motor("arm", hardwareMap));
+        motorArm = new MotorArm(new Motor("armRight", hardwareMap));
 
         action = motorArm.motor.pidfActionEx(0, coefs);
         SilkRoad.runAsync(action);

@@ -24,7 +24,7 @@ public class RegularAuton extends OpMode {
 
     @Override
     public void init() {
-        arm = new Motor("arm",hardwareMap);
+        arm = new Motor("armRight",hardwareMap);
         arm.reverse();
 
         fLeft = new Motor("fLeft", hardwareMap);
@@ -69,9 +69,9 @@ public class RegularAuton extends OpMode {
         mtel.addData("error: ", fLController.getTargetPosition() - fLeft.getCurrentPosition());
 
 //        armController.setTargetPosition((int)(Util.CPI_435_104/2));
-//        arm.getInternal().setPower(armController.update(arm.getCurrentPosition()));
+//        armRight.getInternal().setPower(armController.update(armRight.getCurrentPosition()));
 
-        //arm.goUp();
+        //armRight.goUp();
 
         if(arm.getCurrentPosition()<1200)
             arm.setPower(1);
@@ -79,7 +79,7 @@ public class RegularAuton extends OpMode {
             arm.setPower(0);
         else
             arm.setPower(.5);
-        mtel.addData("arm pos: ", arm.getCurrentPosition());
+        mtel.addData("armRight pos: ", arm.getCurrentPosition());
     }
 
 }

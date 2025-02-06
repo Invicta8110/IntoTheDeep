@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import dev.frozenmilk.dairy.core.util.OpModeLazyCell
-import org.firstinspires.ftc.teamcode.roadrunner.SparkFunOTOSDrive
 
 @Disabled
 @TeleOp
@@ -18,7 +17,7 @@ class OtosTracker : OpMode() {
     }
 
     val arm: DcMotorEx by OpModeLazyCell {
-        hardwareMap.get("arm") as DcMotorEx
+        hardwareMap.get("armRight") as DcMotorEx
     }
 
     override fun init() {

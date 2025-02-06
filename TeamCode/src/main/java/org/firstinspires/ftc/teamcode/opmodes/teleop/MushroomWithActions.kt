@@ -59,14 +59,6 @@ class MushroomWithActions : OpMode() {
             SilkRoad.runAsync(robot.wrist.runToA)
         }
 
-        if (gp1.a.onTrue) {
-            SilkRoad.runAsync(robot.arm.runToA)
-        } else if (gp1.x.onTrue) {
-            SilkRoad.runAsync(robot.arm.runToB)
-        } else if (gp1.b.onTrue) {
-            SilkRoad.runAsync(InstantAction { robot.arm.position = CreamyMushroomRobot.armUp })
-        }
-
         // SLIDE ACTIONS (complicated)
         if (gp1.dpadUp.onTrue) {
             SilkRoad.runAsync(InstantAction{ slidePid.target = 2400 })
@@ -88,7 +80,6 @@ class MushroomWithActions : OpMode() {
         InstantAction { slidePid.enabled = true },
         ParallelAction(
             slidePid.goTo(2400),
-            robot.arm.runToA
         ),
         robot.claw.runToB
     )

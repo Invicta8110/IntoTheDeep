@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.control
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.acmerobotics.roadrunner.Pose2d
+import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.Rotation2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.OTOSPoseToRRPose
@@ -38,8 +39,8 @@ val redLeft = Pose2d(-36.0, -60.0, Math.PI/2)
 // Pose2d operations
 
 fun Pose2D.convertPoseToRR(): Pose2d = OTOSPoseToRRPose(this)
-
 fun Pose2d.convertPoseToOTOS(): Pose2D = RRPoseToOTOSPose(this)
+fun Pose2d.convertToPoseVelocity2d() = PoseVelocity2d(this.position, this.heading.toDouble())
 
 fun Pose2d.distanceTo(other: Pose2d) = this.position.distanceTo(other.position)
 

@@ -10,6 +10,8 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.PwmControl.PwmRange
+import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.hardware.ServoImplEx
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo
@@ -17,22 +19,36 @@ import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
 
 @Config
 class CreamyMushroomRobot
-
 @JvmOverloads constructor(
     hwMap: HardwareMap,
     startPose: Pose2d = Pose2d(0.0, 0.0, 0.0)
 ) {
     val drive = MecanumChassis(hwMap, startPose)
     val slides = LinearSlides(hwMap)
-    val claw = TwoPointServo("claw", hwMap, 0.125, 0.75)
-    val arm = TwoPointServo("armLeft", hwMap, armUp, armDown)
+    val claw = TwoPointServo("claw", hwMap, 0.10, 0.625)
     val wrist = TwoPointServo("wrist", hwMap, 0.25, 0.50)
-    val lynxes = hwMap.getAll(LynxModule::class.java)
     val otos: SparkFunOTOS
         get() = drive.otos
 
+    val arm: List<ServoImplEx>
+    val lynxes: List<LynxModule>
+
     init {
-        arm.pwmRange = armRange
+        val armRight = hwMap[ServoImplEx::class.java, "armRight"]!!
+        val armLeft = hwMap[ServoImplEx::class.java, "armLeft"]!!
+
+        armRight.pwmRange = armRange
+        armLeft.pwmRange = armRange
+
+        arm = listOf(armLeft, armRight)
+
+        lynxes = hwMap.getAll(LynxModule::class.java)
+
+        arm[1].direction = Servo.Direction.REVERSE
+        // "thingy thingy thingy move"
+        //      -andrew
+
+
     }
 
     fun wristManualControl(gamepad: SDKGamepad) {
@@ -63,7 +79,6 @@ class CreamyMushroomRobot
 
     fun scoreSpecimen(slidePid: LinearSlides.SlidePIDAction) = SequentialAction(
         slidePid.goTo(LinearSlides.SlidePosition.SPECIMEN_HANG),
-        arm.runToA,
         claw.runToB,
         slidePid.goTo(LinearSlides.SlidePosition.DOWN)
     )
@@ -71,9 +86,14 @@ class CreamyMushroomRobot
     companion object {
         val armRange = PwmRange(500.0, 2500.0)
 
-        val armHome = 0.90
-        val armUp = 0.3375
-        val armDown = 0.60
-        val armBucket = 0.75
+        val armConstant = 0.1
+        val armHome = 0.64 // x wall grab from front
+        val armUp = 0.12 // a enter submersible from front
+        val armDown = 0.641 // b (keep)
+        val armBucket = 0.572  // y up-right from front
     }
 }
+
+var List<ServoImplEx>.position: Double
+    get() = this[1].position
+    set(value) { this.forEach { it.position = value } }

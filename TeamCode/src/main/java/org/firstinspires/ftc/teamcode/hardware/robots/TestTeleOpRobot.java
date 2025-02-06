@@ -25,7 +25,7 @@ public class TestTeleOpRobot {
         this.gp1 = gp1;
         drive = new MecanumDrive(hwMap, new Pose2d(0.0, 0.0, 0.0));
         slides = new LinearSlides(new Motor("slides", hwMap));
-        arm = new Motor("arm", hwMap);
+        arm = new Motor("armRight", hwMap);
         claw = new TwoPointServo("claw", hwMap);
 
         List<LynxModule> hubs = hwMap.getAll(LynxModule.class);
