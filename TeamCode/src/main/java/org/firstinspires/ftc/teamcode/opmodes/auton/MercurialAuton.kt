@@ -17,7 +17,7 @@ class MercurialAuton : OpMode() {
 
     override fun init() {
         command = robot.drive.commandBuilder(Pose2d(0.0, 0.0, 0.0))
-            .strafeTo(Vector2d(10.0, 0.0))
+            .strafeTo(Vector2d(0.0, 10.0))
             .build()
     }
 

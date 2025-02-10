@@ -22,12 +22,8 @@ fun main() {
     val redLeft = Pose2d(-36.0, -60.0, Math.PI/2)
 
     //any actions go here
-    val action = myBot.drive.actionBuilder(redRight)
-        .splineToConstantHeading(Vector2d(46.0, -12.0), PI/2)
-        .splineToConstantHeading(Vector2d(52.0, -60.0), PI/2)
-        .splineToConstantHeading(Vector2d(52.0, -12.0), PI/2)
-        .splineToConstantHeading(Vector2d(52.0, -60.0), PI/2)
-        .splineToConstantHeading(Vector2d(68.0, -12.0), PI/2)
+    val action = myBot.drive.actionBuilder(Pose2d(0.0, -60.0, 0.0))
+        .strafeTo(Vector2d(12.0, -60.0))
         .build()
 
     myBot.runAction(action)
