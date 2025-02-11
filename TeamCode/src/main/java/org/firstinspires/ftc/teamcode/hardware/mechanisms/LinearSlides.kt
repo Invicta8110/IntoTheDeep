@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware.mechanisms
 
 import dev.frozenmilk.mercurial.commands.Command
 import dev.frozenmilk.mercurial.commands.Lambda
+import org.firstinspires.ftc.teamcode.control.instant
 import org.firstinspires.ftc.teamcode.control.services.PIDFService
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 import page.j5155.expressway.ftc.motion.PIDFController
@@ -25,15 +26,10 @@ class LinearSlides(vararg motors: Motor) : List<Motor> by motors.toList() {
     val motors = motors.toList()
     val service = PIDFService(PIDF, *motors)
 
-    fun updateTarget(target: Int) : Command = Lambda("Slides To $target")
-            .setInit {
-                service.enabled = true
-                service.target = target
-            }
-            .setRequirements(this, service)
-            .setFinish { true }
-
-
+    fun updateTarget(target: Int) : Command = instant("slide target $target") {
+        service.target = target
+        service.enabled = true
+    }
     fun updateTarget(target: SlidePosition) = updateTarget(target.position)
 
     fun goTo(target: Int) : Command = Lambda("Go To $target")
@@ -45,6 +41,5 @@ class LinearSlides(vararg motors: Motor) : List<Motor> by motors.toList() {
         .setFinish {
             service.atTarget(50)
         }
-
     fun goTo(target: SlidePosition) = goTo(target.position)
 }

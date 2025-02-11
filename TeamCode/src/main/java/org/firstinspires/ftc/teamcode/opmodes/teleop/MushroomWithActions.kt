@@ -13,6 +13,7 @@ import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.control.SilkRoad
 import org.firstinspires.ftc.teamcode.control.mtel
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
 import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot
 
 @TeleOp(name = "Mushroom With Actions", group = "Mushrooms")
@@ -20,7 +21,7 @@ import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot
 class MushroomWithActions : OpMode() {
     val robot by OpModeLazyCell { CreamyMushroomRobot(hardwareMap) }
     val gp1 by OpModeLazyCell { SDKGamepad(gamepad1) }
-    val slidePid by OpModeLazyCell { robot.slides.runPID(LinearSlidesRR.SlidePosition.DOWN) }
+    val slidePid by OpModeLazyCell { robot.slides.runPID(SlidePosition.DOWN) }
 
     val timer = ElapsedTime()
     var loopCount = 0

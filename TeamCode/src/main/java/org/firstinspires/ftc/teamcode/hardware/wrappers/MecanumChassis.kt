@@ -37,8 +37,4 @@ class MecanumChassis @JvmOverloads constructor(
         );
     }
      */
-
-    companion object {
-        @JvmStatic val RR_PARAMS: MecanumDrive.Params = MecanumDrive.PARAMS
-    }
 }

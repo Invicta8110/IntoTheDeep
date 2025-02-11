@@ -7,14 +7,14 @@ import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.control.timeout
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
 import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot
 
 @TeleOp
 class SlidePidTest : LinearOpMode() {
     override fun runOpMode() {
         val robot = CreamyMushroomRobot(hardwareMap)
-        val slidePid = robot.slides.runPID(LinearSlidesRR.SlidePosition.DOWN)
+        val slidePid = robot.slides.runPID(SlidePosition.DOWN)
 
         waitForStart()
 
@@ -23,9 +23,9 @@ class SlidePidTest : LinearOpMode() {
         runBlocking(ParallelAction(
             slidePid.timeout(30.0),
             SequentialAction(
-                slidePid.goTo(LinearSlidesRR.SlidePosition.UP),
+                slidePid.goTo(SlidePosition.UP),
                 SleepAction(5.0),
-                slidePid.goTo(LinearSlidesRR.SlidePosition.SPECIMEN_HANG),
+                slidePid.goTo(SlidePosition.SPECIMEN_HANG),
             )
         ))
     }

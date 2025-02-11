@@ -9,6 +9,7 @@ import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.control.SilkRoad
 import org.firstinspires.ftc.teamcode.control.mtel
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
 import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot
 import org.firstinspires.ftc.teamcode.hardware.robots.position
 import page.j5155.expressway.ftc.motion.PIDFController
@@ -20,7 +21,7 @@ class MushroomTeleop : OpMode() {
     private val robot by OpModeLazyCell { CreamyMushroomRobot(hardwareMap) }
     private val gp1 by OpModeLazyCell { SDKGamepad(gamepad1) }
     private var slideCoefs = PIDFController.PIDCoefficients(LinearSlidesRR.kP, LinearSlidesRR.kI, LinearSlidesRR.kD)
-    private var slidePos = LinearSlidesRR.SlidePosition.DOWN
+    private var slidePos = SlidePosition.DOWN
 
     private val slidePid = PIDFController(slideCoefs)
     private var fieldCentric = false
@@ -57,7 +58,7 @@ class MushroomTeleop : OpMode() {
         }
 
         if (gp1.back.onTrue) {
-            slidePid.targetPosition = LinearSlidesRR.SlidePosition.SPECIMEN_HANG.position
+            slidePid.targetPosition = SlidePosition.SPECIMEN_HANG.position
         }
 
         if (gp1.dpadUp.state) {

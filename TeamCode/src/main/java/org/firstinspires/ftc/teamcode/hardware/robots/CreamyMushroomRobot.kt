@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
 import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer
@@ -79,9 +80,9 @@ class CreamyMushroomRobot
     }
 
     fun scoreSpecimen(slidePid: LinearSlidesRR.SlidePIDAction) = SequentialAction(
-        slidePid.goTo(LinearSlidesRR.SlidePosition.SPECIMEN_HANG),
+        slidePid.goTo(SlidePosition.SPECIMEN_HANG),
         claw.runToB,
-        slidePid.goTo(LinearSlidesRR.SlidePosition.DOWN)
+        slidePid.goTo(SlidePosition.DOWN)
     )
 
     companion object {

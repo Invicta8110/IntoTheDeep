@@ -8,17 +8,16 @@ import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.Rotation2d
 import com.acmerobotics.roadrunner.Vector2d
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS.Pose2D
 import dev.frozenmilk.dairy.core.FeatureRegistrar
+import dev.frozenmilk.mercurial.commands.Command
+import dev.frozenmilk.mercurial.commands.Lambda
 import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer.convertPose
 import page.j5155.expressway.ftc.motion.PIDFController
 import kotlin.math.PI
-import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
-import kotlin.math.sin
 
 const val CPR_312 = 537.7
 const val CPR_435 = 384.5
@@ -97,3 +96,5 @@ fun PIDFController.updateInTolerance(
         }
     }
 }
+
+fun instant(repr: String, action: () -> Unit) : Command = Lambda(repr).setInit(action)
