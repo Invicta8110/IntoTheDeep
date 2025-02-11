@@ -7,8 +7,13 @@ import dev.frozenmilk.dairy.core.wrapper.Wrapper
 
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 import page.j5155.expressway.ftc.motion.PIDFController
+import kotlin.math.abs
+import kotlin.math.absoluteValue
 
 class PIDFService(val controller: PIDFController, vararg val motors: Motor) : Feature {
+	constructor(controller: PIDFController, target: Int, vararg motors: Motor) : this(controller, *motors) {
+		this.target = target
+	}
 
 	// first, we need to set up the dependency
 	// Yielding just says "this isn't too important, always attach me, but run me after more important things"
@@ -23,19 +28,24 @@ class PIDFService(val controller: PIDFController, vararg val motors: Motor) : Fe
 	}
 
 	// users should be able to change the target
-	var target: Int by controller::targetPosition
+	var target by controller::targetPosition
 
 	// users should be able to enable / disable the controller
 	var enabled: Boolean = true
 
 	// update controller after loop
 	override fun postUserLoopHook(opMode: Wrapper) {
-		lastOutput = controller.update(motors.averageOf { it.currentPosition.toDouble() })
+		lastOutput = controller.update(
+			measuredPosition=motors.first().currentPosition.toDouble(),
+			measuredVelocity=motors.first().velocity.toDouble()
+		)
 
 		if (enabled) {
 			motors.forEach { it.power = lastOutput }
 		}
 	}
+
+	fun atTarget(tolerance: Int = 20) = controller.lastError.absoluteValue < tolerance
 
 	// in cleanup we deregister, which prevents this from sticking around for another OpMode,
 	// unless the user calls register again
@@ -47,3 +57,13 @@ class PIDFService(val controller: PIDFController, vararg val motors: Motor) : Fe
 fun controllerFromPID(kP: Double, kI: Double, kV: Double) = PIDFController(PIDFController.PIDCoefficients(kP, kI, kV))
 
 fun <E> Array<E>.averageOf(func: (E) -> Double) = this.map(func).average()
+
+fun PIDFController.update(
+	measuredPosition: Double,
+	measuredVelocity: Double
+) = this.update(
+	timestamp = System.nanoTime(),
+	measuredPosition = measuredPosition,
+	measuredVelocity = measuredVelocity
+)
+
