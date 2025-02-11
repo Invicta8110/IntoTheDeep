@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.PwmControl.PwmRange
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
 import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer
@@ -25,7 +25,7 @@ class CreamyMushroomRobot
     startPose: Pose2d = Pose2d(0.0, 0.0, 0.0)
 ) {
     val drive = MecanumChassis(hwMap, startPose)
-    val slides = LinearSlides(hwMap)
+    val slides = LinearSlidesRR(hwMap)
     val claw = TwoPointServo("claw", hwMap, 0.10, 0.625)
     val wrist = TwoPointServo("wrist", hwMap, 0.25, 0.50)
     val otos: SparkFunOTOS
@@ -78,10 +78,10 @@ class CreamyMushroomRobot
         )
     }
 
-    fun scoreSpecimen(slidePid: LinearSlides.SlidePIDAction) = SequentialAction(
-        slidePid.goTo(LinearSlides.SlidePosition.SPECIMEN_HANG),
+    fun scoreSpecimen(slidePid: LinearSlidesRR.SlidePIDAction) = SequentialAction(
+        slidePid.goTo(LinearSlidesRR.SlidePosition.SPECIMEN_HANG),
         claw.runToB,
-        slidePid.goTo(LinearSlides.SlidePosition.DOWN)
+        slidePid.goTo(LinearSlidesRR.SlidePosition.DOWN)
     )
 
     companion object {

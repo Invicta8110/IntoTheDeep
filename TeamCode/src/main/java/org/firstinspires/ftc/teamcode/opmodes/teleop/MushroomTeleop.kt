@@ -3,13 +3,12 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import com.qualcomm.robotcore.hardware.ServoImplEx
 import com.qualcomm.robotcore.util.ElapsedTime
 import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.control.SilkRoad
 import org.firstinspires.ftc.teamcode.control.mtel
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
 import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot
 import org.firstinspires.ftc.teamcode.hardware.robots.position
 import page.j5155.expressway.ftc.motion.PIDFController
@@ -20,8 +19,8 @@ import page.j5155.expressway.ftc.motion.PIDFController
 class MushroomTeleop : OpMode() {
     private val robot by OpModeLazyCell { CreamyMushroomRobot(hardwareMap) }
     private val gp1 by OpModeLazyCell { SDKGamepad(gamepad1) }
-    private var slideCoefs = PIDFController.PIDCoefficients(LinearSlides.kP, LinearSlides.kI, LinearSlides.kD)
-    private var slidePos = LinearSlides.SlidePosition.DOWN
+    private var slideCoefs = PIDFController.PIDCoefficients(LinearSlidesRR.kP, LinearSlidesRR.kI, LinearSlidesRR.kD)
+    private var slidePos = LinearSlidesRR.SlidePosition.DOWN
 
     private val slidePid = PIDFController(slideCoefs)
     private var fieldCentric = false
@@ -58,7 +57,7 @@ class MushroomTeleop : OpMode() {
         }
 
         if (gp1.back.onTrue) {
-            slidePid.targetPosition = LinearSlides.SlidePosition.SPECIMEN_HANG.position
+            slidePid.targetPosition = LinearSlidesRR.SlidePosition.SPECIMEN_HANG.position
         }
 
         if (gp1.dpadUp.state) {

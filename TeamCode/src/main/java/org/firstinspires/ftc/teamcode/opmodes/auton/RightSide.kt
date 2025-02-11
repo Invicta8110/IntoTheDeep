@@ -1,21 +1,19 @@
 package org.firstinspires.ftc.teamcode.opmodes.auton
 
 import com.acmerobotics.roadrunner.Pose2d
-import com.acmerobotics.roadrunner.SequentialAction
 import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import dev.frozenmilk.dairy.core.util.OpModeLazyCell
-import org.firstinspires.ftc.teamcode.control.redRight
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
 import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot
 import kotlin.math.PI
 
 @Autonomous
 class RightSide : LinearOpMode() {
     val robot by OpModeLazyCell { CreamyMushroomRobot(hardwareMap) }
-    val slidePid by OpModeLazyCell { robot.slides.runPID(LinearSlides.SlidePosition.DOWN) }
+    val slidePid by OpModeLazyCell { robot.slides.runPID(LinearSlidesRR.SlidePosition.DOWN) }
 
     override fun runOpMode() {
         val action = robot.drive.actionBuilder(Pose2d(0.0, 0.0, PI/2))

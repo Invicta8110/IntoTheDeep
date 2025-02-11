@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
@@ -23,7 +23,7 @@ public class ActionsExample extends LinearOpMode {
         Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         TwoPointServo claw = new TwoPointServo(hardwareMap.get(ServoImplEx.class, "claw"));
-        LinearSlides lift = new LinearSlides(new Motor("slides", hardwareMap));
+        LinearSlidesRR lift = new LinearSlidesRR(new Motor("slides", hardwareMap));
 
         // vision here that outputs position
         int visionOutputPosition = 1;

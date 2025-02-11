@@ -22,12 +22,6 @@ class PIDFService(val controller: PIDFController, vararg val motors: Motor) : Fe
 		register()
 	}
 
-	private fun update() {
-		lastOutput = controller.update(motors.averageOf { it.currentPosition.toDouble() })
-
-		motors.forEach { it.power = lastOutput }
-	}
-
 	// users should be able to change the target
 	var target: Int by controller::targetPosition
 
@@ -36,8 +30,10 @@ class PIDFService(val controller: PIDFController, vararg val motors: Motor) : Fe
 
 	// update controller after loop
 	override fun postUserLoopHook(opMode: Wrapper) {
+		lastOutput = controller.update(motors.averageOf { it.currentPosition.toDouble() })
+
 		if (enabled) {
-			update()
+			motors.forEach { it.power = lastOutput }
 		}
 	}
 
