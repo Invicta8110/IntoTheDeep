@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.control.fieldCentric
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.ServoArm
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
 import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer
@@ -15,7 +14,7 @@ class TreeRobot(hwMap: HardwareMap) {
     val drive = MecanumChassis(hwMap)
     val slides = LinearSlidesRR(hwMap)
     val claw = TwoPointServo("claw", hwMap, 0.66, 1.0)
-    val arm = ServoArm(hwMap)
+    val arm = TwoPointServo("armLeft", hwMap, 0.0, 1.0)
     val otos: SparkFunOTOS
         get() = (drive.localizer as OTOSLocalizer).otos
 
@@ -36,8 +35,8 @@ class TreeRobot(hwMap: HardwareMap) {
 
     fun armManualControl(gamepad: SDKGamepad) {
         when {
-            gamepad.dpadRight.onTrue -> arm.goUp()
-            gamepad.dpadLeft.onTrue -> arm.goDown()
+            gamepad.dpadRight.onTrue -> arm.goToA()
+            gamepad.dpadLeft.onTrue -> arm.goToB()
         }
     }
 

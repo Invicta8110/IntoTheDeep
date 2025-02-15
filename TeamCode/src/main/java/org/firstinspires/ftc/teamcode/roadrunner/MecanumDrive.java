@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.roadrunner;
 
 import static dev.frozenmilk.wavedash.Commands.DEFAULT_TRAJECTORY_PARAMS;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -52,6 +54,7 @@ import org.firstinspires.ftc.teamcode.control.MecanumStatic;
 import java.util.LinkedList;
 import java.util.List;
 
+import dev.frozenmilk.mercurial.commands.Command;
 import dev.frozenmilk.wavedash.Drive;
 import dev.frozenmilk.wavedash.Localizer;
 import dev.frozenmilk.wavedash.TrajectoryCommandBuilder;
@@ -204,7 +207,7 @@ public class MecanumDrive implements Drive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        localizer = new OTOSLocalizer(hardwareMap, pose);
+        localizer = new PinpointLocalizer(hardwareMap, MecanumParams.getInPerTick(), pose);
 
         FlightRecorder.write("MECANUM_MecanumParams", MecanumParams.getToString());
     }
@@ -301,6 +304,7 @@ public class MecanumDrive implements Drive {
             return true;
         }
 
+        Log.println(Log.ASSERT, "WAVEDASH", "following trajectory " + trajectory);
         Pose2dDual<Time> txWorldTarget = trajectory.get(t);
         targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
 
@@ -378,6 +382,12 @@ public class MecanumDrive implements Drive {
         rightFront.setPower(MecanumStatic.getFeedforward().compute(wheelVels.rightFront) / voltage);
 
         return false;
+    }
+
+    @NonNull
+    public Command followTrajectoryCommand(@NonNull TimeTrajectory trajectory) {
+        Log.println(Log.ASSERT, "WAVEDASH", "starting trajectory " + trajectory);
+        return Drive.super.followTrajectoryCommand(trajectory);
     }
 
     @NonNull

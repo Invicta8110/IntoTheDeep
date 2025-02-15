@@ -9,6 +9,8 @@ import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.Rotation2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS.Pose2D
+import com.qualcomm.robotcore.hardware.HardwareDevice
+import com.qualcomm.robotcore.hardware.HardwareMap
 import dev.frozenmilk.dairy.core.FeatureRegistrar
 import dev.frozenmilk.mercurial.commands.Command
 import dev.frozenmilk.mercurial.commands.Lambda
@@ -98,3 +100,13 @@ fun PIDFController.updateInTolerance(
 }
 
 fun instant(repr: String, action: () -> Unit) : Command = Lambda(repr).setInit(action)
+
+fun <T : HardwareDevice> hardwareGenerator(hwMap: HardwareMap, action: HardwareMap.() -> T) : T {
+    return hwMap.action()
+}
+
+fun <T : HardwareDevice> hardwareEditor(device: T, action: T.() -> Unit) = device.action()
+fun <T : HardwareDevice> T.edit(action: T.() -> Unit) : T {
+    action()
+    return this
+}

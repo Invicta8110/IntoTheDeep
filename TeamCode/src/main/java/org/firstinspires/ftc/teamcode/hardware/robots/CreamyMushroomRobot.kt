@@ -32,7 +32,7 @@ class CreamyMushroomRobot
     val otos: SparkFunOTOS
         get() = (drive.localizer as OTOSLocalizer).otos
 
-    val arm: List<ServoImplEx>
+    val arm: ServoArm
     val lynxes: List<LynxModule>
 
     init {
@@ -96,6 +96,6 @@ class CreamyMushroomRobot
     }
 }
 
-var List<ServoImplEx>.position: Double
+var ServoArm.position: Double
     get() = this[1].position
     set(value) { this.forEach { it.position = value } }
