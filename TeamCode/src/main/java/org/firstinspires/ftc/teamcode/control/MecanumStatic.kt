@@ -19,8 +19,6 @@ import org.firstinspires.ftc.teamcode.control.MecanumParams.maxProfileAccel
 import org.firstinspires.ftc.teamcode.control.MecanumParams.maxWheelVel
 import org.firstinspires.ftc.teamcode.control.MecanumParams.minProfileAccel
 import org.firstinspires.ftc.teamcode.control.MecanumParams.trackWidthTicks
-import org.firstinspires.ftc.teamcode.roadrunner.GoBildaPinpointDriver.GoBildaOdometryPods
-import org.firstinspires.ftc.teamcode.roadrunner.GoBildaPinpointDriver.goBILDA_SWINGARM_POD
 import kotlin.reflect.full.memberProperties
 
 object MecanumParams {
@@ -35,8 +33,8 @@ object MecanumParams {
 
     // drive model parameters
     @JvmStatic
-    var inPerTick: Double =
-      1.0 / (25.4 * goBILDA_SWINGARM_POD) //ticks-per-mm for the goBILDA Swingarm Pod //ticks-per-mm for the goBILDA Swingarm Pod // If you're using OTOS/Pinpoint leave this at 1 (all values will be in inches, 1 tick = 1 inch)
+    var inPerTick: Double = 1.0 //5206 ticks
+        // / (25.4 * goBILDA_SWINGARM_POD) //ticks-per-mm for the goBILDA Swingarm Pod //ticks-per-mm for the goBILDA Swingarm Pod // If you're using OTOS/Pinpoint leave this at 1 (all values will be in inches, 1 tick = 1 inch)
     @JvmStatic
     var lateralInPerTick: Double =
         0.916176790984675 // Tune this with LateralRampLogger (even if you use OTOS/Pinpoint)

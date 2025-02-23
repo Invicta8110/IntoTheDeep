@@ -45,15 +45,20 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.control.MecanumParams;
 import org.firstinspires.ftc.teamcode.control.MecanumStatic;
 
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import dev.frozenmilk.dairy.core.wrapper.Wrapper;
 import dev.frozenmilk.mercurial.commands.Command;
 import dev.frozenmilk.wavedash.Drive;
 import dev.frozenmilk.wavedash.Localizer;
@@ -179,7 +184,8 @@ public class MecanumDrive implements Drive {
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
-            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+            if (!module.getDeviceName().equals("Servo Hub 3"))
+            { module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO); }
         }
 
         // TODO: make sure your config has motors with these names (or change them)
@@ -295,6 +301,8 @@ public class MecanumDrive implements Drive {
      * @return whether the trajectory has been completed
      */
     public boolean followTrajectory(TimeTrajectory trajectory, double t) {
+        Log.e("WAVEDASH", String.format("following trajectory %s at time %f", trajectory, t));
+
         if (t >= trajectory.duration) {
             leftFront.setPower(0);
             leftBack.setPower(0);
@@ -304,7 +312,6 @@ public class MecanumDrive implements Drive {
             return true;
         }
 
-        Log.println(Log.ASSERT, "WAVEDASH", "following trajectory " + trajectory);
         Pose2dDual<Time> txWorldTarget = trajectory.get(t);
         targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
 
@@ -386,8 +393,8 @@ public class MecanumDrive implements Drive {
 
     @NonNull
     public Command followTrajectoryCommand(@NonNull TimeTrajectory trajectory) {
-        Log.println(Log.ASSERT, "WAVEDASH", "starting trajectory " + trajectory);
-        return Drive.super.followTrajectoryCommand(trajectory);
+
+        return new FollowTrajectoryCommand(trajectory);
     }
 
     @NonNull
@@ -395,7 +402,7 @@ public class MecanumDrive implements Drive {
     public TrajectoryCommandBuilder commandBuilder(@NonNull Pose2d beginPose) {
         return new TrajectoryCommandBuilder(
                 this::turnCommand,
-                this::followTrajectoryCommand,
+                FollowTrajectoryCommand::new,
                 DEFAULT_TRAJECTORY_PARAMS,
                 beginPose,
                 0.0,
@@ -592,6 +599,59 @@ public class MecanumDrive implements Drive {
         public void preview(Canvas c) {
             c.setStroke("#7C4DFF7A");
             c.fillCircle(turn.beginPose.position.x, turn.beginPose.position.y, 2);
+        }
+    }
+
+    private class FollowTrajectoryCommand implements Command {
+        final Set<Object> requirements;
+        final Set<Wrapper.OpModeState> runStates;
+        private final TimeTrajectory trajectory;
+
+        ElapsedTime timer;
+        boolean finished;
+
+        public FollowTrajectoryCommand(TimeTrajectory trajectory) {
+            this.trajectory = trajectory;
+            requirements = new HashSet<>();
+            runStates = Set.of(Wrapper.OpModeState.ACTIVE, Wrapper.OpModeState.INIT);
+            timer = new ElapsedTime();
+            finished = false;
+            ;
+            Log.e("WAVEDASH", "Initializing trajectory");
+        }
+
+        @NonNull
+        @Override
+        public Set<Wrapper.OpModeState> getRunStates() {
+            return runStates;
+        }
+
+        @NonNull
+        @Override
+        public Set<Object> getRequirements() {
+            return requirements;
+        }
+
+        @Override
+        public boolean finished() {
+            return finished;
+        }
+
+        @Override
+        public void end(boolean b) {
+            MecanumDrive.this.setDrivePowers(new PoseVelocity2d(new Vector2d(0.0, 0.0), 0.0));
+
+        }
+
+        @Override
+        public void execute() {
+            finished = MecanumDrive.this.followTrajectory(trajectory, timer.seconds());
+        }
+
+        @Override
+        public void initialise() {
+            Log.e("WAVEDASH", "Starting trajectory");
+            timer.reset();
         }
     }
 }

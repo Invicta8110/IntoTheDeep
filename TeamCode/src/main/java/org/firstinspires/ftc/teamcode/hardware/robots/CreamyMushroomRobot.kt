@@ -28,7 +28,7 @@ class CreamyMushroomRobot
     val drive = MecanumChassis(hwMap, startPose)
     val slides = LinearSlidesRR(hwMap)
     val claw = TwoPointServo("claw", hwMap, 0.10, 0.625)
-    val wrist = TwoPointServo("wrist", hwMap, 0.25, 0.50)
+    val wrist = TwoPointServo("wrist", hwMap, 0.225, 0.50)
     val otos: SparkFunOTOS
         get() = (drive.localizer as OTOSLocalizer).otos
 
@@ -95,7 +95,3 @@ class CreamyMushroomRobot
         val armBucket = 0.572  // y up-right from front
     }
 }
-
-var ServoArm.position: Double
-    get() = this[1].position
-    set(value) { this.forEach { it.position = value } }

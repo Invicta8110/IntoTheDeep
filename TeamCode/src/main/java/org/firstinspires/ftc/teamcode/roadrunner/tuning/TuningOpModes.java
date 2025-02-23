@@ -28,7 +28,6 @@ import com.acmerobotics.roadrunner.ftc.OTOSHeadingOffsetTuner;
 import com.acmerobotics.roadrunner.ftc.OTOSIMU;
 import com.acmerobotics.roadrunner.ftc.OTOSLinearScalarTuner;
 import com.acmerobotics.roadrunner.ftc.OTOSPositionOffsetTuner;
-import com.acmerobotics.roadrunner.ftc.OTOSView;
 import com.acmerobotics.roadrunner.ftc.PinpointEncoderGroup;
 import com.acmerobotics.roadrunner.ftc.PinpointIMU;
 import com.acmerobotics.roadrunner.ftc.PinpointView;
@@ -40,18 +39,18 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
 import org.firstinspires.ftc.teamcode.control.MecanumParams;
-import org.firstinspires.ftc.teamcode.roadrunner.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.roadrunner.TankDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.roadrunner.TwoDeadWheelLocalizer;
-import org.firstinspires.ftc.teamcode.roadrunner.tuning.ManualFeedbackTuner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import dev.frozenmilk.wavedash.GoBildaPinpointDriver;
 
 public final class TuningOpModes {
     // TODO: change this to TankDrive.class if you're using tank
@@ -155,18 +154,19 @@ public final class TuningOpModes {
                     perpEncs.add(new EncoderRef(0, 1));
                 } else if (md.localizer instanceof OTOSLocalizer) {
                     OTOSLocalizer ol = (OTOSLocalizer) md.localizer;
-                    OTOSView ov = new OTOSView(ol.getOTOS());
-                    encoderGroups.add(new OTOSEncoderGroup(ov));
+                    encoderGroups.add(new OTOSEncoderGroup(ol.getOTOS()));
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
-                    lazyImu = new OTOSIMU(ov);
+                    lazyImu = new OTOSIMU(ol.getOTOS());
 
                     manager.register(metaForClass(OTOSAngularScalarTuner.class), new OTOSAngularScalarTuner(ol.getOTOS()));
                     manager.register(metaForClass(OTOSLinearScalarTuner.class), new OTOSLinearScalarTuner(ol.getOTOS()));
                     manager.register(metaForClass(OTOSHeadingOffsetTuner.class), new OTOSHeadingOffsetTuner(ol.getOTOS()));
                     manager.register(metaForClass(OTOSPositionOffsetTuner.class), new OTOSPositionOffsetTuner(ol.getOTOS()));
                 }  else if (md.localizer instanceof PinpointLocalizer) {
-                    PinpointView pv = makePinpointView((PinpointLocalizer) md.localizer);
+                    PinpointLocalizer pl = (PinpointLocalizer) md.localizer;
+                    PinpointView pv = makePinpointView(pl);
+                    pl.driver.resetPosAndIMU();
                     encoderGroups.add(new PinpointEncoderGroup(pv));
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
@@ -250,11 +250,10 @@ public final class TuningOpModes {
                     lazyImu = new PinpointIMU(pv);
                 } else if (td.localizer instanceof OTOSLocalizer) {
                     OTOSLocalizer ol = (OTOSLocalizer) td.localizer;
-                    OTOSView ov = new OTOSView(ol.getOTOS());
-                    encoderGroups.add(new OTOSEncoderGroup(ov));
+                    encoderGroups.add(new OTOSEncoderGroup(ol.getOTOS()));
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
-                    lazyImu = new OTOSIMU(ov);
+                    lazyImu = new OTOSIMU(ol.getOTOS());
 
                     manager.register(metaForClass(OTOSAngularScalarTuner.class), new OTOSAngularScalarTuner(ol.getOTOS()));
                     manager.register(metaForClass(OTOSLinearScalarTuner.class), new OTOSLinearScalarTuner(ol.getOTOS()));

@@ -32,6 +32,8 @@ const val CPR_84 = 1993.6
 
 @JvmField val mtel: MultipleTelemetry = MultipleTelemetry(FeatureRegistrar.activeOpMode.telemetry, FtcDashboard.getInstance().telemetry)
 
+fun currentTimeSeconds() = System.nanoTime() / 1_000_000_000.0
+
 val blueRight = Pose2d(36.0, 60.0, -Math.PI/2)
 val blueLeft = Pose2d(-26.0, 60.0, -Math.PI/2)
 val redRight = Pose2d(26.0, -60.0, Math.PI/2)

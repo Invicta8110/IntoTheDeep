@@ -11,21 +11,30 @@ import org.firstinspires.ftc.teamcode.control.mtel
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
 import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot
+import org.firstinspires.ftc.teamcode.hardware.robots.Elphabot
 import org.firstinspires.ftc.teamcode.hardware.robots.position
 import page.j5155.expressway.ftc.motion.PIDFController
 
-@TeleOp(name = "Mushroom One Driver", group = "Mushrooms")
+@TeleOp(name="Elphaba One Driver", group = "Elphabot")
 @Config
 @SilkRoad.Attach
-class MushroomTeleop : OpMode() {
+class ElphabaOneDriver : OpMode() {
     private val robot by OpModeLazyCell { CreamyMushroomRobot(hardwareMap) }
+
     private val gp1 by OpModeLazyCell { SDKGamepad(gamepad1) }
+    private val rightTrigger by OpModeLazyCell {
+        gp1.rightTrigger.conditionalBindState()
+            .greaterThan(0.0)
+            .bind()
+    }
+
     private var slideCoefs = PIDFController.PIDCoefficients(LinearSlidesRR.kP, LinearSlidesRR.kI, LinearSlidesRR.kD)
     private var slidePos = SlidePosition.DOWN
 
     private val slidePid = PIDFController(slideCoefs)
     private var fieldCentric = false
     var timer = ElapsedTime()
+    var specTimer = ElapsedTime()
     var loopCount = 0;
 
     override fun init() {
@@ -45,17 +54,28 @@ class MushroomTeleop : OpMode() {
 
         robot.drive.updatePoseEstimate()
 
-        robot.clawManualControl(gamepad1)
         robot.wristManualControl(gp1)
 
         when {
-            gp1.a.onTrue -> robot.arm.position = CreamyMushroomRobot.armUp
-            gp1.x.onTrue -> robot.arm.position = CreamyMushroomRobot.armHome
-            gp1.b.onTrue -> robot.arm.position = CreamyMushroomRobot.armDown
-            gp1.y.onTrue -> robot.arm.position = CreamyMushroomRobot.armBucket
-            gp1.leftTrigger.state > 0 -> robot.arm.position -= 0.0025
-            gp1.rightTrigger.state > 0 -> robot.arm.position += 0.0025
+            gp1.rightBumper.onTrue -> robot.claw.goToB()
+            gp1.leftBumper.onTrue -> robot.claw.goToA()
         }
+
+        when {
+            gp1.a.onTrue -> robot.arm.position = Elphabot.armPositions["a"]!!
+            gp1.b.onTrue -> robot.arm.position = Elphabot.armPositions["b"]!!
+            gp1.x.onTrue -> robot.arm.position = Elphabot.armPositions["x"]!!
+            gp1.y.onTrue -> robot.arm.position = Elphabot.armPositions["y"]!!
+        }
+
+//        if (rightTrigger.onTrue) {
+//            specTimer.reset()
+//            robot.arm.position = Elphabot.armPositions["x"]!!
+//        }
+//
+//        if (specTimer.seconds() > 1) {
+//            robot.claw.goToA()
+//        }
 
         if (gp1.back.onTrue) {
             slidePid.targetPosition = SlidePosition.SPECIMEN_HANG.position

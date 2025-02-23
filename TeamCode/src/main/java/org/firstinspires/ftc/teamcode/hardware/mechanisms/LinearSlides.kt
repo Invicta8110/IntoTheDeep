@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms
 
+import com.qualcomm.robotcore.hardware.HardwareMap
 import dev.frozenmilk.mercurial.commands.Command
 import dev.frozenmilk.mercurial.commands.Lambda
 import org.firstinspires.ftc.teamcode.control.instant
@@ -23,6 +24,11 @@ class LinearSlides(vararg motors: Motor) : List<Motor> by motors.toList() {
         @JvmStatic val PIDF = PIDFController(PIDFController.PIDCoefficients(kP, kI, kD))
     }
 
+    constructor(hardwareMap: HardwareMap) : this(
+        Motor.reversed(Motor("slidesLeft", hardwareMap)),
+        Motor("slidesRight", hardwareMap)
+    )
+
     val motors = motors.toList()
     val service = PIDFService(PIDF, *motors)
 
@@ -31,6 +37,12 @@ class LinearSlides(vararg motors: Motor) : List<Motor> by motors.toList() {
         service.enabled = true
     }
     fun updateTarget(target: SlidePosition) = updateTarget(target.position)
+
+    fun setPower(power: Double) = instant("slide power $power") {
+        motors.forEach { it.power = power }
+    }
+
+    fun rawSetPower(power: Double) = motors.forEach { it.power = power }
 
     fun goTo(target: Int) : Command = Lambda("Go To $target")
         .setInit {
