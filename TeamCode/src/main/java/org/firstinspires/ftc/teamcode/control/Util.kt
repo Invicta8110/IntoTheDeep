@@ -20,6 +20,7 @@ import kotlin.math.PI
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
+import kotlin.math.roundToInt
 
 const val CPR_312 = 537.7
 const val CPR_435 = 384.5
@@ -54,14 +55,7 @@ fun Pose2d.rotateBy(rotationRadians: Double) = this * Rotation2d.exp(rotationRad
 
 // Vector2d operations
 
-fun Vector2d.compareTo(other: Vector2d): Int {
-    val diff = this.norm() - other.norm()
-    return when {
-        diff > 0.0 -> 1
-        diff < 0.0 -> -1
-        else -> 0
-    }
-}
+operator fun Vector2d.compareTo(other: Vector2d): Int = (this.norm() - other.norm()).roundToInt()
 
 fun Vector2d.distanceTo(other: Vector2d): Double = (this - other).norm()
 

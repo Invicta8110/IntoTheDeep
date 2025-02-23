@@ -11,12 +11,15 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Actions;
+import com.acmerobotics.roadrunner.DisplacementProfile;
+import com.acmerobotics.roadrunner.DisplacementTrajectory;
 import com.acmerobotics.roadrunner.DualNum;
 import com.acmerobotics.roadrunner.HolonomicController;
 import com.acmerobotics.roadrunner.MecanumKinematics;
 import com.acmerobotics.roadrunner.MotorFeedforward;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Pose2dDual;
+import com.acmerobotics.roadrunner.PosePath;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.PoseVelocity2dDual;
 import com.acmerobotics.roadrunner.Rotation2d;
@@ -654,4 +657,41 @@ public class MecanumDrive implements Drive {
             timer.reset();
         }
     }
+
+    class FollowPathAction implements Action {
+        private final DisplacementTrajectory traj;
+        private final PosePath path;
+        private final DisplacementProfile profile;
+        private double disp = 0.0;
+
+        public FollowPathAction(DisplacementTrajectory traj) {
+            this.traj = traj;
+            this.path = traj.path;
+            this.profile = traj.profile;
+        }
+
+        @Override
+        public boolean run(TelemetryPacket p) {
+            PoseVelocity2d robotVel = updatePoseEstimate();
+            disp = traj.project(localizer.getPose().position, disp);
+
+            if (disp >= path.length() ||
+                    (traj.get(traj.length()).position.value().minus(localizer.getPose().position)).norm() < 2) {
+                setDrivePowers(new PoseVelocity2d(new Vector2d(0.0, 0.0), 0.0));
+                return false;
+            }
+
+            PoseVelocity2dDual<Time> command = MecanumStatic.getController().compute(
+                    traj.get(disp),
+                    localizer.getPose(),
+                    robotVel
+            );
+
+            setDrivePowersWithFF(command);
+
+            return true;
+        }
+    }
+
+
 }

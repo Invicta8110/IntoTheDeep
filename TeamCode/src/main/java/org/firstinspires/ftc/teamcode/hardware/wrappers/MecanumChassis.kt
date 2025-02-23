@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.teamcode.hardware.wrappers
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.Action
+import com.acmerobotics.roadrunner.DisplacementTrajectory
 import com.acmerobotics.roadrunner.InstantAction
 import com.acmerobotics.roadrunner.Pose2d
+import com.acmerobotics.roadrunner.PosePath
 import com.acmerobotics.roadrunner.PoseVelocity2d
+import com.acmerobotics.roadrunner.TimeTrajectory
 import com.acmerobotics.roadrunner.Vector2d
+import com.acmerobotics.roadrunner.project
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive
 import page.j5155.expressway.ftc.motion.PIDFController
@@ -23,18 +28,5 @@ class MecanumChassis @JvmOverloads constructor(
 
     fun drivePowerAction(x: Double, y: Double, heading: Double): Action
         = InstantAction { setDrivePowers(x, y, heading) }
-
-    /*
-        public PIDToPoint pidToPointAction(Pose2d target) {
-        return new PIDToPoint(
-                (this::getPose)
-                (this::updatePoseEstimate) // updatePoseEstimate, in addition to updating the pose property, returns the velocity of the robot
-                target, // the target pose
-                (this::setDrivePowers), // setDrivePowers uses inverse kinematics to set the powers of the drivetrain motors
-                new PIDFController.PIDCoefficients(PARAMS.axialGain, 0, PARAMS.axialVelGain), // the axial PID coefficients
-                new PIDFController.PIDCoefficients(PARAMS.lateralGain, 0, PARAMS.lateralVelGain), // the lateral PID coefficients
-                new PIDFController.PIDCoefficients(PARAMS.headingGain, 0, PARAMS.headingVelGain) // the heading PID coefficients
-        );
-    }
-     */
 }
+
