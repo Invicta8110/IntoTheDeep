@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.hardware.robots
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.Vector2d
+import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
@@ -27,31 +29,30 @@ class Elphabot(
     startPose: Pose2d = Pose2d(0.0, 0.0, 0.0)
 ) {
     val drive = MecanumChassis(hwMap, startPose)
-    val slides = LinearSlides(hwMap)
     val claw = TwoPointServo("claw", hwMap, 0.10, 0.625)
     val wrist = TwoPointServo("wrist", hwMap, 0.25, 0.50)
-    val arm by OpModeLazyCell {
-        listOf(
-            hwMap.get(ServoImplEx::class.java, "armLeft").apply {
-                pwmRange = armRange
-                direction = Servo.Direction.FORWARD
-            },
-            hwMap.get(ServoImplEx::class.java, "armRight").apply {
-                pwmRange = armRange
-                direction = Servo.Direction.REVERSE
-            }
-        )
+    val rotator = hwMap[CRServo::class.java, "rotator"]
+    val slides = LinearSlides(hwMap).apply {
+        forEach { it.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER }
+        forEach { it.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER }
     }
 
-    init {
-        slides.forEach { it.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER }
-        slides.forEach { it.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER }
+    val arm = buildList {
+        val armLeft = hwMap[ServoImplEx::class.java, "armLeft"]!!
+        val armRight = hwMap[ServoImplEx::class.java, "armRight"]!!
+
+        armLeft.pwmRange = armRange
+        armRight.pwmRange = armRange
+
+        armRight.direction = Servo.Direction.REVERSE
+
+        add(armLeft)
+        add(armRight)
     }
 
     private fun <E> MutableList<E>.addAll(vararg elements: E) {
         this.addAll(elements)
     }
-
 
     var pose
         get() = drive.localizer.pose

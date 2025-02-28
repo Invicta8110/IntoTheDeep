@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.PosePath
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.PoseVelocity2dDual
 import com.acmerobotics.roadrunner.Time
+import com.acmerobotics.roadrunner.Trajectory
 import com.acmerobotics.roadrunner.project
 import dev.frozenmilk.mercurial.commands.Command
 import dev.frozenmilk.mercurial.commands.Lambda
@@ -60,3 +61,5 @@ fun MecanumChassis.followPathCommand(traj: DisplacementTrajectory): Command {
             setDrivePowers(0.0, 0.0, 0.0)
         }
 }
+
+fun MecanumChassis.followPathCommand(traj: Trajectory) = this.followPathCommand(DisplacementTrajectory(traj))

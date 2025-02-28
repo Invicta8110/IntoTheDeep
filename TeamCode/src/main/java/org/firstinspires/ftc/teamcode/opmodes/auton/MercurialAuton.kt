@@ -9,18 +9,19 @@ import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import dev.frozenmilk.mercurial.Mercurial
 import dev.frozenmilk.mercurial.commands.Command
 import org.firstinspires.ftc.teamcode.hardware.robots.Elphabot
-import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive
+import org.firstinspires.ftc.teamcode.hardware.wrappers.follow
 
 @Autonomous
 @Mercurial.Attach
 class MercurialAuton : OpMode() {
-    val robot by OpModeLazyCell { MecanumDrive(hardwareMap, Pose2d(0.0, 0.0, 0.0)) }
+    val robot by OpModeLazyCell { Elphabot(hardwareMap, Pose2d(0.0, 0.0, 0.0)) }
     lateinit var command: Command
 
     override fun init() {
-        command = robot.commandBuilder(robot.localizer.pose)
-            .strafeTo(Vector2d(10.0, 0.0))
+       command = robot.drive.trajectoryBuilder(robot.pose)
+            .strafeTo(Vector2d(24.0, 0.0))
             .build()
+            .follow(robot.drive)
     }
 
     override fun start() {
@@ -29,7 +30,7 @@ class MercurialAuton : OpMode() {
     }
 
     override fun loop() {
-        telemetry.addData("Pose", robot.localizer.pose)
+        telemetry.addData("Pose", robot.pose)
         telemetry.update()
     }
 }

@@ -30,6 +30,7 @@ const val CPR_84 = 1993.6
 @JvmField val CPI_435_104 = round((1 / (104 * PI)) * CPR_435 * 25.4).toInt()
 
 @JvmField val ZERO_VECTOR = Vector2d(0.0, 0.0)
+@JvmField val ZERO_VELOCITY = PoseVelocity2d(ZERO_VECTOR, 0.0)
 
 @JvmField val mtel: MultipleTelemetry = MultipleTelemetry(FeatureRegistrar.activeOpMode.telemetry, FtcDashboard.getInstance().telemetry)
 

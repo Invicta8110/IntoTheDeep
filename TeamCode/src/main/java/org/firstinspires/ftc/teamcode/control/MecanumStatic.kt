@@ -33,7 +33,7 @@ object MecanumParams {
 
     // drive model parameters
     @JvmStatic
-    var inPerTick: Double = 1.0 //5206 ticks
+    var inPerTick: Double = 117.0 / (46216 - 6238) //5206 ticks
         // / (25.4 * goBILDA_SWINGARM_POD) //ticks-per-mm for the goBILDA Swingarm Pod //ticks-per-mm for the goBILDA Swingarm Pod // If you're using OTOS/Pinpoint leave this at 1 (all values will be in inches, 1 tick = 1 inch)
     @JvmStatic
     var lateralInPerTick: Double =
