@@ -71,78 +71,6 @@ public final class TuningOpModes {
                 .build();
     }
 
-    private static PinpointView makePinpointView(PinpointLocalizer pl) {
-        pl.driver.resetPosAndIMU();
-        return new PinpointView() {
-            PoseVelocity2d vel = Util.ZERO_VELOCITY;
-
-            GoBildaPinpointDriver.EncoderDirection parDirection = pl.initialParDirection;
-            GoBildaPinpointDriver.EncoderDirection perpDirection = pl.initialPerpDirection;
-
-            @Override
-            public void update() {
-                vel = pl.update();
-            }
-
-            @Override
-            public int getParEncoderPosition() {
-                if (parDirection == GoBildaPinpointDriver.EncoderDirection.FORWARD) return pl.driver.getEncoderX();
-                else return -pl.driver.getEncoderX();
-            }
-
-            @Override
-            public int getParEncoderVelocity() {
-                return (int) Math.round(vel.linearVel.x / pl.inPerTick);
-            }
-
-            @Override
-            public int getPerpEncoderPosition() {
-                if (perpDirection == GoBildaPinpointDriver.EncoderDirection.FORWARD) return pl.driver.getEncoderY();
-                else return -pl.driver.getEncoderY();
-            }
-
-            @Override
-            public int getPerpEncoderVelocity() {
-                return (int) Math.round(vel.linearVel.y / pl.inPerTick);
-            }
-
-            @Override
-            public float getHeadingVelocity() {
-                return (float) vel.angVel;
-            }
-
-            @NonNull
-            @Override
-            public DcMotorSimple.Direction getParDirection() {
-                if (parDirection == GoBildaPinpointDriver.EncoderDirection.FORWARD) return DcMotorSimple.Direction.FORWARD;
-                else return DcMotorSimple.Direction.REVERSE;
-            }
-
-            @Override
-            public void setParDirection(@NonNull DcMotorSimple.Direction direction) {
-                parDirection = direction == DcMotorSimple.Direction.FORWARD ?
-                        GoBildaPinpointDriver.EncoderDirection.FORWARD :
-                        GoBildaPinpointDriver.EncoderDirection.REVERSED;
-                pl.driver.setEncoderDirections(parDirection, perpDirection);
-            }
-
-            @NonNull
-            @Override
-            public DcMotorSimple.Direction getPerpDirection() {
-                if (perpDirection == GoBildaPinpointDriver.EncoderDirection.FORWARD) return DcMotorSimple.Direction.FORWARD;
-                else return DcMotorSimple.Direction.REVERSE;
-            }
-
-            @Override
-            public void setPerpDirection(@NonNull DcMotorSimple.Direction direction) {
-                perpDirection = direction == DcMotorSimple.Direction.FORWARD ?
-                        GoBildaPinpointDriver.EncoderDirection.FORWARD :
-                        GoBildaPinpointDriver.EncoderDirection.REVERSED;
-                pl.driver.setEncoderDirections(parDirection, perpDirection);
-            }
-        };
-    }
-
     @OpModeRegistrar
     public static void register(OpModeManager manager) {
         if (DISABLED) return;
@@ -196,7 +124,7 @@ public final class TuningOpModes {
                     manager.register(metaForClass(OTOSPositionOffsetTuner.class), new OTOSPositionOffsetTuner(ol.getOTOS()));
                 }  else if (md.localizer instanceof PinpointLocalizer) {
                     PinpointLocalizer pl = (PinpointLocalizer) md.localizer;
-                    PinpointView pv = makePinpointView(pl);
+                    PinpointView pv = pl.getView();
                     pl.driver.resetPosAndIMU();
                     encoderGroups.add(new PinpointEncoderGroup(pv));
                     parEncs.add(new EncoderRef(0, 0));
@@ -274,7 +202,7 @@ public final class TuningOpModes {
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
                 }  else if (td.localizer instanceof PinpointLocalizer) {
-                    PinpointView pv = makePinpointView((PinpointLocalizer) td.localizer);
+                    PinpointView pv = ((PinpointLocalizer) td.localizer).getView();
                     encoderGroups.add(new PinpointEncoderGroup(pv));
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));

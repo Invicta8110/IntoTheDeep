@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.hardware.robots.Elphabot
 import org.firstinspires.ftc.teamcode.hardware.robots.position
 import page.j5155.expressway.ftc.motion.PIDFController
 
-@TeleOp(name="Elphaba One Driver", group = "Elphabot")
+@TeleOp(name="Elphaba Two Drivers", group = "Elphabot")
 @Config
 @SilkRoad.Attach
 class ElphabaTwoDriver : OpMode() {

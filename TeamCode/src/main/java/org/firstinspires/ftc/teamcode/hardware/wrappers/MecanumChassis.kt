@@ -6,11 +6,9 @@ import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.Pose2dDual
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.PoseVelocity2dDual
-import com.acmerobotics.roadrunner.ProfileParams
 import com.acmerobotics.roadrunner.Time
 import com.acmerobotics.roadrunner.Trajectory
 import com.acmerobotics.roadrunner.TrajectoryBuilder
-import com.acmerobotics.roadrunner.TrajectoryBuilderParams
 import com.acmerobotics.roadrunner.Twist2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.robotcore.hardware.HardwareMap
@@ -22,7 +20,6 @@ import org.firstinspires.ftc.teamcode.control.MecanumStatic
 import org.firstinspires.ftc.teamcode.control.MecanumStatic.defaultAccelConstraint
 import org.firstinspires.ftc.teamcode.control.MecanumStatic.defaultVelConstraint
 import org.firstinspires.ftc.teamcode.control.followPathCommand
-import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive
 
 
@@ -50,7 +47,7 @@ class MecanumChassis @JvmOverloads constructor(
         )
     }
 
-    fun moveToPoint(target: Pose2dDual<Time>) {
+    fun setPowersWithDirection(target: Pose2dDual<Time>) {
         val robotVel: PoseVelocity2d = this.updatePoseEstimate()
         val command: PoseVelocity2dDual<Time> = MecanumStatic.controller.compute(
             targetPose = target,
@@ -59,18 +56,12 @@ class MecanumChassis @JvmOverloads constructor(
         )
         this.setDrivePowersWithFF(command)
     }
+    fun setPowersWithDirection(target: Pose2d) = setPowersWithDirection(Pose2dDual.constant(target, 3))
 
     fun moveToPoint(target: Pose2d): Command {
         return Lambda("Move to $target")
             .setExecute {
-                val robotVel: PoseVelocity2d = this.updatePoseEstimate()
-                val command: PoseVelocity2dDual<Time> = MecanumStatic.controller.compute(
-                    targetPose = Pose2dDual.constant(target, 3),
-                    actualPose = this.localizer.pose,
-                    actualVelActual = robotVel
-                )
-
-                this.setDrivePowers(command.value())
+                setPowersWithDirection(target)
             }.setFinish {
                 val error: Twist2d = target - this.localizer.pose
                 error.line.norm() < 1.0 && error.angle < Math.PI/3
@@ -80,18 +71,22 @@ class MecanumChassis @JvmOverloads constructor(
     }
 
     fun turnTo(target: Double): Command {
-        return Lambda("Turn to $target rad")
+        return Lambda("Turn to $target")
             .setExecute {
-                val robotVel: PoseVelocity2d = this.updatePoseEstimate()
-                val command: PoseVelocity2dDual<Time> = MecanumStatic.controller.compute(
-                    targetPose = Pose2dDual.constant(Pose2d(0.0, 0.0, target), 3),
-                    actualPose = this.localizer.pose,
-                    actualVelActual = robotVel
-                )
-                this.setDrivePowers(command.value())
+                setPowersWithDirection(Pose2d(0.0, 0.0, target))
             }.setFinish {
                 val error: Double = target - this.localizer.pose.heading.toDouble()
                 error < Math.PI/8
+            }
+    }
+
+    fun strafeTo(target: Vector2d): Command {
+        return Lambda("Strafe to $target")
+            .setExecute {
+                setPowersWithDirection(Pose2d(target.x, target.y, localizer.pose.heading.toDouble()))
+            }.setFinish {
+                val error: Vector2d = target - this.localizer.pose.position
+                error.norm() < 1.0
             }
     }
 }

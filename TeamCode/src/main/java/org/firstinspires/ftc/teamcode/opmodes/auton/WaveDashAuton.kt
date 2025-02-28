@@ -9,19 +9,19 @@ import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import dev.frozenmilk.mercurial.Mercurial
 import dev.frozenmilk.mercurial.commands.Command
 import org.firstinspires.ftc.teamcode.hardware.robots.Elphabot
-import org.firstinspires.ftc.teamcode.hardware.wrappers.follow
+import kotlin.math.PI
 
 @Autonomous
 @Mercurial.Attach
-class MercurialAuton : OpMode() {
+class WaveDashAuton : OpMode() {
     val robot by OpModeLazyCell { Elphabot(hardwareMap, Pose2d(0.0, 0.0, 0.0)) }
     lateinit var command: Command
 
     override fun init() {
-       command = robot.drive.trajectoryBuilder(robot.pose)
-            .strafeTo(Vector2d(24.0, 0.0))
-            .build()
-            .follow(robot.drive)
+       command = robot.drive.commandBuilder(robot.pose)
+           .strafeTo(robot.pose.position + Vector2d(12.0, 12.0))
+           .turn(PI/2)
+           .build()
     }
 
     override fun start() {
