@@ -36,7 +36,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "dev.frozenmilk.sinister.sloth:Load:0.0.1"
+        classpath "dev.frozenmilk.sinister.sloth:Load:0.0.2"
     }
 }
 
@@ -75,10 +75,10 @@ dependencies {
     implementation "page.j5155.roadrunner.expressway:core:0.3.7"
     implementation "page.j5155.roadrunner.expressway:ftc:0.3.7"
 
-    implementation "dev.frozenmilk.dairy:Core:1.0.1"
+    implementation "dev.frozenmilk.dairy:Core:2.0.0"
     implementation "dev.frozenmilk.dairy:Pasteurized:1.0.0"
     implementation "dev.frozenmilk.mercurial:Mercurial:1.0.3"
-    implementation "dev.frozenmilk.sinister:Sloth:0.0.0"
+    implementation "dev.frozenmilk.sinister:Sloth:0.0.1"
     implementation "dev.frozenmilk.sinister.sloth:DashFix:0.0.0"
 
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
