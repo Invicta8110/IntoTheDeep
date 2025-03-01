@@ -5,7 +5,8 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
@@ -16,14 +17,16 @@ public class TestTeleOpRobot {
     private final MecanumDrive drive;
     private final Motor arm;
 
-    private final LinearSlides slides;
+    private final LinearSlidesRR slides;
     private LynxModule controlHub, expansionHub;
+    public TwoPointServo claw;
 
     public TestTeleOpRobot(HardwareMap hwMap, Gamepad gp1) {
         this.gp1 = gp1;
         drive = new MecanumDrive(hwMap, new Pose2d(0.0, 0.0, 0.0));
-        slides = new LinearSlides(new Motor("slides", hwMap));
-        arm = new Motor("arm", hwMap);
+        slides = new LinearSlidesRR(new Motor("slides", hwMap));
+        arm = new Motor("armRight", hwMap);
+        claw = new TwoPointServo("claw", hwMap);
 
         List<LynxModule> hubs = hwMap.getAll(LynxModule.class);
         for (LynxModule module : hubs) {
@@ -35,7 +38,7 @@ public class TestTeleOpRobot {
         }
     }
 
-    public TestTeleOpRobot(HardwareMap hwMap, Gamepad gp1, MecanumDrive drive, LinearSlides slides, Motor arm) {
+    public TestTeleOpRobot(HardwareMap hwMap, Gamepad gp1, MecanumDrive drive, LinearSlidesRR slides, Motor arm) {
         this.gp1 = gp1;
         this.drive = drive;
         this.slides = slides;
@@ -50,7 +53,7 @@ public class TestTeleOpRobot {
         return arm;
     }
 
-    public LinearSlides getSlides() {
+    public LinearSlidesRR getSlides() {
         return slides;
     }
 
@@ -74,11 +77,11 @@ public class TestTeleOpRobot {
 
     public void arm() {
         if (gp1.x) {
-            arm.getInternal().setPower(1);
+            arm.setPower(1);
         } else if (gp1.y) {
-            arm.getInternal().setPower(-1);
+            arm.setPower(-1);
         } else {
-            arm.getInternal().setPower(0);
+            arm.setPower(0);
         }
     }
 
@@ -97,5 +100,13 @@ public class TestTeleOpRobot {
         drive.leftBack.setPower(y - x + rx);
         drive.rightFront.setPower(y - x - rx);
         drive.rightBack.setPower(y + x - rx);
+    }
+
+    public void claw() {
+        if (gp1.a) {
+            claw.goToA();
+        } else if (gp1.b) {
+            claw.goToB();
+        }
     }
 }

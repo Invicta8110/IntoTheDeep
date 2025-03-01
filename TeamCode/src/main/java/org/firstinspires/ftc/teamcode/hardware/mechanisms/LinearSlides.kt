@@ -1,53 +1,57 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms
 
-import com.acmerobotics.roadrunner.InstantAction
-import com.acmerobotics.roadrunner.ParallelAction
 import com.qualcomm.robotcore.hardware.HardwareMap
+import dev.frozenmilk.mercurial.commands.Command
+import dev.frozenmilk.mercurial.commands.Lambda
+import org.firstinspires.ftc.teamcode.control.instant
+import org.firstinspires.ftc.teamcode.control.services.PIDFService
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
+import page.j5155.expressway.ftc.motion.PIDFController
 
+enum class SlidePosition(val position: Int) {
+    DOWN(100),
+    SPECIMEN_HANG(752),
+    MIDDLE(2000),
+    UP(3000),
+}
 
-class LinearSlides(private val DOWN_POS: Int, private val UP_POS: Int, vararg motors: Motor) {
-    val motors: List<Motor>
-    val position: Int
-        get() = motors[0].position
+class LinearSlides(vararg motors: Motor) : List<Motor> by motors.toList() {
+    companion object {
+        @JvmField var kP = 0.01
+        @JvmField var kI = 0.0
+        @JvmField var kD = 0.1
 
-    /**
-     * NOTE: MOTORS MUST BE SET TO THE CORRECT DIRECTION BEFORE CONSTRUCTING LINEAR SLIDES
-     */
-    init {
-        this.motors = motors.toList()
+        @JvmStatic val PIDF = PIDFController(PIDFController.PIDCoefficients(kP, kI, kD))
     }
-
-    constructor(vararg motors: Motor) : this(0, 2000, *motors)
 
     constructor(hardwareMap: HardwareMap) : this(
         Motor.reversed(Motor("slidesLeft", hardwareMap)),
         Motor("slidesRight", hardwareMap)
     )
 
-    fun reverse() {
-        motors.forEach { m -> m.reverse() }
+    val motors = motors.toList()
+    val service = PIDFService(PIDF, *motors)
+
+    fun updateTarget(target: Int) : Command = instant("slide target $target") {
+        service.target = target
+        service.enabled = true
+    }
+    fun updateTarget(target: SlidePosition) = updateTarget(target.position)
+
+    fun setPower(power: Double) = instant("slide power $power") {
+        motors.forEach { it.power = power }
     }
 
-    fun up() {
-        motors.forEach { m -> m().power = 1.0 }
-    }
+    fun rawSetPower(power: Double) = motors.forEach { it.power = power }
 
-    operator fun get(index: Int): Motor {
-        return motors[index]
-    }
-
-    fun setPower(power: Double) {
-        motors.forEach { it().power = power }
-    }
-
-    fun powerAction(power: Double): InstantAction {
-        return InstantAction { setPower(power) }
-    }
-
-    @get:JvmName("goUp")
-    val goUp get() = ParallelAction(motors.map { it.RTPAction(UP_POS, 1.0) })
-
-    @get:JvmName("goDown")
-    val goDown get() = ParallelAction(motors.map { it.RTPAction(DOWN_POS, 1.0) })
+    fun goTo(target: Int) : Command = Lambda("Go To $target")
+        .setInit {
+            service.enabled = true
+            service.target = target
+        }
+        .setRequirements(this, service)
+        .setFinish {
+            service.atTarget(50)
+        }
+    fun goTo(target: SlidePosition) = goTo(target.position)
 }

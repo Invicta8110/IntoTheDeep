@@ -9,17 +9,20 @@ import com.qualcomm.robotcore.hardware.ServoImplEx
 
 open class TwoPointServo @JvmOverloads constructor(
     private val servo: ServoImplEx,
-    private val pA: Double = 0.0,
-    private val pB: Double = 1.0,
+    var pA: Double = 0.0,
+    var pB: Double = 1.0,
 ) {
 
-    val position get() = servo.position
+    var position by servo::position
+    var pwmRange by servo::pwmRange
 
     @get:JvmName("runToA")
-    val runToA = InstantAction(::goToA)
+    val runToA
+        get() = InstantAction(::goToA)
 
     @get:JvmName("runToB")
-    val runToB = InstantAction(::goToB)
+    val runToB
+        get() = InstantAction(::goToB)
 
     @JvmOverloads
     constructor(
@@ -33,7 +36,7 @@ open class TwoPointServo @JvmOverloads constructor(
     )
 
     init {
-        servo.pwmRange = PwmControl.PwmRange(500.0, 2500.0)
+        pwmRange = PwmControl.PwmRange(500.0, 2500.0)
         servo.direction = Servo.Direction.FORWARD
     }
 
