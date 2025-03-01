@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.PwmControl.PwmRange
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
@@ -26,7 +26,7 @@ class CreamyMushroomRobot
     startPose: Pose2d = Pose2d(0.0, 0.0, 0.0)
 ) {
     val drive = MecanumChassis(hwMap, startPose)
-    val slides = LinearSlidesRR(hwMap)
+    val slides = LinearSlidesManual(hwMap)
     val claw = TwoPointServo("claw", hwMap, 0.10, 0.625)
     val wrist = TwoPointServo("wrist", hwMap, 0.225, 0.50)
     val otos: SparkFunOTOS
@@ -79,7 +79,7 @@ class CreamyMushroomRobot
         )
     }
 
-    fun scoreSpecimen(slidePid: LinearSlidesRR.SlidePIDAction) = SequentialAction(
+    fun scoreSpecimen(slidePid: LinearSlidesManual.SlidePIDAction) = SequentialAction(
         slidePid.goTo(SlidePosition.SPECIMEN_HANG),
         claw.runToB,
         slidePid.goTo(SlidePosition.DOWN)

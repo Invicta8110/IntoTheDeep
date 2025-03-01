@@ -3,26 +3,29 @@ package org.firstinspires.ftc.teamcode.hardware.robots
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.Vector2d
-import com.qualcomm.hardware.lynx.LynxModule
-import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
-import dev.frozenmilk.dairy.core.util.OpModeLazyCell
+import dev.frozenmilk.mercurial.commands.groups.Sequential
+import dev.frozenmilk.mercurial.commands.util.Wait
 import org.firstinspires.ftc.teamcode.control.instant
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlides
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.IndexServo
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesMercurial
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo
 import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot.Companion.armRange
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
-import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 
 typealias ServoArm = List<ServoImplEx>
 
 var ServoArm.position: Double
     get() = this[1].position
-    set(value) { this.forEach { it.position = value } }
+    set(value) {
+        this.forEach { it.position = value }
+    }
 
 class Elphabot(
     hwMap: HardwareMap,
@@ -30,12 +33,14 @@ class Elphabot(
 ) {
     val drive = MecanumChassis(hwMap, startPose)
     val claw = TwoPointServo("claw", hwMap, 0.10, 0.625)
-    val wrist = TwoPointServo("wrist", hwMap, 0.25, 0.50)
+    val wrist = IndexServo("wrist", hwMap, 0.35, 0.65, 0.05)
     val rotator = hwMap[CRServo::class.java, "rotator"]
-    val slides = LinearSlides(hwMap).apply {
-        forEach { it.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER }
+
+    val slidesManual = LinearSlidesManual(hwMap).apply {
+        forEach { motor -> motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER }
         forEach { it.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER }
     }
+    val slidesMercurial = LinearSlidesMercurial(slidesManual)
 
     val arm = buildList {
         val armLeft = hwMap[ServoImplEx::class.java, "armLeft"]!!
@@ -56,12 +61,14 @@ class Elphabot(
 
     var pose
         get() = drive.localizer.pose
-        set(value) { drive.localizer.pose = value }
+        set(value) {
+            drive.localizer.pose = value
+        }
 
     companion object {
         val armHome = 0.985 // x wall grab from front
         val armUp = 0.0 // a enter submersible from front
-        val armDown = 0.65 // b (keep)
+        val armDown = 0.80 // b (keep)
         val armBucket = 0.80  // y up-right from front
 
         val armPositions = mapOf(
@@ -72,8 +79,23 @@ class Elphabot(
         )
     }
 
-    fun moveArm(position: String) = instant("Move arm to $position") { arm.position = armPositions[position]!! }
+    fun moveArm(position: String) =
+        instant("Move arm to $position") { arm.position = armPositions[position]!! }
 
-    fun setDrivePowers(powers: PoseVelocity2d) = instant("Set drive powers to $powers") { drive.setDrivePowers(powers) }
-    fun setDrivePowers(x: Double, y: Double, rx: Double) = setDrivePowers(PoseVelocity2d(Vector2d(x, y), rx))
+    fun setDrivePowers(powers: PoseVelocity2d) =
+        instant("Set drive powers to $powers") { drive.setDrivePowers(powers) }
+
+    fun setDrivePowers(x: Double, y: Double, rx: Double) =
+        setDrivePowers(PoseVelocity2d(Vector2d(x, y), rx))
+
+    fun scoreSpecimen() = Sequential(
+        claw.goToBCommand(),
+        instant("arm-to-Y") { arm.position = Elphabot.armPositions["y"]!! },
+        slidesMercurial.goTo(SlidePosition.SPECIMEN_HANG),
+        wrist.goToCommand(0),
+        Wait(0.5),
+        wrist.goToCommand(2),
+        Wait(0.5),
+        claw.goToACommand()
+    )
 }

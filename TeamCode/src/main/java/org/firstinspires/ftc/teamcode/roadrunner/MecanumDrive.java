@@ -320,11 +320,7 @@ public class MecanumDrive implements Drive {
 
         PoseVelocity2d robotVelRobot = updatePoseEstimate();
 
-        PoseVelocity2dDual<Time> command = new HolonomicController(
-                MecanumParams.getAxialGain(), MecanumParams.getLateralGain(), MecanumParams.getHeadingGain(),
-                MecanumParams.getAxialVelGain(), MecanumParams.getLateralVelGain(), MecanumParams.getHeadingVelGain()
-        )
-                .compute(txWorldTarget, localizer.getPose(), robotVelRobot);
+        PoseVelocity2dDual<Time> command = MecanumStatic.getController().compute(txWorldTarget, localizer.getPose(), robotVelRobot);
         driveCommandWriter.write(new DriveCommandMessage(command));
 
         MecanumKinematics.WheelVelocities<Time> wheelVels = MecanumStatic.getKinematics().inverse(command);

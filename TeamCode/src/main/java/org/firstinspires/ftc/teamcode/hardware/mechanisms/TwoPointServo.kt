@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.PwmControl
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
+import org.firstinspires.ftc.teamcode.control.instant
 
 
 open class TwoPointServo @JvmOverloads constructor(
@@ -47,6 +48,9 @@ open class TwoPointServo @JvmOverloads constructor(
     fun goToB() {
         servo.position = pB
     }
+
+    fun goToACommand() = instant("go-to-A") { goToA() }
+    fun goToBCommand() = instant("go-to-B") { goToB() }
 
     fun runAction(): InstantAction {
         return if (servo.position == pA) {

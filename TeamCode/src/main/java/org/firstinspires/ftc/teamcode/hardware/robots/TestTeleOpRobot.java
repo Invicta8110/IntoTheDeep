@@ -5,7 +5,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
@@ -17,14 +17,14 @@ public class TestTeleOpRobot {
     private final MecanumDrive drive;
     private final Motor arm;
 
-    private final LinearSlidesRR slides;
+    private final LinearSlidesManual slides;
     private LynxModule controlHub, expansionHub;
     public TwoPointServo claw;
 
     public TestTeleOpRobot(HardwareMap hwMap, Gamepad gp1) {
         this.gp1 = gp1;
         drive = new MecanumDrive(hwMap, new Pose2d(0.0, 0.0, 0.0));
-        slides = new LinearSlidesRR(new Motor("slides", hwMap));
+        slides = new LinearSlidesManual(new Motor("slides", hwMap));
         arm = new Motor("armRight", hwMap);
         claw = new TwoPointServo("claw", hwMap);
 
@@ -38,7 +38,7 @@ public class TestTeleOpRobot {
         }
     }
 
-    public TestTeleOpRobot(HardwareMap hwMap, Gamepad gp1, MecanumDrive drive, LinearSlidesRR slides, Motor arm) {
+    public TestTeleOpRobot(HardwareMap hwMap, Gamepad gp1, MecanumDrive drive, LinearSlidesManual slides, Motor arm) {
         this.gp1 = gp1;
         this.drive = drive;
         this.slides = slides;
@@ -53,7 +53,7 @@ public class TestTeleOpRobot {
         return arm;
     }
 
-    public LinearSlidesRR getSlides() {
+    public LinearSlidesManual getSlides() {
         return slides;
     }
 

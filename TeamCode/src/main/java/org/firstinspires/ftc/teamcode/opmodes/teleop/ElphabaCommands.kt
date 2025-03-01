@@ -8,21 +8,27 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.util.ElapsedTime
 import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
-import org.firstinspires.ftc.teamcode.control.SilkRoad
+import dev.frozenmilk.mercurial.Mercurial
+import dev.frozenmilk.mercurial.bindings.BoundGamepad
+import dev.frozenmilk.mercurial.commands.groups.Sequential
+import org.firstinspires.ftc.teamcode.control.instant
 import org.firstinspires.ftc.teamcode.control.mtel
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesMercurial
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
 import org.firstinspires.ftc.teamcode.hardware.robots.Elphabot
 import org.firstinspires.ftc.teamcode.hardware.robots.position
 import page.j5155.expressway.ftc.motion.PIDFController
 
-@TeleOp(name="Elphaba One Driver", group = "Elphabot")
+@TeleOp(name="Elphaba Commands", group = "Elphabot")
 @Config
-@SilkRoad.Attach
-class ElphabaOneDriver : OpMode() {
+@Mercurial.Attach
+class ElphabaCommands : OpMode() {
     private val robot by OpModeLazyCell { Elphabot(hardwareMap) }
+    private val slides by OpModeLazyCell { robot.slidesMercurial }
 
-    private val gp1 by OpModeLazyCell { SDKGamepad(gamepad1) }
+    private val gp1 by OpModeLazyCell { BoundGamepad(SDKGamepad(gamepad1)) }
+
     private val rightTrigger by OpModeLazyCell {
         gp1.rightTrigger.conditionalBindState()
             .greaterThan(0.0)
@@ -33,9 +39,7 @@ class ElphabaOneDriver : OpMode() {
     private var slidePos = SlidePosition.DOWN
 
     private val slidePid = PIDFController(slideCoefs)
-    private var fieldCentric = false
     var timer = ElapsedTime()
-    var specTimer = ElapsedTime()
     var loopCount = 0;
 
     override fun init() {
@@ -43,8 +47,24 @@ class ElphabaOneDriver : OpMode() {
         slidePid.targetPosition = 0
     }
 
+    override fun start() {
+        gp1.dpadLeft.onTrue(robot.wrist.goToCommand(1))
+        gp1.dpadRight.onTrue(robot.wrist.goToCommand(0))
+        gp1.b.onTrue(robot.wrist.goToCommand(2))
+
+        gp1.rightBumper.onTrue(robot.claw.goToBCommand())
+        gp1.leftBumper.onTrue(robot.claw.goToACommand())
+
+        gp1.a.onTrue(instant("arm-to-A") { robot.arm.position = Elphabot.armPositions["a"]!! })
+        //gp1.b.onTrue(instant("arm-to-B") { robot.arm.position = Elphabot.armPositions["b"]!! })
+        gp1.x.onTrue(instant("arm-to-X") { robot.arm.position = Elphabot.armPositions["x"]!! })
+        gp1.y.onTrue(instant("arm-to-Y") { robot.arm.position = Elphabot.armPositions["y"]!! })
+
+        slides.pidEnabled = true
+    }
+
     override fun loop() {
-        robot.drive.setDrivePowers(
+        robot.setDrivePowers(
             PoseVelocity2d(
                 Vector2d(
                     gp1.leftStickY.state,
@@ -52,52 +72,32 @@ class ElphabaOneDriver : OpMode() {
                 ),
                 -gp1.rightStickX.state
             )
-        )
+        ).schedule()
 
         robot.drive.updatePoseEstimate()
 
-        when {
-            gp1.dpadLeft.onTrue -> robot.wrist.goTo(1)
-            gp1.dpadRight.onTrue -> robot.wrist.goTo(0)
-            gp1.b.onTrue -> robot.wrist.goTo(2)
-        }
-
-        when {
-            gp1.rightBumper.onTrue -> robot.claw.goToB()
-            gp1.leftBumper.onTrue -> robot.claw.goToA()
-        }
-
-        when {
-            gp1.a.onTrue -> robot.arm.position = Elphabot.armPositions["a"]!!
-            //gp1.b.onTrue -> robot.arm.position = Elphabot.armPositions["b"]!!
-            gp1.x.onTrue -> robot.arm.position = Elphabot.armPositions["x"]!!
-            gp1.y.onTrue -> robot.arm.position = Elphabot.armPositions["y"]!!
-        }
-
         robot.rotator.power = gp1.rightTrigger.state - gp1.leftTrigger.state
 
-        if (gp1.back.onTrue) {
-            slidePid.targetPosition = SlidePosition.SPECIMEN_HANG.position
+        when {
+            gp1.dpadUp.onTrue -> {
+                slidePos = slidePos.next()
+                slides.setTarget(slidePos).schedule()
+            }
+            gp1.dpadDown.onTrue -> {
+                slidePos = slidePos.previous()
+                slides.setTarget(slidePos).schedule()
+            }
+            gp1.rightTrigger.state > 0 -> {
+                slidePos = SlidePosition.SPECIMEN_HANG
+                robot.scoreSpecimen().schedule()
+            }
         }
 
-        if (gp1.dpadUp.state) {
-            robot.slidesManual.setPower(1.0)
-        } else if (gp1.dpadUp.onFalse) {
-            slidePid.targetPosition = robot.slidesManual[0].currentPosition
-        } else if (gp1.dpadDown.state) {
-            robot.slidesManual.setPower(-1.0)
-        } else if (gp1.dpadDown.onFalse) {
-            slidePid.targetPosition = robot.slidesManual[0].currentPosition
-        } else {
-            val output = slidePid.update(measuredPosition=robot.slidesManual[0].currentPosition.toDouble())
-
-            robot.slidesManual[0].power = output
-            robot.slidesManual[1].power = output
+        if (slides.pidEnabled) {
+            slides.motors.forEach { it.power = slides.pid.update(slides.currentPosition.toDouble()) }
         }
 
-        mtel.addData("Slide PID Target", slidePid.targetPosition)
-        mtel.addData("Slide 0 Pos", robot.slidesManual[0].currentPosition)
-        mtel.addData("Slide 1 Pos", robot.slidesManual[1].currentPosition)
+        mtel.addData("Slide PID Target", slides.pid.targetPosition)
         mtel.addData("Robot Position", robot.drive.localizer.pose.position)
         mtel.addData("Robot Heading", robot.drive.localizer.pose.heading.log())
         mtel.addData("Loop Time", timer.milliseconds()/loopCount)
@@ -106,3 +106,4 @@ class ElphabaOneDriver : OpMode() {
         loopCount++;
     }
 }
+

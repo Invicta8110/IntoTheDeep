@@ -12,7 +12,6 @@ import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.control.SilkRoad
 import org.firstinspires.ftc.teamcode.control.mtel
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
 import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot
 

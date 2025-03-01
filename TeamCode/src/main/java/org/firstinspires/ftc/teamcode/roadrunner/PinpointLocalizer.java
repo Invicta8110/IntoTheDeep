@@ -10,9 +10,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.PinpointView;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import java.util.Objects;
-
 import dev.frozenmilk.wavedash.Localizer;
 import dev.frozenmilk.wavedash.GoBildaPinpointDriver;
 
@@ -21,7 +19,7 @@ public final class PinpointLocalizer implements Localizer {
     public static class Params {
         // mmPerTick can either be tuned manually using PinpointForwardPushTest,
         // or by dividing the the circumference of your odometry wheels **in mm** by the number of ticks per revolution
-        public double mmPerTick = 1.0 / 13.26291192;
+        public double mmPerTick = 1 / GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD.getTicksPerMM();
 
         public double parYTicks = 0.0; // y position of the parallel encoder (in tick units)
         public double perpXTicks = 0.0; // x position of the perpendicular encoder (in tick units)
