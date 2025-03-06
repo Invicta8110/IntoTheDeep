@@ -34,12 +34,11 @@ public class LocalizationTest extends LinearOpMode {
                         -gamepad1.right_stick_x
                 ));
 
-                drive.updatePoseEstimate();
+                PoseVelocity2d vel = drive.updatePoseEstimate();
 
                 Pose2d pose = drive.localizer.getPose();
-                telemetry.addData("x", pose.position.x);
-                telemetry.addData("y", pose.position.y);
-                telemetry.addData("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
+                telemetry.addData("Pose", pose);
+                telemetry.addData("Vel", vel);
                 telemetry.update();
 
                 TelemetryPacket packet = new TelemetryPacket();

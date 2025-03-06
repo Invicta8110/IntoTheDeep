@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.roadrunner.TankDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.roadrunner.TwoDeadWheelLocalizer;
+import org.firstinspires.ftc.teamcode.roadrunner.TwoDeadWheelPinpointImu;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,6 +81,15 @@ public final class TuningOpModes {
                     ));
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
+                } else if (md.localizer instanceof TwoDeadWheelPinpointImu) {
+                    TwoDeadWheelPinpointImu dl = (TwoDeadWheelPinpointImu) md.localizer;
+                    encoderGroups.add(new LynxQuadratureEncoderGroup(
+                            hardwareMap.getAll(LynxModule.class),
+                            Arrays.asList(dl.getPar(), dl.getPerp())
+                    ));
+                    parEncs.add(new EncoderRef(0, 0));
+                    perpEncs.add(new EncoderRef(0, 1));
+                    lazyImu = new PinpointIMU(dl.getView());
                 } else if (md.localizer instanceof OTOSLocalizer) {
                     OTOSLocalizer ol = (OTOSLocalizer) md.localizer;
                     encoderGroups.add(new OTOSEncoderGroup(ol.getOTOS()));

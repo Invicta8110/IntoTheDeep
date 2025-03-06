@@ -89,7 +89,10 @@ class ElphabaCommands : OpMode() {
             }
             gp1.rightTrigger.state > 0 -> {
                 slidePos = SlidePosition.SPECIMEN_HANG
-                robot.scoreSpecimen().schedule()
+                robot.scoreSpecimen.schedule()
+            }
+            gp1.leftTrigger.state > 0 && Mercurial.isScheduled(robot.scoreSpecimen) -> {
+                robot.scoreSpecimen.cancel()
             }
         }
 

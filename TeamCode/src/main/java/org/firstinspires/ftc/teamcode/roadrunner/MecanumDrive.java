@@ -16,7 +16,6 @@ import com.acmerobotics.roadrunner.DisplacementTrajectory;
 import com.acmerobotics.roadrunner.DualNum;
 import com.acmerobotics.roadrunner.HolonomicController;
 import com.acmerobotics.roadrunner.MecanumKinematics;
-import com.acmerobotics.roadrunner.MotorFeedforward;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Pose2dDual;
 import com.acmerobotics.roadrunner.PosePath;
@@ -216,7 +215,7 @@ public class MecanumDrive implements Drive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        localizer = new PinpointLocalizer(hardwareMap, pose);
+        localizer = new TwoDeadWheelPinpointImu(hardwareMap, MecanumParams.getInPerTick(), pose);
 
         FlightRecorder.write("MECANUM_MecanumParams", MecanumParams.getToString());
     }
@@ -243,13 +242,11 @@ public class MecanumDrive implements Drive {
     public void setDrivePowersWithFF(PoseVelocity2dDual<Time> powers) {
         MecanumKinematics.WheelVelocities<Time> wheelVels = MecanumStatic.getKinematics().inverse(powers);
         double voltage = voltageSensor.getVoltage();
-
-        final MotorFeedforward feedforward = new MotorFeedforward(MecanumParams.getKS(),
-                MecanumParams.getKV() / MecanumParams.getInPerTick(), MecanumParams.getKA() / MecanumParams.getInPerTick());
-        double leftFrontPower = feedforward.compute(wheelVels.leftFront) / voltage;
-        double leftBackPower = feedforward.compute(wheelVels.leftBack) / voltage;
-        double rightBackPower = feedforward.compute(wheelVels.rightBack) / voltage;
-        double rightFrontPower = feedforward.compute(wheelVels.rightFront) / voltage;
+        
+        double leftFrontPower = MecanumStatic.getFeedforward().compute(wheelVels.leftFront) / voltage;
+        double leftBackPower = MecanumStatic.getFeedforward().compute(wheelVels.leftBack) / voltage;
+        double rightBackPower = MecanumStatic.getFeedforward().compute(wheelVels.rightBack) / voltage;
+        double rightFrontPower = MecanumStatic.getFeedforward().compute(wheelVels.rightFront) / voltage;
 
         mecanumCommandWriter.write(new MecanumCommandMessage(
                 voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower
@@ -393,7 +390,7 @@ public class MecanumDrive implements Drive {
     @NonNull
     public Command followTrajectoryCommand(@NonNull TimeTrajectory trajectory) {
 
-        return new FollowTrajectoryCommand(trajectory);
+        return Drive.super.followTrajectoryCommand(trajectory);
     }
 
     @NonNull
@@ -401,7 +398,7 @@ public class MecanumDrive implements Drive {
     public TrajectoryCommandBuilder commandBuilder(@NonNull Pose2d beginPose) {
         return new TrajectoryCommandBuilder(
                 this::turnCommand,
-                FollowTrajectoryCommand::new,
+                this::followTrajectoryCommand,
                 DEFAULT_TRAJECTORY_PARAMS,
                 beginPose,
                 0.0,

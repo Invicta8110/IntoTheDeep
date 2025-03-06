@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.PosePath
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.PoseVelocity2dDual
 import com.acmerobotics.roadrunner.Time
+import com.acmerobotics.roadrunner.TimeTrajectory
 import com.acmerobotics.roadrunner.Trajectory
 import com.acmerobotics.roadrunner.project
 import dev.frozenmilk.mercurial.commands.Command
@@ -42,7 +43,6 @@ class FollowPathAction(val drive: MecanumChassis, val traj: DisplacementTrajecto
 
 fun MecanumChassis.followPathCommand(traj: DisplacementTrajectory): Command {
     val path = traj.path
-    val profile = traj.profile
     var disp = 0.0
 
     return Lambda("Following Path $traj")
@@ -63,3 +63,5 @@ fun MecanumChassis.followPathCommand(traj: DisplacementTrajectory): Command {
 }
 
 fun MecanumChassis.followPathCommand(traj: Trajectory) = this.followPathCommand(DisplacementTrajectory(traj))
+fun MecanumChassis.followPathCommand(traj: TimeTrajectory) =
+    this.followPathCommand(DisplacementTrajectory(traj.path, traj.profile.dispProfile))

@@ -15,7 +15,7 @@
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'dev.frozenmilk.sinister.sloth.Load'
+apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
@@ -32,11 +32,11 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            url "https://repo.dairy.foundation/snapshots"
+            url "https://repo.dairy.foundation/releases"
         }
     }
     dependencies {
-        classpath "dev.frozenmilk.sinister.sloth:Load:0.0.2"
+        classpath "dev.frozenmilk:Load:0.1.0"
     }
 }
 
@@ -64,22 +64,32 @@ dependencies {
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
     //implementation "com.acmerobotics.roadrunner:ftc:0.1.20"
-    implementation "com.acmerobotics.roadrunner:ftc_u:0.1.21-SNAPSHOT-1"
+    implementation("com.acmerobotics.roadrunner:ftc_u:0.1.21-SNAPSHOT-1") {
+        exclude group: "com.acmerobotics.dashboard"
+    }
 
     implementation "com.acmerobotics.roadrunner:core:1.0.1"
-    implementation "com.acmerobotics.roadrunner:actions:1.0.1"
-    implementation("dev.frozenmilk:Wavedash:0.2.3-RC-1")
-    implementation "com.acmerobotics.dashboard:dashboard:0.4.16"
+    implementation("com.acmerobotics.roadrunner:actions:1.0.1") {
+        exclude group: "com.acmerobotics.dashboard"
+        exclude group: "dev.frozenmilk.dairy"
+    }
+    implementation("dev.frozenmilk:Wavedash:0.2.3-RC-1") {
+        exclude group: "com.acmerobotics.dashboard"
+    }
+    //implementation "com.acmerobotics.dashboard:dashboard:0.4.16"
     //implementation "com.github.jdhs-ftc:road-runner-ftc-otos:a02ba3fe51"
 
-    implementation "page.j5155.roadrunner.expressway:core:0.3.7"
-    implementation "page.j5155.roadrunner.expressway:ftc:0.3.7"
+    implementation("page.j5155.roadrunner.expressway:core:0.3.7"){
+        exclude group: "com.acmerobotics.dashboard"
+    }
+    implementation("page.j5155.roadrunner.expressway:ftc:0.3.7") {
+        exclude group: "com.acmerobotics.dashboard"
+    }
 
-    implementation "dev.frozenmilk.dairy:Core:2.0.0"
+    implementation "dev.frozenmilk.dairy:Core:2.1.0"
     implementation "dev.frozenmilk.dairy:Pasteurized:1.0.0"
     implementation "dev.frozenmilk.mercurial:Mercurial:1.0.3"
-    implementation "dev.frozenmilk.sinister:Sloth:0.0.1"
-    implementation "dev.frozenmilk.sinister.sloth:DashFix:0.0.0"
+    implementation("com.acmerobotics.slothboard:dashboard:0.1.1+0.4.16")
 
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }

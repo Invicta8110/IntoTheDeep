@@ -88,7 +88,7 @@ class Elphabot(
     fun setDrivePowers(x: Double, y: Double, rx: Double) =
         setDrivePowers(PoseVelocity2d(Vector2d(x, y), rx))
 
-    fun scoreSpecimen() = Sequential(
+    val scoreSpecimen = Sequential(
         claw.goToBCommand(),
         instant("arm-to-Y") { arm.position = Elphabot.armPositions["y"]!! },
         slidesMercurial.goTo(SlidePosition.SPECIMEN_HANG),
