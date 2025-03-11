@@ -20,7 +20,6 @@ class WaveDashAuton : OpMode() {
     override fun init() {
        command = robot.drive.commandBuilder(robot.pose)
            .strafeTo(Vector2d(12.0, 0.0))
-           .turn(PI/2)
            .build()
     }
 

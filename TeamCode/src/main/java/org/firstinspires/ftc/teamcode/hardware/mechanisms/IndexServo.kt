@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.PwmControl
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
+import dev.frozenmilk.mercurial.commands.groups.Advancing
 import org.firstinspires.ftc.teamcode.control.instant
 
 class IndexServo(
@@ -30,4 +31,6 @@ class IndexServo(
 
     fun goTo(index: Int) { position = positions[index] }
     fun goToCommand(index: Int) = instant("go-to-$index") { goTo(index) }
+
+    val advancing = Advancing(positions.indices.map { goToCommand(it) })
 }

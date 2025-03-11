@@ -70,8 +70,6 @@ class ElphabaTwoDriver : OpMode() {
             gp1.y.onTrue -> robot.arm.position = Elphabot.armPositions["y"]!!
         }
 
-        robot.rotator.power = gp1.rightTrigger.state - gp1.leftTrigger.state
-
         if (gp1.back.onTrue) {
             slidePid.targetPosition = SlidePosition.SPECIMEN_HANG.position
         }
@@ -94,8 +92,8 @@ class ElphabaTwoDriver : OpMode() {
         mtel.addData("Slide PID Target", slidePid.targetPosition)
         mtel.addData("Slide 0 Pos", robot.slidesManual[0].currentPosition)
         mtel.addData("Slide 1 Pos", robot.slidesManual[1].currentPosition)
-        mtel.addData("Robot Position", robot.drive.localizer.pose.position)
-        mtel.addData("Robot Heading", robot.drive.localizer.pose.heading.log())
+        mtel.addData("Robot Position", robot.drive.mdLocalizer.pose.position)
+        mtel.addData("Robot Heading", robot.drive.mdLocalizer.pose.heading.log())
         mtel.addData("Loop Time", timer.milliseconds()/loopCount)
         mtel.update()
 

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.control
 
+import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.AccelConstraint
 import com.acmerobotics.roadrunner.AngularVelConstraint
 import com.acmerobotics.roadrunner.HolonomicController
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.control.MecanumParams.minProfileAccel
 import org.firstinspires.ftc.teamcode.control.MecanumParams.trackWidthTicks
 import kotlin.reflect.full.memberProperties
 
+@Config
 object MecanumParams {
     // IMU orientation
     // TODO: fill in these values based on
@@ -37,17 +39,16 @@ object MecanumParams {
     var inPerTick: Double = (1.0 / GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD.ticksPerMM) / 25.4 //5206 ticks
         // / (25.4 * goBILDA_SWINGARM_POD) //ticks-per-mm for the goBILDA Swingarm Pod //ticks-per-mm for the goBILDA Swingarm Pod // If you're using OTOS/Pinpoint leave this at 1 (all values will be in inches, 1 tick = 1 inch)
     @JvmStatic
-    var lateralInPerTick: Double =
-        0.916176790984675 // Tune this with LateralRampLogger (even if you use OTOS/Pinpoint)
+    var lateralInPerTick: Double = inPerTick
     @JvmStatic
-    var trackWidthTicks: Double = 10.5
+    var trackWidthTicks: Double = 12.5 * inPerTick
 
     // feedforward parameters (in tick units)
     @JvmStatic
-    var kS: Double = 3.63265493223649
+    var kS: Double = -1.3749787233781499
     @JvmStatic
-    var kV: Double = 3.269727019879922
-    @JvmStatic
+    var kV: Double = 0.00035720941737686055
+    @JvmField
     var kA: Double = 0.0
 
     // path profile parameters (in inches)
@@ -65,11 +66,11 @@ object MecanumParams {
     var maxAngAccel: Double = Math.PI
 
     // path controller gains
-    @JvmStatic
+    @JvmField
     var axialGain: Double = 0.0
-    @JvmStatic
+    @JvmField
     var lateralGain: Double = 0.0
-    @JvmStatic
+    @JvmField
     var headingGain: Double = 0.0 // shared with turn
 
     @JvmStatic

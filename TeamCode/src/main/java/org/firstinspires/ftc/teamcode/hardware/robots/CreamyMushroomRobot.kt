@@ -30,7 +30,7 @@ class CreamyMushroomRobot
     val claw = TwoPointServo("claw", hwMap, 0.10, 0.625)
     val wrist = TwoPointServo("wrist", hwMap, 0.225, 0.50)
     val otos: SparkFunOTOS
-        get() = (drive.localizer as OTOSLocalizer).otos
+        get() = (drive.mdLocalizer as OTOSLocalizer).otos
 
     val arm: ServoArm
     val lynxes: List<LynxModule>

@@ -7,7 +7,8 @@ import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 import page.j5155.expressway.ftc.motion.PIDFController
 
 enum class SlidePosition(val position: Int) {
-    DOWN(100),
+    DOWN(0),
+    SUBMERSIBLE(250),
     SPECIMEN_HANG(1000),
     MIDDLE(2000),
     UP(3000);
@@ -36,13 +37,6 @@ class LinearSlidesMercurial(val motors: Set<Motor>) {
     val pid = PIDF
     val currentPosition by motors.first()::currentPosition
     var pidEnabled = false
-    var lastOutput: Double = 0.0
-        private set
-
-    constructor(hardwareMap: HardwareMap) : this(
-        Motor.reversed(Motor("slidesLeft", hardwareMap)),
-        Motor("slidesRight", hardwareMap)
-    )
 
     fun setTarget(target: Int) =
         instant("set-slide-target-$target") { pid.targetPosition = target }

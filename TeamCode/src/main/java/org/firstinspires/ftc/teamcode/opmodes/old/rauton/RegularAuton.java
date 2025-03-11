@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.control.Util;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 
+import org.firstinspires.ftc.teamcode.control.PIDController;
+
 import page.j5155.expressway.ftc.motion.PIDFController;
 
 @Disabled

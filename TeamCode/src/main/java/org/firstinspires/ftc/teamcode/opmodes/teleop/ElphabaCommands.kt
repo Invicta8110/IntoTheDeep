@@ -10,11 +10,10 @@ import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import dev.frozenmilk.mercurial.Mercurial
 import dev.frozenmilk.mercurial.bindings.BoundGamepad
-import dev.frozenmilk.mercurial.commands.groups.Sequential
+import dev.frozenmilk.mercurial.commands.groups.Advancing
 import org.firstinspires.ftc.teamcode.control.instant
 import org.firstinspires.ftc.teamcode.control.mtel
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesMercurial
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
 import org.firstinspires.ftc.teamcode.hardware.robots.Elphabot
 import org.firstinspires.ftc.teamcode.hardware.robots.position
@@ -38,6 +37,8 @@ class ElphabaCommands : OpMode() {
     private var slideCoefs = PIDFController.PIDCoefficients(LinearSlidesManual.kP, LinearSlidesManual.kI, LinearSlidesManual.kD)
     private var slidePos = SlidePosition.DOWN
 
+    private var wristything = false
+
     private val slidePid = PIDFController(slideCoefs)
     var timer = ElapsedTime()
     var loopCount = 0;
@@ -48,12 +49,19 @@ class ElphabaCommands : OpMode() {
     }
 
     override fun start() {
-        gp1.dpadLeft.onTrue(robot.wrist.goToCommand(1))
+        gp1.dpadLeft.onTrue(robot.wrist.goToCommand(2))
         gp1.dpadRight.onTrue(robot.wrist.goToCommand(0))
-        gp1.b.onTrue(robot.wrist.goToCommand(2))
 
-        gp1.rightBumper.onTrue(robot.claw.goToBCommand())
-        gp1.leftBumper.onTrue(robot.claw.goToACommand())
+        //gp1.b.onTrue(robot.wrist.goToCommand(1))
+
+        gp1.leftBumper.onTrue(robot.rotator.goToCommand(2))
+        gp1.rightBumper.onTrue(robot.claw.advancing)
+
+        gp1.rightTrigger.conditionalBindState().greaterThan(0.0).bind().onTrue(robot.scoreSpecimen)
+        gp1.leftTrigger.conditionalBindState().greaterThan(0.0).bind().onTrue(Advancing(
+            robot.rotator.goToCommand(0),
+            robot.rotator.goToCommand(1)
+        ))
 
         gp1.a.onTrue(instant("arm-to-A") { robot.arm.position = Elphabot.armPositions["a"]!! })
         //gp1.b.onTrue(instant("arm-to-B") { robot.arm.position = Elphabot.armPositions["b"]!! })
@@ -64,19 +72,9 @@ class ElphabaCommands : OpMode() {
     }
 
     override fun loop() {
-        robot.setDrivePowers(
-            PoseVelocity2d(
-                Vector2d(
-                    gp1.leftStickY.state,
-                    -gp1.leftStickX.state
-                ),
-                -gp1.rightStickX.state
-            )
-        ).schedule()
+        robot.setDrivePowers(PoseVelocity2d(Vector2d(gp1.leftStickY.state, -gp1.leftStickX.state), -gp1.rightStickX.state)).schedule()
 
         robot.drive.updatePoseEstimate()
-
-        robot.rotator.power = gp1.rightTrigger.state - gp1.leftTrigger.state
 
         when {
             gp1.dpadUp.onTrue -> {
@@ -87,13 +85,6 @@ class ElphabaCommands : OpMode() {
                 slidePos = slidePos.previous()
                 slides.setTarget(slidePos).schedule()
             }
-            gp1.rightTrigger.state > 0 -> {
-                slidePos = SlidePosition.SPECIMEN_HANG
-                robot.scoreSpecimen.schedule()
-            }
-            gp1.leftTrigger.state > 0 && Mercurial.isScheduled(robot.scoreSpecimen) -> {
-                robot.scoreSpecimen.cancel()
-            }
         }
 
         if (slides.pidEnabled) {
@@ -101,8 +92,8 @@ class ElphabaCommands : OpMode() {
         }
 
         mtel.addData("Slide PID Target", slides.pid.targetPosition)
-        mtel.addData("Robot Position", robot.drive.localizer.pose.position)
-        mtel.addData("Robot Heading", robot.drive.localizer.pose.heading.log())
+        mtel.addData("Robot Position", robot.drive.mdLocalizer.pose.position)
+        mtel.addData("Robot Heading", robot.drive.mdLocalizer.pose.heading.log())
         mtel.addData("Loop Time", timer.milliseconds()/loopCount)
         mtel.update()
 

@@ -30,7 +30,7 @@ public class ChocolateRaisin {
         slides = new LinearSlidesManual(new Motor("slides", hwMap));
         motorArm = new MotorArm(new Motor("armRight", hwMap));
         claw = new TwoPointServo("claw", hwMap, .75, 1);
-        otos = ((OTOSLocalizer)chassis.localizer).getOTOS();
+        otos = ((OTOSLocalizer) chassis.getLocalizer()).otos;
 
         List<LynxModule> hubs = hwMap.getAll(LynxModule.class);
         for (LynxModule module : hubs) {
@@ -75,7 +75,7 @@ public class ChocolateRaisin {
     public SparkFunOTOS getOTOS() { return otos; }
 
     public Pose2d getPose() {
-        return chassis.localizer.getPose();
+        return chassis.getLocalizer().getPose();
     }
 
     private void configureOtos() {

@@ -16,7 +16,7 @@ class TreeRobot(hwMap: HardwareMap) {
     val claw = TwoPointServo("claw", hwMap, 0.66, 1.0)
     val arm = TwoPointServo("armLeft", hwMap, 0.0, 1.0)
     val otos: SparkFunOTOS
-        get() = (drive.localizer as OTOSLocalizer).otos
+        get() = (drive.mdLocalizer as OTOSLocalizer).otos
 
     fun slideManualControl(gamepad: SDKGamepad) {
         when {
@@ -51,7 +51,7 @@ class TreeRobot(hwMap: HardwareMap) {
     fun driveManualControlFC(gamepad: SDKGamepad) {
         this.drive.setDrivePowers(
             Vector2d(gamepad.leftStickY.state, gamepad.leftStickX.state)
-                .fieldCentric(drive.localizer.pose.heading),
+                .fieldCentric(drive.mdLocalizer.pose.heading),
             gamepad.rightStickX.state
             )
     }

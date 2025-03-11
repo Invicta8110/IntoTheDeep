@@ -14,7 +14,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import dev.frozenmilk.dairy.core.FeatureRegistrar
 import dev.frozenmilk.mercurial.commands.Command
 import dev.frozenmilk.mercurial.commands.Lambda
-import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer.convertPose
 import page.j5155.expressway.ftc.motion.PIDFController
 import kotlin.math.PI
 import kotlin.math.max
@@ -41,10 +40,6 @@ val blueLeft = Pose2d(-26.0, 60.0, -Math.PI/2)
 val redRight = Pose2d(26.0, -60.0, Math.PI/2)
 val redLeft = Pose2d(-36.0, -60.0, Math.PI/2)
 
-// Pose2d operations
-
-fun Pose2D.convertPoseToRR(): Pose2d = convertPose(this)
-fun Pose2d.convertPoseToOTOS(): Pose2D = convertPose(this)
 fun Pose2d.convertToPoseVelocity2d() = PoseVelocity2d(this.position, this.heading.toDouble())
 
 fun Pose2d.distanceTo(other: Pose2d) = this.position.distanceTo(other.position)
@@ -96,7 +91,7 @@ fun PIDFController.updateInTolerance(
     }
 }
 
-fun instant(repr: String, action: () -> Unit) : Command = Lambda(repr).setInit(action)
+fun instant(repr: String, action: () -> Unit) = Lambda(repr).setInit(action)
 
 fun <T : HardwareDevice> hardwareGenerator(hwMap: HardwareMap, action: HardwareMap.() -> T) : T {
     return hwMap.action()

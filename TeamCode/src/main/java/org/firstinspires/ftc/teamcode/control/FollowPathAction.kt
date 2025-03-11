@@ -2,14 +2,17 @@ package org.firstinspires.ftc.teamcode.control
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.Action
+import com.acmerobotics.roadrunner.Arclength
 import com.acmerobotics.roadrunner.DisplacementProfile
 import com.acmerobotics.roadrunner.DisplacementTrajectory
 import com.acmerobotics.roadrunner.PosePath
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.PoseVelocity2dDual
+import com.acmerobotics.roadrunner.PositionPath
 import com.acmerobotics.roadrunner.Time
 import com.acmerobotics.roadrunner.TimeTrajectory
 import com.acmerobotics.roadrunner.Trajectory
+import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.project
 import dev.frozenmilk.mercurial.commands.Command
 import dev.frozenmilk.mercurial.commands.Lambda
@@ -22,16 +25,16 @@ class FollowPathAction(val drive: MecanumChassis, val traj: DisplacementTrajecto
 
     override fun run(p: TelemetryPacket) : Boolean {
         val robotVel: PoseVelocity2d = drive.updatePoseEstimate()
-        disp = traj.project(drive.localizer.pose.position, disp)
+        disp = traj.project(drive.mdLocalizer.pose.position, disp)
 
-        if (disp >= path.length() || (traj[traj.length()].position.value() - drive.localizer.pose.position).norm() < 2) {
+        if (disp >= path.length() || (traj[traj.length()].position.value() - drive.mdLocalizer.pose.position).norm() < 2) {
             drive.setDrivePowers(0.0, 0.0, 0.0)
             return false
         }
 
         val command: PoseVelocity2dDual<Time> = MecanumStatic.controller.compute(
             traj[disp],
-            drive.localizer.pose,
+            drive.mdLocalizer.pose,
             robotVel
         )
 
@@ -48,15 +51,15 @@ fun MecanumChassis.followPathCommand(traj: DisplacementTrajectory): Command {
     return Lambda("Following Path $traj")
         .setExecute {
             val robotVel = updatePoseEstimate()
-            disp = traj.project(localizer.pose.position, disp)
+            disp = traj.project(mdLocalizer.pose.position, disp)
 
-            setDrivePowersWithFF(MecanumStatic.controller.compute(
+            setDrivePowersWithFF(controller.compute(
                 traj[disp],
-                localizer.pose,
+                mdLocalizer.pose,
                 robotVel
             ))
         }.setFinish {
-            disp >= path.length() || (traj[traj.length()].position.value() - localizer.pose.position).norm() < 2
+            disp >= path.length() || (traj[traj.length()].position.value() - mdLocalizer.pose.position).norm() < 2
         }.setEnd {
             setDrivePowers(0.0, 0.0, 0.0)
         }
@@ -65,3 +68,5 @@ fun MecanumChassis.followPathCommand(traj: DisplacementTrajectory): Command {
 fun MecanumChassis.followPathCommand(traj: Trajectory) = this.followPathCommand(DisplacementTrajectory(traj))
 fun MecanumChassis.followPathCommand(traj: TimeTrajectory) =
     this.followPathCommand(DisplacementTrajectory(traj.path, traj.profile.dispProfile))
+
+fun PositionPath<Arclength>.project(query: Vector2d, init: Double = 0.0) : Double = project(this, query, init)

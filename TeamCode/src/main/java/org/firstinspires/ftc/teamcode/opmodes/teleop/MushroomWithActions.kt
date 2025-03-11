@@ -69,8 +69,8 @@ class MushroomWithActions : OpMode() {
         mtel.addData("Loop Time", timer.milliseconds()/loopCount)
         mtel.addData("Slide PID Target", slidePid.pid.targetPosition)
         mtel.addData("Slide PID Enabled", slidePid.enabled)
-        mtel.addData("Robot Position", robot.drive.localizer.pose.position)
-        mtel.addData("Robot Heading", robot.drive.localizer.pose.heading.log())
+        mtel.addData("Robot Position", robot.drive.mdLocalizer.pose.position)
+        mtel.addData("Robot Heading", robot.drive.mdLocalizer.pose.heading.log())
         mtel.update()
 
         loopCount++

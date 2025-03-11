@@ -7,7 +7,6 @@ import dev.frozenmilk.dairy.core.wrapper.Wrapper
 
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 import page.j5155.expressway.ftc.motion.PIDFController
-import kotlin.math.abs
 import kotlin.math.absoluteValue
 
 class PIDFService(val controller: PIDFController, vararg val motors: Motor) : Feature {
