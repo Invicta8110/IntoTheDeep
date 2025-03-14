@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo
+import org.firstinspires.ftc.teamcode.hardware.wrappers.TwoPointServo
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
 import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer
 

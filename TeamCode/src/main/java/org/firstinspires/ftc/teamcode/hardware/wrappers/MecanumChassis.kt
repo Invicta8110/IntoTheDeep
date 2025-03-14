@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware.wrappers
 
-import com.acmerobotics.dashboard.canvas.Canvas
 import com.acmerobotics.roadrunner.Action
 import com.acmerobotics.roadrunner.HolonomicController
 import com.acmerobotics.roadrunner.InstantAction
@@ -27,14 +26,10 @@ import dev.frozenmilk.wavedash.Drive
 import dev.frozenmilk.wavedash.Localizer
 import dev.frozenmilk.wavedash.TrajectoryCommandBuilder
 import dev.frozenmilk.wavedash.messages.MecanumCommandMessage
-import org.firstinspires.ftc.teamcode.control.MecanumParams
-import org.firstinspires.ftc.teamcode.control.MecanumParams.inPerTick
 import org.firstinspires.ftc.teamcode.control.MecanumStatic
-import org.firstinspires.ftc.teamcode.control.MecanumStatic.feedforward
 import org.firstinspires.ftc.teamcode.control.PIDController
 import org.firstinspires.ftc.teamcode.control.followPathCommand
 import org.firstinspires.ftc.teamcode.control.project
-import org.firstinspires.ftc.teamcode.roadrunner.Drawing
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive
 import org.firstinspires.ftc.teamcode.roadrunner.messages.DriveCommandMessage
 import org.firstinspires.ftc.teamcode.roadrunner.messages.PoseMessage
@@ -147,7 +142,21 @@ class MecanumChassis @JvmOverloads constructor(
     fun moveToPoint(target: Pose2d): Command {
         return Lambda("Move to $target")
             .setExecute {
-                setPowersWithDirection(target)
+                val robotVel: PoseVelocity2d = this.updatePoseEstimate()
+
+                val command: PoseVelocity2dDual<Time> = MecanumStatic.controller.compute(
+                    targetPose = target,
+                    actualPose = this.mdLocalizer.pose,
+                    actualVelActual = robotVel
+                )
+
+                val wheelVels = kinematics.inverse<Time>(command)
+                val voltage = voltageSensor.voltage
+
+                leftFront.power = feedforward.compute(wheelVels.leftFront) / voltage
+                leftBack.power = feedforward.compute(wheelVels.leftBack) / voltage
+                rightBack.power = feedforward.compute(wheelVels.rightBack) / voltage
+                rightFront.power = feedforward.compute(wheelVels.rightFront) / voltage
             }.setFinish {
                 val error: Twist2d = target - this.mdLocalizer.pose
                 error.line.norm() < 1.0 && error.angle < Math.PI/3
@@ -155,6 +164,7 @@ class MecanumChassis @JvmOverloads constructor(
                 this.setDrivePowers(0.0, 0.0, 0.0)
             }
     }
+    fun moveToPoint(target: Vector2d) = moveToPoint(Pose2d(target, this.mdLocalizer.pose.heading))
 
     fun turnTo(target: Double): Command {
         return Lambda("Turn to $target")
@@ -328,17 +338,20 @@ class MecanumChassis @JvmOverloads constructor(
     }
 
     fun lineTo(target: Vector2d): Command {
-        val line = Line(currentPosition.position, target)
-        val timer = ElapsedTime()
+        lateinit var line: Line
         var disp = 0.0
 
         return Lambda("line-to-$target")
-            .setInit { timer.reset() }
+            .setInit {
+                line = Line(currentPosition.position, target)
+            }
             .setExecute {
                 val robotVel = updatePoseEstimate()
+
                 disp = line.project(currentPosition.position, disp)
+
                 val command = controller.compute(
-                    targetPose = Pose2d(line[disp, 1].value(), 0.0),
+                    targetPose = Pose2d(line[disp, 1].value(), currentPosition.heading),
                     actualPose = currentPosition,
                     actualVelActual = robotVel
                 )

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.control.Util;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.MotorArm;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo;
+import org.firstinspires.ftc.teamcode.hardware.wrappers.TwoPointServo;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer;

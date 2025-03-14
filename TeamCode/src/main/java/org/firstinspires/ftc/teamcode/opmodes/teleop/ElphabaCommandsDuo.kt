@@ -19,14 +19,15 @@ import org.firstinspires.ftc.teamcode.hardware.robots.Elphabot
 import org.firstinspires.ftc.teamcode.hardware.robots.position
 import page.j5155.expressway.ftc.motion.PIDFController
 
-@TeleOp(name="Elphaba Commands", group = "Elphabot")
+@TeleOp(name="Elphaba Commands Duo", group = "Elphabot")
 @Config
 @Mercurial.Attach
-class ElphabaCommands : OpMode() {
+class ElphabaCommandsDuo : OpMode() {
     private val robot by OpModeLazyCell { Elphabot(hardwareMap) }
     private val slides by OpModeLazyCell { robot.slidesMercurial }
 
     private val gp1 by OpModeLazyCell { BoundGamepad(SDKGamepad(gamepad1)) }
+    private val gp2 by OpModeLazyCell { BoundGamepad(SDKGamepad(gamepad2)) }
 
     private val rightTrigger by OpModeLazyCell {
         gp1.rightTrigger.conditionalBindState()
@@ -73,7 +74,7 @@ class ElphabaCommands : OpMode() {
     }
 
     override fun loop() {
-        robot.setDrivePowers(PoseVelocity2d(Vector2d(gp1.leftStickY.state, -gp1.leftStickX.state), -gp1.rightStickX.state)).schedule()
+        robot.setDrivePowers(PoseVelocity2d(Vector2d(gp2.leftStickY.state, -gp2.leftStickX.state), -gp2.rightStickX.state)).schedule()
 
         robot.drive.updatePoseEstimate()
 

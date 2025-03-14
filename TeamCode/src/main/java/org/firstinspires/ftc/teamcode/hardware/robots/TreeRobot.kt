@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.control.fieldCentric
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo
+import org.firstinspires.ftc.teamcode.hardware.wrappers.TwoPointServo
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
 import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer
 

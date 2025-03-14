@@ -8,13 +8,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import dev.frozenmilk.mercurial.commands.groups.Parallel
-import dev.frozenmilk.mercurial.commands.groups.Sequential
 import org.firstinspires.ftc.teamcode.control.instant
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.IndexServo
+import org.firstinspires.ftc.teamcode.hardware.wrappers.IndexServo
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesMercurial
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo
+import org.firstinspires.ftc.teamcode.hardware.wrappers.TwoPointServo
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
 
 typealias ServoArm = List<ServoImplEx>
@@ -35,8 +34,8 @@ class Elphabot(
     startPose: Pose2d = Pose2d(0.0, 0.0, 0.0)
 ) {
     val drive = MecanumChassis(hwMap, startPose)
-    val claw = TwoPointServo("claw", hwMap, 0.10, 0.625)
-    val wrist = IndexServo("wrist", hwMap, 0.35, 0.65, 0.05, 0.475)
+    val claw = TwoPointServo("claw", hwMap, 0.4, 0.65)
+    val wrist = IndexServo("wrist", hwMap, 0.35, 0.65, 0.05, 0.55, 0.50)
     val rotator = IndexServo("rotator", hwMap, 0.20, 0.50, 0.80)
 
     val slidesManual = LinearSlidesManual(hwMap).apply {
@@ -46,8 +45,8 @@ class Elphabot(
     val slidesMercurial = LinearSlidesMercurial(slidesManual)
 
     val arm = buildList {
-        val armLeft = hwMap[ServoImplEx::class.java, "armLeft"]!!
-        val armRight = hwMap[ServoImplEx::class.java, "armRight"]!!
+        val armLeft = hwMap["armLeft"] as ServoImplEx
+        val armRight = hwMap["armRight"] as ServoImplEx
 
         //armLeft.pwmRange = armRange
         //armRight.pwmRange = armRange
@@ -69,10 +68,10 @@ class Elphabot(
         }
 
     companion object {
-        val armHome = 0.975 // x wall grab from front
+        val armHome = 1.0 // x wall grab from front
         val armUp = 0.05 // a enter submersible from front
-        val armBucket = 0.80  // y up-right from front
-        val armSpecimen = 0.225 //
+        val armBucket = 0.82  // y up-right from front
+        val armSpecimen = 0.25 //
 
         val armPositions = mapOf(
             "x" to armHome,
@@ -93,6 +92,7 @@ class Elphabot(
         setDrivePowers(PoseVelocity2d(Vector2d(x, y), rx))
 
     val scoreSpecimen get() = Parallel(
+        slidesMercurial.goTo(SlidePosition.SUBMERSIBLE),
         arm.goToCommand("b"),
         wrist.goToCommand(3),
         rotator.goToCommand(2),

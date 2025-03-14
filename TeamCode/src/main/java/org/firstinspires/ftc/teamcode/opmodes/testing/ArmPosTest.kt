@@ -21,7 +21,7 @@ class ArmPosTest : OpMode() {
     override fun loop() {
         when {
             gp1.a.onTrue -> arm.position = Elphabot.armUp
-            gp1.b.onTrue -> arm.position = Elphabot.armDown
+            gp1.b.onTrue -> arm.position = Elphabot.armSpecimen
             gp1.x.onTrue -> arm.position = Elphabot.armHome
             gp1.y.onTrue -> arm.position = Elphabot.armBucket
         }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware.mechanisms
+package org.firstinspires.ftc.teamcode.hardware.wrappers
 
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.PwmControl

@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo;
+import org.firstinspires.ftc.teamcode.hardware.wrappers.TwoPointServo;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 

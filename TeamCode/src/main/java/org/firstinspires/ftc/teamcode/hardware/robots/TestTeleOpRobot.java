@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo;
+import org.firstinspires.ftc.teamcode.hardware.wrappers.TwoPointServo;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 

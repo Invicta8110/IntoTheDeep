@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms
 
 import com.qualcomm.robotcore.hardware.HardwareMap
+import dev.frozenmilk.dairy.core.dependency.Dependency
+import dev.frozenmilk.dairy.core.wrapper.Wrapper
 import dev.frozenmilk.mercurial.commands.Lambda
+import dev.frozenmilk.mercurial.subsystems.Subsystem
 import org.firstinspires.ftc.teamcode.control.instant
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 import page.j5155.expressway.ftc.motion.PIDFController
@@ -37,6 +40,7 @@ class LinearSlidesMercurial(val motors: Set<Motor>) {
     val pid = PIDF
     val currentPosition by motors.first()::currentPosition
     var pidEnabled = false
+    var lastOutput = 0.0
 
     fun setTarget(target: Int) =
         instant("set-slide-target-$target") { pid.targetPosition = target }
@@ -48,4 +52,14 @@ class LinearSlidesMercurial(val motors: Set<Motor>) {
         .setFinish { currentPosition in target-10..target+10 }
 
     fun goTo(target: SlidePosition) = goTo(target.position)
+
+    val operatePid = Lambda("slide-pid")
+        .setFinish { false }
+        .setExecute {
+            lastOutput = pid.update(currentPosition.toDouble())
+
+            if (pidEnabled) {
+                motors.forEach { it.power = lastOutput }
+            }
+        }
 }
