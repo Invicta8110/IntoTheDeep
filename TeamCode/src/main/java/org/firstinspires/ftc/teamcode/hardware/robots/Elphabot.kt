@@ -35,7 +35,7 @@ class Elphabot(
 ) {
     val drive = MecanumChassis(hwMap, startPose)
     val claw = TwoPointServo("claw", hwMap, 0.4, 0.65)
-    val wrist = IndexServo("wrist", hwMap, 0.35, 0.65, 0.05, 0.55, 0.50)
+    val wrist = IndexServo("wrist", hwMap, 0.35, 0.65, 0.3, 0.4, 0.36)
     val rotator = IndexServo("rotator", hwMap, 0.20, 0.50, 0.80)
 
     val slidesManual = LinearSlidesManual(hwMap).apply {
@@ -92,8 +92,8 @@ class Elphabot(
         setDrivePowers(PoseVelocity2d(Vector2d(x, y), rx))
 
     val scoreSpecimen get() = Parallel(
-        slidesMercurial.goTo(SlidePosition.SUBMERSIBLE),
-        arm.goToCommand("b"),
+        slidesMercurial.goTo(SlidePosition.SPECIMEN_HANG),
+        arm.goToCommand("a"),
         wrist.goToCommand(3),
         rotator.goToCommand(2),
     )
@@ -103,5 +103,13 @@ class Elphabot(
         wrist.goToCommand(0),
         rotator.goToCommand(0),
         claw.goToBCommand
+    )
+
+    val wallGrab get() = Parallel (
+        slidesMercurial.goTo(SlidePosition.DOWN),
+        arm.goToCommand("x"),
+        wrist.goToCommand(4),
+        rotator.goToCommand(0),
+        claw.goToACommand
     )
 }

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import dev.frozenmilk.dairy.core.wrapper.Wrapper
 import dev.frozenmilk.mercurial.Mercurial
+import dev.frozenmilk.mercurial.commands.Command
 import dev.frozenmilk.mercurial.commands.groups.Parallel
 import dev.frozenmilk.mercurial.commands.groups.Sequential
 import dev.frozenmilk.mercurial.commands.util.Wait
@@ -19,18 +20,25 @@ import java.lang.Math.toDegrees
 @Mercurial.Attach
 class AndrewAuton : OpMode() {
     val robot by OpModeLazyCell { Elphabot(hardwareMap, Pose2d(0.0, 0.0, 0.0)) }
+    lateinit var drive1: Command
 
     override fun init() {
         robot.claw.goToBCommand.setRunStates(Wrapper.OpModeState.INIT, Wrapper.OpModeState.ACTIVE)
             .schedule()
+
+        drive1 = robot.drive.commandBuilder(Pose2d(0.0, 0.0, 0.0))
+            .stopAndAdd(robot.scoreSpecimen)
+            .strafeTo(Vector2d(-20.0, 0.0))
+            .build()
     }
 
     override fun start() {
+        robot.slidesMercurial.pidEnabled = true
+
+        robot.slidesMercurial.operatePid.schedule()
+
         Sequential(
-            Parallel(
-                robot.scoreSpecimen,
-                robot.drive.moveToPoint(Vector2d(-20.0, 0.0))
-            ),
+            drive1,
             robot.claw.goToACommand,
             Wait(0.5),
             Parallel(

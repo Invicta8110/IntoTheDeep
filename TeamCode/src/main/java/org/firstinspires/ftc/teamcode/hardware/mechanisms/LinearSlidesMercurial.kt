@@ -12,7 +12,7 @@ import page.j5155.expressway.ftc.motion.PIDFController
 enum class SlidePosition(val position: Int) {
     DOWN(0),
     SUBMERSIBLE(250),
-    SPECIMEN_HANG(1000),
+    SPECIMEN_HANG(1025),
     MIDDLE(2000),
     UP(3000);
 

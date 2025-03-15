@@ -66,7 +66,8 @@ class ElphabaCommands : OpMode() {
         gp1.a.onTrue(instant("arm-to-A") { robot.arm.position = Elphabot.armPositions["a"]!! })
         //gp1.b.onTrue(instant("arm-to-B") { robot.arm.position = Elphabot.armPositions["b"]!! })
         gp1.b.onTrue(robot.wrist.goToCommand(4))
-        gp1.x.onTrue(instant("arm-to-X") { robot.arm.position = Elphabot.armPositions["x"]!! })
+        //gp1.x.onTrue(instant("arm-to-X") { robot.arm.position = Elphabot.armPositions["x"]!! })
+        gp1.x.onTrue(robot.wallGrab)
         gp1.y.onTrue(instant("arm-to-Y") { robot.arm.position = Elphabot.armPositions["y"]!! })
 
         slides.pidEnabled = true

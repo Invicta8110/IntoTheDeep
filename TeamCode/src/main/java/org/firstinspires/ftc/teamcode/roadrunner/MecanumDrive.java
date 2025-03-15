@@ -66,7 +66,7 @@ public class MecanumDrive {
         // drive model parameters
         public double inPerTick = PinpointLocalizer.PINPOINT_PARAMS.mmPerTick / 25.4;
         public double lateralInPerTick = inPerTick;
-        public double trackWidthTicks = 12.5 * inPerTick;;
+        public double trackWidthTicks = 14.5 * inPerTick;;
 
         // feedforward parameters (in tick units)
         public double kS = 1.1885971244425084;
@@ -448,14 +448,14 @@ public class MecanumDrive {
     public PoseVelocity2d updatePoseEstimate() {
         PoseVelocity2d vel = mdLocalizer.update();
         poseHistory.add(mdLocalizer.getPose());
-        
+
         while (poseHistory.size() > 100) {
             poseHistory.removeFirst();
         }
 
         estimatedPoseWriter.write(new PoseMessage(mdLocalizer.getPose()));
-        
-        
+
+
         return vel;
     }
 
