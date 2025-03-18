@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop
 
 import com.acmerobotics.dashboard.config.Config
+import com.acmerobotics.roadrunner.PoseVelocity2d
+import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.util.ElapsedTime
@@ -8,9 +10,8 @@ import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.control.SilkRoad
 import org.firstinspires.ftc.teamcode.control.mtel
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
-import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot
 import org.firstinspires.ftc.teamcode.hardware.robots.Elphabot
 import org.firstinspires.ftc.teamcode.hardware.robots.position
 import page.j5155.expressway.ftc.motion.PIDFController
@@ -19,7 +20,7 @@ import page.j5155.expressway.ftc.motion.PIDFController
 @Config
 @SilkRoad.Attach
 class ElphabaOneDriver : OpMode() {
-    private val robot by OpModeLazyCell { CreamyMushroomRobot(hardwareMap) }
+    private val robot by OpModeLazyCell { Elphabot(hardwareMap) }
 
     private val gp1 by OpModeLazyCell { SDKGamepad(gamepad1) }
     private val rightTrigger by OpModeLazyCell {
@@ -28,7 +29,7 @@ class ElphabaOneDriver : OpMode() {
             .bind()
     }
 
-    private var slideCoefs = PIDFController.PIDCoefficients(LinearSlidesRR.kP, LinearSlidesRR.kI, LinearSlidesRR.kD)
+    private var slideCoefs = PIDFController.PIDCoefficients(LinearSlidesManual.kP, LinearSlidesManual.kI, LinearSlidesManual.kD)
     private var slidePos = SlidePosition.DOWN
 
     private val slidePid = PIDFController(slideCoefs)
@@ -43,18 +44,23 @@ class ElphabaOneDriver : OpMode() {
     }
 
     override fun loop() {
-//        slideCoefs = PIDFController.PIDCoefficients(LinearSlides.kP, LinearSlides.kI, LinearSlides.kD)
-//
-//        robot.armRight.pA = armA
-//        robot.armRight.pB = armB
-//        robot.wrist.pA = wristA
-//        robot.wrist.pB = wristB
-
-        robot.driveManualControl(gamepad1)
+        robot.drive.setDrivePowers(
+            PoseVelocity2d(
+                Vector2d(
+                    gp1.leftStickY.state,
+                    -gp1.leftStickX.state
+                ),
+                -gp1.rightStickX.state
+            )
+        )
 
         robot.drive.updatePoseEstimate()
 
-        robot.wristManualControl(gp1)
+        when {
+            gp1.dpadLeft.onTrue -> robot.wrist.goTo(1)
+            gp1.dpadRight.onTrue -> robot.wrist.goTo(0)
+            gp1.b.onTrue -> robot.wrist.goTo(2)
+        }
 
         when {
             gp1.rightBumper.onTrue -> robot.claw.goToB()
@@ -63,44 +69,35 @@ class ElphabaOneDriver : OpMode() {
 
         when {
             gp1.a.onTrue -> robot.arm.position = Elphabot.armPositions["a"]!!
-            gp1.b.onTrue -> robot.arm.position = Elphabot.armPositions["b"]!!
+            //gp1.b.onTrue -> robot.arm.position = Elphabot.armPositions["b"]!!
             gp1.x.onTrue -> robot.arm.position = Elphabot.armPositions["x"]!!
             gp1.y.onTrue -> robot.arm.position = Elphabot.armPositions["y"]!!
         }
-
-//        if (rightTrigger.onTrue) {
-//            specTimer.reset()
-//            robot.arm.position = Elphabot.armPositions["x"]!!
-//        }
-//
-//        if (specTimer.seconds() > 1) {
-//            robot.claw.goToA()
-//        }
 
         if (gp1.back.onTrue) {
             slidePid.targetPosition = SlidePosition.SPECIMEN_HANG.position
         }
 
         if (gp1.dpadUp.state) {
-            robot.slides.setPower(1.0)
+            robot.slidesManual.setPower(1.0)
         } else if (gp1.dpadUp.onFalse) {
-            slidePid.targetPosition = robot.slides[0].currentPosition
+            slidePid.targetPosition = robot.slidesManual[0].currentPosition
         } else if (gp1.dpadDown.state) {
-            robot.slides.setPower(-1.0)
+            robot.slidesManual.setPower(-1.0)
         } else if (gp1.dpadDown.onFalse) {
-            slidePid.targetPosition = robot.slides[0].currentPosition
+            slidePid.targetPosition = robot.slidesManual[0].currentPosition
         } else {
-            val output = slidePid.update(measuredPosition=robot.slides[0].currentPosition.toDouble())
+            val output = slidePid.update(measuredPosition=robot.slidesManual[0].currentPosition.toDouble())
 
-            robot.slides[0].power = output
-            robot.slides[1].power = output
+            robot.slidesManual[0].power = output
+            robot.slidesManual[1].power = output
         }
 
         mtel.addData("Slide PID Target", slidePid.targetPosition)
-        mtel.addData("Slide 0 Pos", robot.slides[0].currentPosition)
-        mtel.addData("Slide 1 Pos", robot.slides[1].currentPosition)
-        mtel.addData("Robot Position", robot.drive.localizer.pose.position)
-        mtel.addData("Robot Heading", robot.drive.localizer.pose.heading.log())
+        mtel.addData("Slide 0 Pos", robot.slidesManual[0].currentPosition)
+        mtel.addData("Slide 1 Pos", robot.slidesManual[1].currentPosition)
+        mtel.addData("Robot Position", robot.drive.mdLocalizer.pose.position)
+        mtel.addData("Robot Heading", robot.drive.mdLocalizer.pose.heading.log())
         mtel.addData("Loop Time", timer.milliseconds()/loopCount)
         mtel.update()
 

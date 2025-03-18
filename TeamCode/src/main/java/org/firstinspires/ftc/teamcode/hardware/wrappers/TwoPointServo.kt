@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode.hardware.mechanisms
+package org.firstinspires.ftc.teamcode.hardware.wrappers
 
 import com.acmerobotics.roadrunner.InstantAction
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.PwmControl
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
+import dev.frozenmilk.mercurial.commands.groups.Advancing
+import org.firstinspires.ftc.teamcode.control.instant
 
 
 open class TwoPointServo @JvmOverloads constructor(
@@ -47,6 +49,11 @@ open class TwoPointServo @JvmOverloads constructor(
     fun goToB() {
         servo.position = pB
     }
+
+    val goToACommand get() = instant("go-to-A") { goToA() }
+    val goToBCommand get() = instant("go-to-B") { goToB() }
+
+    val advancing = Advancing(goToACommand, goToBCommand)
 
     fun runAction(): InstantAction {
         return if (servo.position == pA) {

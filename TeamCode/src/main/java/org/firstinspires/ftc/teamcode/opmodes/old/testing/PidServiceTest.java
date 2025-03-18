@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.hardware.robots.ChocolateRaisin;
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad;
 import page.j5155.expressway.ftc.motion.PIDFController;
 
+import org.firstinspires.ftc.teamcode.control.PIDController;
+
 @Disabled
 @Config
 @TeleOp

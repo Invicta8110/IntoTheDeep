@@ -12,7 +12,6 @@ import dev.frozenmilk.dairy.core.util.OpModeLazyCell
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import org.firstinspires.ftc.teamcode.control.SilkRoad
 import org.firstinspires.ftc.teamcode.control.mtel
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.SlidePosition
 import org.firstinspires.ftc.teamcode.hardware.robots.CreamyMushroomRobot
 
@@ -70,8 +69,8 @@ class MushroomWithActions : OpMode() {
         mtel.addData("Loop Time", timer.milliseconds()/loopCount)
         mtel.addData("Slide PID Target", slidePid.pid.targetPosition)
         mtel.addData("Slide PID Enabled", slidePid.enabled)
-        mtel.addData("Robot Position", robot.drive.localizer.pose.position)
-        mtel.addData("Robot Heading", robot.drive.localizer.pose.heading.log())
+        mtel.addData("Robot Position", robot.drive.mdLocalizer.pose.position)
+        mtel.addData("Robot Heading", robot.drive.mdLocalizer.pose.heading.log())
         mtel.update()
 
         loopCount++

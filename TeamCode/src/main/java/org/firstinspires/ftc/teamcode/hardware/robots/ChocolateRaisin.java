@@ -9,8 +9,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.control.Util;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.MotorArm;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesRR;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.TwoPointServo;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.LinearSlidesManual;
+import org.firstinspires.ftc.teamcode.hardware.wrappers.TwoPointServo;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis;
 import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor;
 import org.firstinspires.ftc.teamcode.roadrunner.OTOSLocalizer;
@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ChocolateRaisin {
     private final MecanumChassis chassis;
-    private final LinearSlidesRR slides;
+    private final LinearSlidesManual slides;
     private final MotorArm motorArm;
     private final TwoPointServo claw;
     private LynxModule controlHub, expansionHub;
@@ -27,10 +27,10 @@ public class ChocolateRaisin {
 
     public ChocolateRaisin(HardwareMap hwMap, Pose2d pose) {
         chassis = new MecanumChassis(hwMap, pose);
-        slides = new LinearSlidesRR(new Motor("slides", hwMap));
+        slides = new LinearSlidesManual(new Motor("slides", hwMap));
         motorArm = new MotorArm(new Motor("armRight", hwMap));
         claw = new TwoPointServo("claw", hwMap, .75, 1);
-        otos = ((OTOSLocalizer)chassis.localizer).getOTOS();
+        otos = ((OTOSLocalizer) chassis.getLocalizer()).otos;
 
         List<LynxModule> hubs = hwMap.getAll(LynxModule.class);
         for (LynxModule module : hubs) {
@@ -52,7 +52,7 @@ public class ChocolateRaisin {
         return chassis;
     }
 
-    public LinearSlidesRR getSlides() {
+    public LinearSlidesManual getSlides() {
         return slides;
     }
 
@@ -75,7 +75,7 @@ public class ChocolateRaisin {
     public SparkFunOTOS getOTOS() { return otos; }
 
     public Pose2d getPose() {
-        return chassis.localizer.getPose();
+        return chassis.getLocalizer().getPose();
     }
 
     private void configureOtos() {

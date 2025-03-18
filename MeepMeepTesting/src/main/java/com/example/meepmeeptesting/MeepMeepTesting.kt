@@ -17,16 +17,14 @@ fun main() {
 
     //starting positions
     val blueRight = Pose2d(36.0, 60.0, -Math.PI/2)
-    val blueLeft = Pose2d(-26.0, 60.0, -Math.PI/2)
+    val blueLeft = Pose2d(-8.0, 60.0, -Math.PI/2)
     val redRight = Pose2d(26.0, -60.0, Math.PI/2)
     val redLeft = Pose2d(-36.0, -60.0, Math.PI/2)
 
     //any actions go here
-    val action = myBot.drive.actionBuilder(redLeft)
-        .strafeTo(redRight.position)
-        .strafeTo(blueRight.position)
-        .strafeTo(blueLeft.position)
-        .strafeTo(redLeft.position)
+    val action = myBot.drive.actionBuilder(blueLeft)
+        .strafeTo(Vector2d(-8.0, 30.0))
+        .strafeTo(Vector2d(-56.0, 60.0))
         .build()
 
     myBot.runAction(action)

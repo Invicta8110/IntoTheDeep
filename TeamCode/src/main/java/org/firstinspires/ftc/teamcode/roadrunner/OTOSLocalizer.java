@@ -3,47 +3,45 @@ package org.firstinspires.ftc.teamcode.roadrunner;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.OTOSKt;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import dev.frozenmilk.wavedash.Localizer;
 
 @Config
 public class OTOSLocalizer implements Localizer {
     public static class Params {
-        public double angularScalar = 0.9953;
-        public double linearScalar = 115.5943 / 115;
+        public double angularScalar = 1.0;
+        public double linearScalar = 1.0;
 
-        public SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(3.06, 2.78, 1.5475);
-    }
-
-    public static Pose2d convertPose(SparkFunOTOS.Pose2D pose) {
-        return new Pose2d(pose.x, pose.y, pose.h);
-    }
-
-    public static SparkFunOTOS.Pose2D convertPose(Pose2d pose) {
-        return new SparkFunOTOS.Pose2D(pose.position.x, pose.position.y, pose.heading.toDouble());
+        // Note: units are in inches and radians
+        public SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, 0);
     }
 
     public static Params PARAMS = new Params();
 
-    private final SparkFunOTOS otos;
+    public final SparkFunOTOS otos;
     private Pose2d currentPose;
 
     public OTOSLocalizer(HardwareMap hardwareMap, Pose2d initialPose) {
+        // TODO: make sure your config has an OTOS device with this name
+        //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         otos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
         currentPose = initialPose;
-        otos.setPosition(convertPose(currentPose));
+        otos.setPosition(OTOSKt.toOTOSPose(currentPose));
+        otos.setLinearUnit(DistanceUnit.INCH);
+        otos.setAngularUnit(AngleUnit.RADIANS);
 
         otos.calibrateImu();
         otos.setLinearScalar(PARAMS.linearScalar);
         otos.setAngularScalar(PARAMS.angularScalar);
         otos.setOffset(PARAMS.offset);
-    }
-
-    public SparkFunOTOS getOTOS() {
-        return otos;
     }
 
     @Override
@@ -54,7 +52,7 @@ public class OTOSLocalizer implements Localizer {
     @Override
     public void setPose(Pose2d pose) {
         currentPose = pose;
-        otos.setPosition(convertPose(currentPose));
+        otos.setPosition(OTOSKt.toOTOSPose(currentPose));
     }
 
     @Override
@@ -64,7 +62,9 @@ public class OTOSLocalizer implements Localizer {
         SparkFunOTOS.Pose2D otosAcc = new SparkFunOTOS.Pose2D();
         otos.getPosVelAcc(otosPose, otosVel, otosAcc);
 
-        currentPose = convertPose(otosPose);
-        return new PoseVelocity2d(new Vector2d(otosVel.x, otosVel.y), otosVel.h);
+        currentPose = OTOSKt.toRRPose(otosPose);
+        Vector2d fieldVel = new Vector2d(otosVel.x, otosVel.y);
+        Vector2d robotVel = Rotation2d.exp(otosPose.h).inverse().times(fieldVel);
+        return new PoseVelocity2d(robotVel, otosVel.h);
     }
 }

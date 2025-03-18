@@ -10,10 +10,10 @@ import org.firstinspires.ftc.teamcode.hardware.wrappers.Motor
 import page.j5155.expressway.ftc.motion.PIDFController
 
 @Config
-class LinearSlidesRR(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
-                     @get:JvmName("UP_POS") val UP_POS: Int,
-                     vararg motors: Motor)
-    : List<Motor> by motors.toList() {
+open class LinearSlidesManual(@get:JvmName("downPos") val downPos: Int,
+                              @get:JvmName("upPos") val upPos: Int,
+                              vararg motors: Motor
+) : List<Motor> by motors.toList() {
     val motors: List<Motor> = motors.toList()
     val position: Int
         get() = motors[0].currentPosition
@@ -44,10 +44,10 @@ class LinearSlidesRR(@get:JvmName("DOWN_POS") val DOWN_POS: Int,
     }
 
     @get:JvmName("goUp")
-    val goUp get() = ParallelAction(motors.map { it.RTPAction(UP_POS, 1.0) })
+    val goUp get() = ParallelAction(motors.map { it.RTPAction(upPos, 1.0) })
 
     @get:JvmName("goDown")
-    val goDown get() = ParallelAction(motors.map { it.RTPAction(DOWN_POS, 1.0) })
+    val goDown get() = ParallelAction(motors.map { it.RTPAction(downPos, 1.0) })
 
     companion object {
         @JvmField var kP = 0.01

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.old.testing;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ftc.OTOSKt;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -25,10 +26,10 @@ public class OtosTest extends OpMode {
     public void loop() {
         robot.setDrivePowers(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
-        Pose2d pose = Util.convertPoseToRR(otos.getPosition());
+        Pose2d pose = OTOSKt.toRRPose(otos.getPosition());
 
         Util.mtel.addData("Robot Position via OTOS", pose);
-        Util.mtel.addData("Robot Position via RR", robot.localizer.getPose());
+        Util.mtel.addData("Robot Position via RR", robot.getLocalizer().getPose());
         Util.mtel.update();
     }
 }
