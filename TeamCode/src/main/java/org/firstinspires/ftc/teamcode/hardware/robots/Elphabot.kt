@@ -35,13 +35,13 @@ class Elphabot(
 ) {
     val drive = MecanumChassis(hwMap, startPose)
     val claw = TwoPointServo("claw", hwMap, 0.4, 0.65)
-    val wrist = IndexServo("wrist", hwMap, 0.35, 0.65, 0.3, 0.4, 0.36)
+    val wrist = IndexServo("wrist", hwMap, 0.35, 0.65, 0.3, 0.4, 0.37)
     val rotator = IndexServo("rotator", hwMap, 0.20, 0.50, 0.80)
 
     val slidesManual = LinearSlidesManual(hwMap).apply {
-        forEach { motor -> motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER }
         forEach { it.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER }
     }
+
     val slidesMercurial = LinearSlidesMercurial(slidesManual)
 
     val arm = buildList {

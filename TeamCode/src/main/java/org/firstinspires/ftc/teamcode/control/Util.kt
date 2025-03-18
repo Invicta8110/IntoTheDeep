@@ -5,16 +5,23 @@ package org.firstinspires.ftc.teamcode.control
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.acmerobotics.roadrunner.Pose2d
+import com.acmerobotics.roadrunner.PosePath
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.Rotation2d
 import com.acmerobotics.roadrunner.Vector2d
+import com.acmerobotics.roadrunner.project
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS.Pose2D
 import com.qualcomm.robotcore.hardware.HardwareDevice
 import com.qualcomm.robotcore.hardware.HardwareMap
 import dev.frozenmilk.dairy.core.FeatureRegistrar
 import dev.frozenmilk.mercurial.commands.Command
 import dev.frozenmilk.mercurial.commands.Lambda
+import dev.frozenmilk.mercurial.commands.groups.CommandGroup
+import dev.frozenmilk.mercurial.commands.groups.Parallel
+import dev.frozenmilk.mercurial.commands.groups.Sequential
+import org.firstinspires.ftc.teamcode.hardware.robots.Elphabot
 import page.j5155.expressway.ftc.motion.PIDFController
+import java.util.Vector
 import kotlin.math.PI
 import kotlin.math.max
 import kotlin.math.min
@@ -36,7 +43,7 @@ const val CPR_84 = 1993.6
 fun currentTimeSeconds() = System.nanoTime() / 1_000_000_000.0
 
 val blueRight = Pose2d(36.0, 60.0, -Math.PI/2)
-val blueLeft = Pose2d(-26.0, 60.0, -Math.PI/2)
+val blueLeft = Pose2d(-8.0, 60.0, -Math.PI/2)
 val redRight = Pose2d(26.0, -60.0, Math.PI/2)
 val redLeft = Pose2d(-36.0, -60.0, Math.PI/2)
 
@@ -102,3 +109,11 @@ fun <T : HardwareDevice> T.edit(action: T.() -> Unit) : T {
     action()
     return this
 }
+
+fun Collection<Command>.snapshotSize(): Int = fold(0) { acc, command ->
+    when (command) {
+        is CommandGroup -> acc + command.commands.snapshotSize()
+        else -> acc + 1
+    }
+}
+

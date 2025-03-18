@@ -164,20 +164,8 @@ class MecanumChassis @JvmOverloads constructor(
                 this.setDrivePowers(0.0, 0.0, 0.0)
             }
     }
+
     fun moveToPoint(target: Vector2d) = moveToPoint(Pose2d(target, this.mdLocalizer.pose.heading))
-
-    fun rrLineTo(target: Vector2d): Command {
-        lateinit var cmd: Command
-
-        return Lambda("rr-line")
-            .setInit {
-                val trajectory = this.trajectoryBuilder(currentPosition)
-                    .strafeTo(target)
-                    .build()
-                cmd = Sequential(trajectory.map { followTrajectoryCommand(TimeTrajectory(it)) })
-                cmd.schedule()
-            }
-    }
 
     fun turnTo(target: Double): Command {
         return Lambda("Turn to $target")
@@ -406,4 +394,3 @@ fun HolonomicController.compute(
     actualPose,
     actualVelActual
 )
-

@@ -55,9 +55,10 @@ class ElphabaCommands : OpMode() {
         gp1.leftBumper.onTrue(robot.rotator.goToCommand(2))
         gp1.rightBumper.onTrue(robot.claw.advancing)
 
-        gp1.rightTrigger.conditionalBindState().greaterThan(0.0).bind().onTrue(robot.scoreSpecimen.also {
-            slidePos = SlidePosition.SUBMERSIBLE
-        })
+        gp1.rightTrigger.conditionalBindState().greaterThan(0.0).bind().onTrue(
+            robot.scoreSpecimen.with(instant("update-slide-target ") { slidePos = SlidePosition.SPECIMEN_HANG })
+        )
+
         gp1.leftTrigger.conditionalBindState().greaterThan(0.0).bind().onTrue(Advancing(
             robot.rotator.goToCommand(0),
             robot.rotator.goToCommand(1)

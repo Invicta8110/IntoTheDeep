@@ -16,6 +16,7 @@ import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.project
 import dev.frozenmilk.mercurial.commands.Command
 import dev.frozenmilk.mercurial.commands.Lambda
+import dev.frozenmilk.util.cell.AtomicCell
 import org.firstinspires.ftc.teamcode.hardware.wrappers.MecanumChassis
 
 class FollowPathAction(val drive: MecanumChassis, val traj: DisplacementTrajectory) : Action {
@@ -45,13 +46,14 @@ class FollowPathAction(val drive: MecanumChassis, val traj: DisplacementTrajecto
 }
 
 fun MecanumChassis.followPathCommand(traj: DisplacementTrajectory): Command {
-    val path = traj.path
     var disp = 0.0
 
-    return Lambda("Following Path $traj")
-        .setExecute {
+    return Lambda("Following-Path-${traj.repr}")
+        .setInit {
+            disp = 0.0
+        }.setExecute {
             val robotVel = updatePoseEstimate()
-            disp = traj.project(mdLocalizer.pose.position, disp)
+            disp = traj.multiProject(mdLocalizer.pose.position, disp)
 
             setDrivePowersWithFF(controller.compute(
                 traj[disp],
@@ -59,7 +61,7 @@ fun MecanumChassis.followPathCommand(traj: DisplacementTrajectory): Command {
                 robotVel
             ))
         }.setFinish {
-            disp >= path.length() || (traj[traj.length()].position.value() - mdLocalizer.pose.position).norm() < 2
+            disp >= traj.path.length() || (traj[traj.length()].position.value() - mdLocalizer.pose.position).norm() < 2
         }.setEnd {
             setDrivePowers(0.0, 0.0, 0.0)
         }
@@ -70,3 +72,14 @@ fun MecanumChassis.followPathCommand(traj: TimeTrajectory) =
     this.followPathCommand(DisplacementTrajectory(traj.path, traj.profile.dispProfile))
 
 fun PositionPath<Arclength>.project(query: Vector2d, init: Double = 0.0) : Double = project(this, query, init)
+
+val DisplacementTrajectory.repr get() =
+    "traj-${this.path.begin(1).value().position}-to-${this.path.end(1).value().position}"
+
+fun multiProject(path: PosePath, query: Vector2d, init: Double, iter: Int = 5) =
+    (1..iter).fold(init) { acc, _ ->
+        project(path, query, acc)
+    }
+
+fun DisplacementTrajectory.multiProject(query: Vector2d, init: Double, iter: Int = 5) =
+    multiProject(this.path, query, init, iter)
